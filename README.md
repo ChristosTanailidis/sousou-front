@@ -14,6 +14,6 @@ pnpm install
 ```
 
 ## Run
-```vite
-npx vite --port=**port-number**
+```bash
+npx vite --port=4000
 ```

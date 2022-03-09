@@ -9,9 +9,8 @@ declare module 'vue' {
     CarbonChevronRight: typeof import('~icons/carbon/chevron-right')['default']
     CarbonLogout: typeof import('~icons/carbon/logout')['default']
     CarbonSettings: typeof import('~icons/carbon/settings')['default']
-    Counter: typeof import('./components/Counter.vue')['default']
-    Footer: typeof import('./components/Footer.vue')['default']
-    README: typeof import('./components/README.md')['default']
+    Login: typeof import('./components/login.vue')['default']
+    Register: typeof import('./components/register.vue')['default']
   }
 }
 

@@ -15,6 +15,8 @@ import Inspect from 'vite-plugin-inspect'
 import Prism from 'markdown-it-prism'
 import LinkAttributes from 'markdown-it-link-attributes'
 
+import VueFormulate from '@braid/vue-formulate'
+
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
@@ -65,6 +67,8 @@ export default defineConfig({
           prefix: false,
           enabledCollections: ['carbon'],
         }),
+
+        VueFormulate,
       ],
 
       dts: 'src/components.d.ts',

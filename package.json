@@ -12,6 +12,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@braid/vue-formulate": "^2.5.3",
+    "@kyvg/vue3-notification": "^2.3.4",
     "@vueuse/core": "^7.5.4",
     "@vueuse/head": "^0.7.5",
     "nprogress": "^0.2.0",

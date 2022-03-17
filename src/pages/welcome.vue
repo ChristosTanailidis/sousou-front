@@ -5,7 +5,7 @@
         class="text-4xl"
         dark="text-gray-300"
       >
-        Welcome 👋 !
+        Welcome 👋
       </div>
       <div>
         <login v-if="loginPage" />

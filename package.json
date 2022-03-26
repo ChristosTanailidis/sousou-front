@@ -16,6 +16,7 @@
     "@kyvg/vue3-notification": "^2.3.4",
     "@vueuse/core": "^7.5.4",
     "@vueuse/head": "^0.7.5",
+    "minimist": "1.2.6",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.9",
     "prism-theme-vars": "^0.2.2",

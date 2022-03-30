@@ -1,7 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import axios from 'axios'
-import { authService } from './auth'
-import 'dotenv/config'
+// import { authService } from './auth'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -15,12 +14,12 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: `${process.env.VITE_SERVER_URL}/graphql` })
+const api = axios.create({ baseURL: `${import.meta.env.VITE_SERVER_URL}/graphql` })
 
 api.interceptors.request.use(async(config) => {
-  const accessToken = await authService.getAccessToken()
-  if (config && config.headers)
-    config.headers.common.Authorization = `Bearer ${accessToken}`
+  // const accessToken = await authService.getAccessToken()
+  // if (config && config.headers)
+  //   config.headers.common.Authorization = 'Bearer test'
   return config
 })
 

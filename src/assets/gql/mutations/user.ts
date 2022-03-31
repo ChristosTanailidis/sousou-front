@@ -5,3 +5,9 @@ export const createUser = gql`
     registerUser(data: $data)
   }
 `
+
+export const loginUser = gql`
+  mutation loginUser($data: LoginUserInputData!) {
+    loginUser(data: $data)
+  }
+`

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { defineStore } from 'pinia'
-import type UserInputData from '~/assets/input-data/user'
+import type { UserInputData, UserLoginInputData } from '~/assets/input-data/user'
 import { useUserMutation } from '~/hooks/mutations/user'
 
 // export interface AuthUser {
@@ -30,6 +30,13 @@ export const useLocalUser = defineStore({
     //
   },
   actions: {
+    async loginUser(userData: UserLoginInputData) {
+      const { logUser } = useUserMutation()
+
+      const result = await logUser(userData)
+
+      return result
+    },
     async createUser(userData: UserInputData) {
       const { addUser } = useUserMutation()
 

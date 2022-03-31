@@ -30,7 +30,6 @@ export const useLocalUser = defineStore({
     //
   },
   actions: {
-<<<<<<< HEAD
     async loginUser(userData: UserLoginInputData) {
       const { logUser } = useUserMutation()
 
@@ -38,8 +37,6 @@ export const useLocalUser = defineStore({
 
       return result
     },
-=======
->>>>>>> 32778a5ee8956062f6c3bc92d78415f5c3926e23
     async createUser(userData: UserInputData) {
       const { addUser } = useUserMutation()
 

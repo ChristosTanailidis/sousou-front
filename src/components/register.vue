@@ -5,7 +5,7 @@
       <FormKit
         v-model="formData"
         type="form"
-        :form-class="submitted ? 'hidden' : 'box'"
+        :form-class="submitted ? 'box' : 'box'"
         submit-label="Register"
         @submit="submitHandler"
       >
@@ -47,7 +47,7 @@
 import { onMounted, ref } from 'vue'
 import { notify as vNotify } from '@kyvg/vue3-notification'
 import type UserInputData from '~/assets/input-data/user'
-import { useUserMutation } from '~/hooks/mutations/user'
+import { useLocalUser } from '~/stores/local-user'
 
 onMounted(() => {
   vNotify({
@@ -59,7 +59,6 @@ onMounted(() => {
 const submitted = ref<boolean>(false)
 const formData = ref<UserInputData|undefined>()
 const submitHandler = async() => {
-  // Lets pretend this is an ajax request:
   if (!formData.value) return
 
   const userInputData: UserInputData = {
@@ -67,13 +66,10 @@ const submitHandler = async() => {
     email: formData.value.email,
     password: formData.value.password,
   }
-  console.log(userInputData)
 
-  const { addUser } = useUserMutation()
+  const result = useLocalUser().createUser(userInputData) // todo: when this becomes boolean assign its value on the submitted ref
 
-  await addUser(userInputData)
-
-  submitted.value = true
+  submitted.value = !!result
 }
 
 </script>

@@ -27,28 +27,13 @@ export const useLocalUser = defineStore({
     }
   },
   getters: {
-    // user: (state) => {
-    //   return state
-    // },
+    //
   },
   actions: {
-    // addUser(userLogged: AuthUser) {
-    //   this.$patch({
-    //     id: userLogged.sub,
-    //     name: userLogged.name,
-    //     email: userLogged.email,
-    //     role: userLogged.resource_access.global_roles[0],
-    //   })
-    // },
-    // removeUser() {
-    //   this.$reset()
-    // },
     async createUser(userData: UserInputData) {
       const { addUser } = useUserMutation()
 
-      const result = await addUser(userData)
-
-      return result // todo: this will become boolean
+      return await addUser(userData)
     },
   },
 })

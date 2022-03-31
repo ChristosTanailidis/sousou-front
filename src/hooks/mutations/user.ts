@@ -20,11 +20,11 @@ export function useUserMutation() {
             },
           },
         },
-      }) as unknown as GraphQLResponse<{ user: User }> // todo: change this to boolean returning value
+      }) as unknown as GraphQLResponse<{ registerUser: boolean }>
 
       // todo: add notify
       if (response.data.data) {
-        return response.data.data.user
+        return response.data.data.registerUser
       }
       else {
         console.log('register user error', response.data.errors)

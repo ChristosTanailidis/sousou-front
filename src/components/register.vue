@@ -67,7 +67,7 @@ const submitHandler = async() => {
     password: formData.value.password,
   }
 
-  const result = useLocalUser().createUser(userInputData) // todo: when this becomes boolean assign its value on the submitted ref
+  const result = useLocalUser().createUser(userInputData)
 
   submitted.value = !!result
 }

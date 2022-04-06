@@ -31,3 +31,8 @@
 <script setup lang="ts">
 const loginPage = ref(true)
 </script>
+
+<route lang="yaml">
+meta:
+  layout: welcome
+</route>

@@ -29,6 +29,9 @@
 </template>
 
 <script setup lang="ts">
+import Login from '~/components/welcome/login.vue'
+import Register from '~/components/welcome/register.vue'
+
 const loginPage = ref(true)
 </script>
 

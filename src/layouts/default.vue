@@ -1,15 +1,15 @@
 <template>
   <main
-    class="h-full overflow-hidden text-gray-700"
+    class="h-screen overflow-hidden text-gray-700"
     dark="text-dark-content-1 bg-dark-base-1"
   >
     <div
       class="flex flex-row no-wrap p-4 h-full"
     >
-      <div class="flex flex-row no-wrap">
+      <div class="flex flex-row no-wrap h-full">
         <!-- DRAWER -->
         <div
-          class="flex flex-col no-wrap gap-y-4 w-24"
+          class="flex flex-col no-wrap gap-y-4 w-24 h-full"
           :md="miniState ? 'w-24' : 'w-72'"
         >
           <div class="flex flex-col no-wrap gap-y-1">
@@ -58,36 +58,7 @@
             </div>
           </div>
 
-          <!-- GROUPS -->
-          <div
-            class="flex flex-col items-center no-wrap gap-y-2 py-2 pl-2 bg-gray-200 rounded-md h-full overflow-y-scroll"
-            dark="bg-dark-base-2"
-          >
-            <div
-              v-for="i in 15" :key="i"
-              class="flex flex-row items-center no-wrap gap-x-2 p-2 justify-center bg-gray-300 rounded-md h-18 w-full"
-              :class="miniState ? 'justify-center' : 'justify-start'"
-              :md="miniState ? 'justify-center h-18' : 'justify-start h-20'"
-              dark="bg-dark-base-3"
-            >
-              <!-- GROUP-IMAGE -->
-              <div
-                class="rounded-full w-12 h-12 bg-blue-200 flex items-center justify-center text-gray-700 text-2xl font-bold"
-                md="w-14 h-14"
-              >
-                G{{ i }}
-              </div>
-              <div
-                v-if="!miniState"
-                class="flex flex-col no-wrap hidden"
-                md="block"
-              >
-                <div>name</div>
-                <div>tag</div>
-                <div>something else</div>
-              </div>
-            </div>
-          </div>
+          <nav-bars-tabs :mini-state="miniState" class="h-full overflow-y-hidden overflow-x-visible" />
         </div>
 
         <!-- CLOSE-OPEN BUTTON -->
@@ -115,6 +86,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import NavBarsTabs from '~/components/layout/nav-bars-tabs.vue'
 
 const miniState = ref(false)
 </script>

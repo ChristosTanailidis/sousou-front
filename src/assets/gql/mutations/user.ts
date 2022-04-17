@@ -1,14 +1,14 @@
 import gql from 'graphql-tag'
 
-export const qCreateUser = gql`
+export const mCreateUser = gql`
   mutation registerUser($data: UserRegisterInputData!) {
     registerUser(data: $data)
   }
 `
 
-// change this to return user
-export const qLoginUser = gql`
+// todo: this is a query
+export const mLoginUser = gql`
   mutation loginUser($data: LoginUserInputData!) {
-    loginUser(data: $data)
+    token: loginUser(data: $data)
   }
 `

@@ -4,12 +4,19 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AddFriend: typeof import('./components/dialogs/add-friend.vue')['default']
+    CarbonAddAlt: typeof import('~icons/carbon/add-alt')['default']
     CarbonChevronLeft: typeof import('~icons/carbon/chevron-left')['default']
     CarbonChevronRight: typeof import('~icons/carbon/chevron-right')['default']
+    CarbonFaceAdd: typeof import('~icons/carbon/face-add')['default']
     CarbonLogout: typeof import('~icons/carbon/logout')['default']
     CarbonSettings: typeof import('~icons/carbon/settings')['default']
-    Login: typeof import('./components/login.vue')['default']
-    Register: typeof import('./components/register.vue')['default']
+    FriendList: typeof import('./components/layout/tabs/friend-list.vue')['default']
+    Group: typeof import('./components/dialogs/group.vue')['default']
+    GroupList: typeof import('./components/layout/tabs/group-list.vue')['default']
+    Login: typeof import('./components/welcome/login.vue')['default']
+    NavBarsTabs: typeof import('./components/layout/nav-bars-tabs.vue')['default']
+    Register: typeof import('./components/welcome/register.vue')['default']
   }
 }
 

@@ -1,11 +1,15 @@
 /* eslint-disable camelcase */
 import { defineStore } from 'pinia'
+import { print } from 'graphql'
 import { api } from '~/boot/axios'
 
 // interfaces
 import type Group from '~/assets/entities/group'
 import type { GroupInputData } from '~/assets/input-data/group'
 import type { GraphQLResponse } from '~/assets/entities/axios-response'
+
+// graphql
+import { mCreateGroup } from '~/assets/gql/mutations/group'
 
 export const useGroups = defineStore({
   id: 'groups',
@@ -30,7 +34,7 @@ export const useGroups = defineStore({
           url: '',
           method: 'post',
           data: {
-            query: print(/* mCreateGroup */), // todo: add when resolver is ready
+            query: print(mCreateGroup),
             variables: {
               data: {
                 ...group,

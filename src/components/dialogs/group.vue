@@ -62,7 +62,7 @@ const submitHandler = () => {
   const payload = {
     ...groupObj.value,
     // ownerId: useLocalUser().id, // todo: change this
-    ownerId: 'a1fb2930-c2cd-497c-859e-eb99a6e06cff', // temporary
+    // ownerId: 'a1fb2930-c2cd-497c-859e-eb99a6e06cff', // temporary
   } as GroupInputData
 
   groupsStore.createGroup(payload)

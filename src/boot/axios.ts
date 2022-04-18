@@ -21,13 +21,6 @@ api.interceptors.request.use((config: AxiosRequestConfig) => {
   const localUser = useLocalUser()
   const token = localUser.token ? localUser.token : localStorage.getItem('token')
 
-  if (!token) {
-    // todo: notify
-    localUser.logoutUser()
-
-    return
-  }
-
   // todo: expired token
   // if (localUser.decodedToken.expired) {
   //   localUser.logoutUser() // or fetch new token??

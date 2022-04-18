@@ -1,3 +1,8 @@
+<template>
+  <notifications position="bottom right" close-on-click />
+  <router-view />
+</template>
+
 <script setup lang="ts">
 // https://github.com/vueuse/head
 // you can use this to manipulate the document head in any components,
@@ -8,9 +13,11 @@ useHead({
     { name: 'description', content: 'Spill the tea!' },
   ],
 })
-</script>
 
-<template>
-  <notifications position="bottom right" close-on-click />
-  <router-view />
-</template>
+const router = useRouter()
+
+if (!localStorage.getItem('token') && router.currentRoute.value.name !== 'welcome') {
+  router.push('/welcome')
+} 
+
+</script>

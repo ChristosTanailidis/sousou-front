@@ -5,7 +5,6 @@
       <FormKit
         v-model="formData"
         type="form"
-        :form-class="submitted ? 'box' : 'box'"
         submit-label="Login"
         @submit="submitHandler"
       >
@@ -39,7 +38,8 @@ onMounted(() => {
   })
 })
 
-const submitted = ref<boolean>(false)
+const router = useRouter()
+
 const formData = ref<UserLoginInputData|undefined>()
 const submitHandler = async() => {
   if (!formData.value) return
@@ -51,7 +51,12 @@ const submitHandler = async() => {
 
   const result = useLocalUser().loginUser(userInputData)
 
-  submitted.value = !!result
+  if (!result) {
+    // todo: notify?
+    return
+  }
+
+  router.push('/')
 }
 
 </script>

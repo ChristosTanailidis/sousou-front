@@ -13,6 +13,7 @@
           :md="miniState ? 'w-24' : 'w-72'"
         >
           <div class="flex flex-col no-wrap gap-y-1">
+            <!-- TODO: Make this a component -->
             <!-- USER INFO -->
             <div
               class="flex flex-row justify-start no-wrap items-center gap-x-4 p-2
@@ -52,12 +53,14 @@
                 class="flex items-center just rounded bg-gray-400 p-1"
                 dark="bg-red-500 text-dark-content-1"
                 hover="opacity-80"
+                @click="logout()"
               >
                 <carbon-logout />
               </button>
             </div>
           </div>
 
+          <!-- #Groups / #Friends -->
           <nav-bars-tabs :mini-state="miniState" class="h-full overflow-y-hidden overflow-x-visible" />
         </div>
 
@@ -87,6 +90,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import NavBarsTabs from '~/components/layout/nav-bars-tabs.vue'
+import { useLocalUser } from '~/stores/local-user';
+
+const router = useRouter()
 
 const miniState = ref(false)
+
+const logout = async () => {
+  // todo: dialog before logging out
+  const result = await useLocalUser().logoutUser()
+
+  if (!result) {
+    // todo: notify?
+    return
+  }
+
+  router.push('/welcome')
+}
 </script>

@@ -12,3 +12,10 @@ export const mLoginUser = gql`
     token: loginUser(data: $data)
   }
 `
+
+// todo: this is a query
+export const mLogoutUser = gql`
+  mutation logoutUser {
+    loggedOut: logoutUser
+  }
+`

@@ -18,27 +18,28 @@ declare module '@vue/runtime-core' {
 const api = axios.create({ baseURL: `${import.meta.env.VITE_SERVER_URL}/graphql` })
 
 api.interceptors.request.use((config: AxiosRequestConfig) => {
-  // const accessToken = await authService.getAccessToken()
-  // if (config && config.headers)
-  //   config.headers.common.Authorization = 'Bearer test'
-  
-  // todo: take the token from the local storage instead of pinia
-  //       cause when page is refreshed token is lost
-  //       also fetch user on every refresh ???
-  const token = useLocalUser().token
+  const localUser = useLocalUser()
+  const token = localUser.token ? localUser.token : localStorage.getItem('token')
 
+  if (!token) {
+    // todo: notify
+    localUser.logoutUser()
+
+    return
+  }
+
+  // todo: expired token
+  // if (localUser.decodedToken.expired) {
+  //   localUser.logoutUser() // or fetch new token??
+
+  //   return
+  // }
+  
   if(config && config.headers && token){
     config.headers = { Authorization: `Bearer ${token}`}
   }
 
   return config
 })
-
-// api.interceptors.request.use(async(config) => {
-//   const accessToken = await authService.getAccessToken()
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-//   config.headers.common.Authorization = `Bearer ${accessToken}`
-//   return config
-// })
 
 export { api }

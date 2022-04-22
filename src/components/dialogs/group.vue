@@ -58,13 +58,15 @@ const groupObj = ref<Group|undefined>()
 const groupsStore = useGroups()
 
 // todo: check this when resolver is ready
-const submitHandler = () => {
+const submitHandler = async () => {
   const payload = {
     ...groupObj.value,
   } as GroupInputData
 
-  groupsStore.createGroup(payload)
+  const result = await groupsStore.createGroup(payload)
 
-  console.log(payload)
+  if (!result) return
+
+  console.log(result)
 }
 </script>

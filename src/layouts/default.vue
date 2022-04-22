@@ -101,10 +101,7 @@ const logout = async () => {
   // todo: dialog before logging out
   const result = await localUser.logoutUser()
 
-  if (!result) {
-    // todo: notify?
-    return
-  }
+  if (!result) return
 
   // todo: add this route
   router.push({ path: '/logged-out' })

@@ -10,6 +10,7 @@ import type { GraphQLResponse } from '~/assets/entities/axios-response'
 
 // graphql
 import { mCreateGroup } from '~/assets/gql/mutations/group'
+import notify, { notifyRequestErrors } from '~/utils/notify'
 
 export const useGroups = defineStore({
   id: 'groups',
@@ -43,12 +44,13 @@ export const useGroups = defineStore({
           },
         }) as unknown as GraphQLResponse<{ registerUser: boolean }>
 
-        // todo: add notify
         if (response.data.data) {
+          notify('success', `Group ${group.name} created successfully`)
           return response.data.data.registerUser
         }
         else {
           console.log('create group error', response.data.errors)
+          notifyRequestErrors(response.data.errors)
           return null
         }
       }

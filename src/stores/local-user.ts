@@ -12,20 +12,19 @@ import type User from '~/assets/entities/user'
 // graphql
 import { mCreateUser, mLoginUser, mLogoutUser } from '~/assets/gql/mutations/user'
 import { qGetUserByID } from '~/assets/gql/queries/user'
+import notify, { notifyRequestErrors } from '~/utils/notify'
 
 export const useLocalUser = defineStore({
   id: 'localUser',
   state: () => {
     const user = undefined as User | undefined
     const token = undefined as string | undefined
-    // const userInputData = undefined as UserLoginInputData | undefined
 
     const loading = 0
 
     return {
       user,
       token,
-      // userInputData,
       loading,
     }
   },
@@ -40,18 +39,12 @@ export const useLocalUser = defineStore({
       // this.userInputData = user
 
       const token = await this.getUserToken(user)
-      if (!token) {
-        // notify: token was not returned
-        return
-      }
+      if (!token) return
 
       this.token = token
 
       const loggedUser = await this.getUserByID(this.decodedToken.id)
-      if (!loggedUser) {
-        // notify: user was not returned
-        return
-      }
+      if (!loggedUser) return
 
       this.user = { ...loggedUser, token }
       
@@ -71,17 +64,18 @@ export const useLocalUser = defineStore({
           },
         }) as unknown as GraphQLResponse<{ loggedOut: boolean}>
 
-        // todo: add notify
         if (response.data.data && !!response.data.data.loggedOut){
           this.user = undefined
           this.token = undefined
 
           localStorage.removeItem('token')
 
+          notify('success', 'Successfully logged out')
           return response.data.data.loggedOut
         }
         else{
           console.log('logout user error', response.data.errors)
+          notifyRequestErrors(response.data.errors)
           return undefined
         }
       }
@@ -110,12 +104,12 @@ export const useLocalUser = defineStore({
           },
         }) as unknown as GraphQLResponse<{ token: string }>
 
-        // todo: add notify
         if (response.data.data) {
           return response.data.data.token
         }
         else {
           console.log('login user error', response.data.errors)
+          notifyRequestErrors(response.data.errors)
           return undefined
         }
       }
@@ -144,12 +138,13 @@ export const useLocalUser = defineStore({
           },
         }) as unknown as GraphQLResponse<{ registerUser: boolean }>
 
-        // todo: add notify
         if (response.data.data) {
+          notify('success', 'User Created', 'Email verification is required')
           return response.data.data.registerUser
         }
         else {
           console.log('register user error', response.data.errors)
+          notifyRequestErrors(response.data.errors)
           return undefined
         }
       }
@@ -176,12 +171,12 @@ export const useLocalUser = defineStore({
           },
         }) as unknown as GraphQLResponse<{ user: User }>
 
-        // todo: add notify
         if (response.data.data){
           return response.data.data.user
         }
-        else{
+        else {
           console.log('get user by id error', response.data.errors)
+          notifyRequestErrors(response.data.errors)
           return undefined
         }
       }

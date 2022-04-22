@@ -49,10 +49,7 @@ const submitHandler = async() => {
 
   const result = await localUser.loginUser(userInputData)
 
-  if (!result) {
-    // todo: notify?
-    return
-  }
+  if (!result) return
 
   // Redirect to home when logged
   router.push({path : '/'})

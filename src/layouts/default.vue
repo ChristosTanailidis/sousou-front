@@ -93,18 +93,20 @@ import NavBarsTabs from '~/components/layout/nav-bars-tabs.vue'
 import { useLocalUser } from '~/stores/local-user';
 
 const router = useRouter()
+const localUser = useLocalUser()
 
 const miniState = ref(false)
 
 const logout = async () => {
   // todo: dialog before logging out
-  const result = await useLocalUser().logoutUser()
+  const result = await localUser.logoutUser()
 
   if (!result) {
     // todo: notify?
     return
   }
 
-  router.push('/welcome')
+  // todo: add this route
+  router.push({ path: '/logged-out' })
 }
 </script>

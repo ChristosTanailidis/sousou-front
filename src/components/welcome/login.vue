@@ -6,6 +6,7 @@
         v-model="formData"
         type="form"
         submit-label="Login"
+        submit-behavior="live"
         @submit="submitHandler"
       >
         <FormKit
@@ -30,6 +31,10 @@ import { onMounted, ref } from 'vue'
 import { notify as vNotify } from '@kyvg/vue3-notification'
 import type { UserLoginInputData } from '~/assets/input-data/user'
 import { useLocalUser } from '~/stores/local-user'
+import { FormKit } from '@formkit/vue';
+
+const router = useRouter()
+const localUser = useLocalUser()
 
 onMounted(() => {
   vNotify({
@@ -37,8 +42,6 @@ onMounted(() => {
     title: 'test',
   })
 })
-
-const router = useRouter()
 
 const formData = ref<UserLoginInputData|undefined>()
 const submitHandler = async() => {
@@ -49,14 +52,15 @@ const submitHandler = async() => {
     password: formData.value.password,
   }
 
-  const result = useLocalUser().loginUser(userInputData)
+  const result = await localUser.loginUser(userInputData)
 
   if (!result) {
     // todo: notify?
     return
   }
 
-  router.push('/')
+  // Redirect to home when logged
+  router.push({path : '/'})
 }
 
 </script>

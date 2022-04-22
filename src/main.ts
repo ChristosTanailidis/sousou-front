@@ -23,5 +23,18 @@ export const createApp = ViteSSG(
   (ctx) => {
     // install all modules under `modules/`
     Object.values(import.meta.globEager('./modules/*.ts')).forEach(i => i.install?.(ctx))
+
+    // Router guarding
+    ctx.router.beforeEach((to, from, next) => {
+      const token = localStorage.getItem('token')
+      if (!token && to.path !== '/welcome') {
+        next('/welcome')
+      } else if (token && to.path === '/welcome') {
+        next('/')
+      } else {
+        next()
+      }
+    })
   },
+  
 )

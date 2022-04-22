@@ -13,11 +13,4 @@ useHead({
     { name: 'description', content: 'Spill the tea!' },
   ],
 })
-
-const router = useRouter()
-
-if (!localStorage.getItem('token') && router.currentRoute.value.name !== 'welcome') {
-  router.push('/welcome')
-} 
-
 </script>

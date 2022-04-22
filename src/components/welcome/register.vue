@@ -5,7 +5,6 @@
       <FormKit
         v-model="formData"
         type="form"
-        :form-class="submitted ? 'box' : 'box'"
         submit-label="Register"
         @submit="submitHandler"
       >
@@ -46,8 +45,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { notify as vNotify } from '@kyvg/vue3-notification'
-import type UserInputData from '~/assets/input-data/user'
+import type { UserInputData } from '~/assets/input-data/user'
 import { useLocalUser } from '~/stores/local-user'
+
+const router = useRouter()
 
 onMounted(() => {
   vNotify({
@@ -56,7 +57,6 @@ onMounted(() => {
   })
 })
 
-const submitted = ref<boolean>(false)
 const formData = ref<UserInputData|undefined>()
 const submitHandler = async() => {
   if (!formData.value) return
@@ -69,7 +69,13 @@ const submitHandler = async() => {
 
   const result = useLocalUser().createUser(userInputData)
 
-  submitted.value = !!result
+  if (!result) {
+    // todo: notify?
+    return
+  }
+
+  // Redirect to home when logged
+  router.push({path : '/'})
 }
 
 </script>

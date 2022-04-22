@@ -5,6 +5,7 @@ import type { UserModule } from '~/types'
 // https://pinia.esm.dev/
 export const install: UserModule = ({ isClient, initialState, app }) => {
   const pinia = createPinia()
+
   app.use(pinia)
   // Refer to
   // https://github.com/antfu/vite-ssg/blob/main/README.md#state-serialization

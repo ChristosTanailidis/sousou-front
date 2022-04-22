@@ -74,8 +74,14 @@ const submitHandler = async() => {
     return
   }
 
-  // Redirect to home when logged
-  router.push({path : '/'})
+  // todo: add confirmation page
+  // Redirect to confirmation
+  router.push({path : '/confirm-email'})
 }
 
 </script>
+
+<route lang="yaml">
+meta:
+  layout: welcome
+</route>

@@ -27,7 +27,10 @@ export const createApp = ViteSSG(
     // Router guarding
     ctx.router.beforeEach((to, from, next) => {
       const token = localStorage.getItem('token')
-      if (!token && to.path !== '/welcome') {
+      const unguarded_paths = ['/welcome', '/welcome/register']
+      const is_on_guarded_path = !unguarded_paths.includes(to.path)
+
+      if (!token && is_on_guarded_path) {
         next('/welcome')
       } else if (token && to.path === '/welcome') {
         next('/')

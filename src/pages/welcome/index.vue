@@ -64,3 +64,8 @@ const submitHandler = async() => {
 }
 
 </script>
+
+<route lang="yaml">
+meta:
+  layout: welcome
+</route>

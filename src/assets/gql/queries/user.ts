@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const qGetUserByID = gql`
-  query GetUserById {
-    user: getUserById(id: "a3fd5f56-f0c6-48d9-b393-a52780b90547") {
+  query GetUserById($getUserByIdId: String!) {
+    user: getUserById(id: $getUserByIdId) {
       id
       username
       displayName

@@ -6,7 +6,7 @@ import { api } from '~/boot/axios'
 
 // interfaces
 import type { GraphQLResponse } from '~/assets/entities/axios-response'
-import type { UserInputData, UserLoginInputData } from '~/assets/input-data/user'
+import type { UserInputData, UserLoginInputData } from '~/assets/entities/input-data/user'
 import type User from '~/assets/entities/user'
 
 // graphql
@@ -166,7 +166,7 @@ export const useLocalUser = defineStore({
           data: {
             query: print(qGetUserByID),
             variables: {
-              id: userID
+              getUserByIdId: userID
             },
           },
         }) as unknown as GraphQLResponse<{ user: User }>

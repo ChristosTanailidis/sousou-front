@@ -18,14 +18,14 @@ export const useLocalUser = defineStore({
   state: () => {
     const user = undefined as User | undefined
     const token = undefined as string | undefined
-    const userInputData = undefined as UserLoginInputData | undefined
+    // const userInputData = undefined as UserLoginInputData | undefined
 
     const loading = 0
 
     return {
       user,
       token,
-      userInputData,
+      // userInputData,
       loading,
     }
   },
@@ -37,46 +37,27 @@ export const useLocalUser = defineStore({
   },
   actions: {
     async loginUser(user: UserLoginInputData) {
-      this.userInputData = user
+      // this.userInputData = user
 
-      this.token = await this.getUserToken()
-      if (!this.token) {
+      const token = await this.getUserToken(user)
+      if (!token) {
         // notify: token was not returned
         return
       }
 
-      try {
-        this.loading++
-        const response = await api({
-          url: '',
-          method: 'post',
-          data: {
-            query: print(qGetUserByID),
-            variables: {
-              id: this.decodedToken.id,
-            },
-          },
-        }) as unknown as GraphQLResponse<{ user: User }>
+      this.token = token
 
-        // todo: add notify
-        if (response.data.data){
-          this.user = { ...response.data.data.user, token: this.token }
-          localStorage.setItem('token', this.token)
+      const loggedUser = await this.getUserByID(this.decodedToken.id)
+      if (!loggedUser) {
+        // notify: user was not returned
+        return
+      }
 
-          return response.data.data.user
-        }
-        else{
-          console.log('login user error', response.data.errors)
-          return undefined
-        }
-      }
-      catch (e) {
-        console.log(e)
-        return undefined
-      }
-      finally {
-        this.loading--
-      }
+      this.user = { ...loggedUser, token }
+      
+      localStorage.setItem('token', token)
+
+      return token && loggedUser
     },
 
     async logoutUser() {
@@ -91,10 +72,9 @@ export const useLocalUser = defineStore({
         }) as unknown as GraphQLResponse<{ loggedOut: boolean}>
 
         // todo: add notify
-        if (response.data.data && response.data.data.loggedOut){
+        if (response.data.data && !!response.data.data.loggedOut){
           this.user = undefined
           this.token = undefined
-          this.userInputData = undefined
 
           localStorage.removeItem('token')
 
@@ -102,6 +82,40 @@ export const useLocalUser = defineStore({
         }
         else{
           console.log('logout user error', response.data.errors)
+          return undefined
+        }
+      }
+      catch (e) {
+        console.log(e)
+        return undefined
+      }
+      finally {
+        this.loading--
+      }
+    },
+
+    async getUserToken(user: UserLoginInputData) {
+      try {
+        this.loading++
+        const response = await api({
+          url: '',
+          method: 'post',
+          data: {
+            query: print(mLoginUser),
+            variables: {
+              data: {
+                ...user,
+              },
+            },
+          },
+        }) as unknown as GraphQLResponse<{ token: string }>
+
+        // todo: add notify
+        if (response.data.data) {
+          return response.data.data.token
+        }
+        else {
+          console.log('login user error', response.data.errors)
           return undefined
         }
       }
@@ -148,28 +162,26 @@ export const useLocalUser = defineStore({
       }
     },
 
-    async getUserToken() {
+    async getUserByID(userID: string) {
       try {
         this.loading++
         const response = await api({
           url: '',
           method: 'post',
           data: {
-            query: print(mLoginUser),
+            query: print(qGetUserByID),
             variables: {
-              data: {
-                ...this.userInputData,
-              },
+              id: userID
             },
           },
-        }) as unknown as GraphQLResponse<{ token: string }>
+        }) as unknown as GraphQLResponse<{ user: User }>
 
         // todo: add notify
-        if (response.data.data) {
-          return response.data.data.token
+        if (response.data.data){
+          return response.data.data.user
         }
-        else {
-          console.log('login user error', response.data.errors)
+        else{
+          console.log('get user by id error', response.data.errors)
           return undefined
         }
       }
@@ -181,5 +193,5 @@ export const useLocalUser = defineStore({
         this.loading--
       }
     },
-  },
+  },  
 })

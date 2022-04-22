@@ -27,21 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { notify as vNotify } from '@kyvg/vue3-notification'
-import type { UserLoginInputData } from '~/assets/input-data/user'
-import { useLocalUser } from '~/stores/local-user'
 import { FormKit } from '@formkit/vue';
+
+// interfaces
+import type { UserLoginInputData } from '~/assets/input-data/user'
+
+// stores
+import { useLocalUser } from '~/stores/local-user'
 
 const router = useRouter()
 const localUser = useLocalUser()
-
-onMounted(() => {
-  vNotify({
-    type: 'error',
-    title: 'test',
-  })
-})
 
 const formData = ref<UserLoginInputData|undefined>()
 const submitHandler = async() => {
@@ -66,6 +61,7 @@ const submitHandler = async() => {
 </script>
 
 <route lang="yaml">
+alias: /welcome/login
 meta:
   layout: welcome
 </route>

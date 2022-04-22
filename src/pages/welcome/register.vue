@@ -76,7 +76,7 @@ const submitHandler = async() => {
 
   // todo: add confirmation page
   // Redirect to confirmation
-  router.push({path : '/confirm-email'})
+  router.push({path : 'welcome/login'})
 }
 
 </script>

@@ -29,9 +29,10 @@ export const createApp = ViteSSG(
     // install all modules under `modules/`
     Object.values(import.meta.globEager('./modules/*.ts')).forEach(i => i.install?.(ctx))
 
-    // Router guarding
-    ctx.router.beforeEach(async (to, from, next) => {
+    ctx.router.beforeEach(async (to, _from, next) => {
       const token = localStorage.getItem('token')
+      
+      // <---------- LOCAL_USER REFETCHING ---------->
       const localUser = useLocalUser()
 
       // If localUser is removed refetch him based on the token
@@ -42,17 +43,27 @@ export const createApp = ViteSSG(
         localUser.token = token
       }
 
-      // Paths that are not guarded by the authentication 
-      const unguarded_paths = ['/welcome', '/welcome/register'] 
+      // <---------- ROUTE GUARDS ---------->
+      // Paths not guarded by user authentication 
+      const unguarded_paths = [
+        '/welcome', 
+        '/welcome/login',
+        '/welcome/register'
+      ] 
 
-      // User is on a guarded path (not on unguarded_paths array)
+      // True if user is on a guarded path
       const is_on_guarded_path = !unguarded_paths.includes(to.path)
 
-      if (!token && is_on_guarded_path) {
+      // Login redirect when user is not logged
+      if (!token && is_on_guarded_path) { 
         next('/welcome')
-      } else if (token && to.path === '/welcome') {
+      } 
+      // Preventing access to welcome pages when user is logged
+      else if (token && !is_on_guarded_path) { 
         next('/')
-      } else {
+      } 
+      // User is logged and can access all guarded routes
+      else { 
         next()
       }
     })

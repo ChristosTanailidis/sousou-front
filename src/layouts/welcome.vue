@@ -35,5 +35,7 @@
 <script setup lang="ts">
 const router = useRouter()
 
-const loginPage = computed(() => router.currentRoute.value.path === '/welcome')
+const loginPage = computed(() => 
+  ['/welcome', '/welcome/login'].includes(router.currentRoute.value.path)
+)
 </script>

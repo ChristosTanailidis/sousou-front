@@ -15,9 +15,7 @@ declare module 'vue' {
     FriendList: typeof import('./components/layout/tabs/friend-list.vue')['default']
     Group: typeof import('./components/dialogs/group.vue')['default']
     GroupList: typeof import('./components/layout/tabs/group-list.vue')['default']
-    Login: typeof import('./components/welcome/login.vue')['default']
     NavBarsTabs: typeof import('./components/layout/nav-bars-tabs.vue')['default']
-    Register: typeof import('./components/welcome/register.vue')['default']
   }
 }
 

@@ -41,7 +41,7 @@
 <script setup lang="ts">
 // interfaces
 import type Group from '~/assets/entities/group'
-import type { GroupInputData } from '~/assets/input-data/group'
+import type GroupInputData from '~/assets/entities/input-data/group'
 
 // stores
 import { useGroups } from '~/stores/groups'
@@ -66,6 +66,8 @@ const submitHandler = async () => {
   const result = await groupsStore.createGroup(payload)
 
   if (!result) return
+
+  emits('update:value', false)
 
   console.log(result)
 }

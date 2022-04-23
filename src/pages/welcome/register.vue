@@ -43,10 +43,10 @@
 </template>
 
 <script setup lang="ts">
-import type { UserInputData } from '~/assets/input-data/user'
+import type { UserInputData } from '~/assets/entities/input-data/user'
 import { useLocalUser } from '~/stores/local-user'
 
-const router = useRouter()
+// const router = useRouter()
 
 const formData = ref<UserInputData|undefined>()
 const submitHandler = async() => {
@@ -61,10 +61,6 @@ const submitHandler = async() => {
   const result = useLocalUser().createUser(userInputData)
 
   if (!result) return
-
-  // todo: add confirmation page? 
-  // Redirect to confirmation
-  router.push({path : 'welcome/login'})
 }
 
 </script>

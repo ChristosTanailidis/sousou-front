@@ -92,7 +92,7 @@ import { ref } from 'vue'
 import NavBarsTabs from '~/components/layout/nav-bars-tabs.vue'
 import { useLocalUser } from '~/stores/local-user';
 
-const router = useRouter()
+// const router = useRouter()
 const localUser = useLocalUser()
 
 const miniState = ref(false)
@@ -102,8 +102,5 @@ const logout = async () => {
   const result = await localUser.logoutUser()
 
   if (!result) return
-
-  // todo: add this route
-  router.push({ path: '/logged-out' })
 }
 </script>

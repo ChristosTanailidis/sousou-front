@@ -40,14 +40,10 @@
       class="bg-dark-base-2 rounded-b-md rounded-r-md flex-grow overflow-y-scroll"
     >
       <!-- #GROUPS -->
-      <div v-if="selectedTab === 0">
-        <group-list :mini-state="props.miniState" />
-      </div>
+      <group-list v-if="selectedTab === 0" :mini-state="props.miniState" />
 
       <!-- #FRIENDS -->
-      <div v-else-if="selectedTab === 1">
-        <friend-list :mini-state="props.miniState" />
-      </div>
+      <friend-list v-else-if="selectedTab === 1" :mini-state="props.miniState" />
     </div>
 
     <!-- #DIALOGS -->

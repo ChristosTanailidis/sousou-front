@@ -30,12 +30,12 @@
 import { FormKit } from '@formkit/vue';
 
 // interfaces
-import type { UserLoginInputData } from '~/assets/input-data/user'
+import type { UserLoginInputData } from '~/assets/entities/input-data/user'
 
 // stores
 import { useLocalUser } from '~/stores/local-user'
 
-const router = useRouter()
+// const router = useRouter()
 const localUser = useLocalUser()
 
 const formData = ref<UserLoginInputData|undefined>()
@@ -50,9 +50,6 @@ const submitHandler = async() => {
   const result = await localUser.loginUser(userInputData)
 
   if (!result) return
-
-  // Redirect to home when logged
-  router.push({path : '/'})
 }
 
 </script>

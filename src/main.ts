@@ -15,9 +15,7 @@ import 'virtual:windi-utilities.css'
 import 'virtual:windi-devtools'
 
 // My imports
-import { useLocalUser } from './stores/local-user'
-import User from './assets/entities/user'
-import jwt_decode from 'jwt-decode'
+import { setRouter } from './router'
 
 const routes = setupLayouts(generatedRoutes)
 
@@ -28,45 +26,9 @@ export const createApp = ViteSSG(
   (ctx) => {
     // install all modules under `modules/`
     Object.values(import.meta.globEager('./modules/*.ts')).forEach(i => i.install?.(ctx))
+    const { router } = ctx
 
-    ctx.router.beforeEach(async (to, _from, next) => {
-      const token = localStorage.getItem('token')
-      
-      // <---------- LOCAL_USER REFETCHING ---------->
-      const localUser = useLocalUser()
-
-      // If localUser is removed refetch him based on the token
-      if (token && !localUser.user) {
-        const jwtUser = (jwt_decode(token) as User)
-        const user = await localUser.getUserByID(jwtUser.id)
-        localUser.user = user
-        localUser.token = token
-      }
-
-      // <---------- ROUTE GUARDS ---------->
-      // Paths not guarded by user authentication 
-      const unguarded_paths = [
-        '/welcome', 
-        '/welcome/login',
-        '/welcome/register'
-      ] 
-
-      // True if user is on a guarded path
-      const is_on_guarded_path = !unguarded_paths.includes(to.path)
-
-      // Login redirect when user is not logged
-      if (!token && is_on_guarded_path) { 
-        next('/welcome')
-      } 
-      // Preventing access to welcome pages when user is logged
-      else if (token && !is_on_guarded_path) { 
-        next('/')
-      } 
-      // User is logged and can access all guarded routes
-      else { 
-        next()
-      }
-    })
+    setRouter(router)    
   },
   
 )

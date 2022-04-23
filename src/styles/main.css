@@ -55,6 +55,11 @@ html.dark {
   p-5 shadow shadow-dark-600;
 }
 
+.chip {
+  @apply p-[10px] rounded-md shadow bg-gray-500
+  flex flex-row no-wrap gap-x-1 items-center justify-center;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

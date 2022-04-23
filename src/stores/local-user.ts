@@ -13,6 +13,19 @@ import type User from '~/assets/entities/user'
 import { mCreateUser, mLoginUser, mLogoutUser } from '~/assets/gql/mutations/user'
 import { qGetUserByID } from '~/assets/gql/queries/user'
 import notify, { notifyRequestErrors } from '~/utils/notify'
+import { router } from '~/router'
+
+interface DecodedToken {
+  id: string,
+  email: string,
+  username: string,
+  displayName: string,
+  icon: string,
+  preferences: JSON,
+  code: number,
+  iat: number, // issued at
+  exp: number // expiration time
+}
 
 export const useLocalUser = defineStore({
   id: 'localUser',
@@ -30,8 +43,21 @@ export const useLocalUser = defineStore({
   },
   getters: {
     decodedToken(state) {
+      const localToken = localStorage.getItem('token')
+      if (localToken){
+        this.token = localToken
+      }
+
       if (!state.token) return undefined
-      return jwt_decode(state.token)
+
+      const decToken = jwt_decode(state.token) as DecodedToken
+
+      // Modify expiration date and now date to check expiration
+      const tokenExpStr = decToken.exp.toString()
+      const nowStr = new Date().valueOf().toString().slice(0, tokenExpStr.length - 1)
+      const expired = parseInt(tokenExpStr) < parseInt(nowStr)
+
+      return { ...decToken, expired }
     }
   },
   actions: {
@@ -41,14 +67,16 @@ export const useLocalUser = defineStore({
       const token = await this.getUserToken(user)
       if (!token) return
 
-      this.token = token
-
-      const loggedUser = await this.getUserByID(this.decodedToken.id)
-      if (!loggedUser) return
-
-      this.user = { ...loggedUser, token }
-      
       localStorage.setItem('token', token)
+      this.token = token
+  
+      if (!this.decodedToken) return
+      const loggedUser = await this.getUserByID(this.decodedToken.id)
+
+      if (!loggedUser) return
+      this.user = { ...loggedUser, token }
+
+      router.push('/')
 
       return token && loggedUser
     },
@@ -65,12 +93,15 @@ export const useLocalUser = defineStore({
         }) as unknown as GraphQLResponse<{ loggedOut: boolean}>
 
         if (response.data.data && !!response.data.data.loggedOut){
+          router.push('/logout')
+
           this.user = undefined
           this.token = undefined
 
           localStorage.removeItem('token')
 
           notify('success', 'Successfully logged out')
+
           return response.data.data.loggedOut
         }
         else{
@@ -140,6 +171,9 @@ export const useLocalUser = defineStore({
 
         if (response.data.data) {
           notify('success', 'User Created', 'Email verification is required')
+
+          router.push('/confirm-email')
+
           return response.data.data.registerUser
         }
         else {

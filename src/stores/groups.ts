@@ -82,12 +82,12 @@ export const useGroups = defineStore({
           data: {
             query: print(qGetGroups),
             variables: {
-              paginationInputData: this.pagination 
-                ? { ...this.pagination } 
+              paginationInputData: this.pagination
+                ? { ...this.pagination }
                 : { limit: 0, page: 1 }, // fetch all
             },
           },
-        }) as unknown as GraphQLResponse<{ groups: { data: Array<Group>, total: number } }>
+        }) as unknown as GraphQLResponse<{ groups: { data: Array<Group>; total: number } }>
 
         if (response.data.data) {
           this.groups = response.data.data.groups.data
@@ -107,6 +107,6 @@ export const useGroups = defineStore({
       finally {
         this.loading--
       }
-    }
+    },
   },
 })

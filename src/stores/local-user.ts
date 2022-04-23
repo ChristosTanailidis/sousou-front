@@ -16,14 +16,14 @@ import notify, { notifyRequestErrors } from '~/utils/notify'
 import { router } from '~/router'
 
 interface DecodedToken {
-  id: string,
-  email: string,
-  username: string,
-  displayName: string,
-  icon: string,
-  preferences: JSON,
-  code: number,
-  iat: number, // issued at
+  id: string
+  email: string
+  username: string
+  displayName: string
+  icon: string
+  preferences: JSON
+  code: number
+  iat: number // issued at
   exp: number // expiration time
 }
 
@@ -44,21 +44,13 @@ export const useLocalUser = defineStore({
   getters: {
     decodedToken(state) {
       const localToken = localStorage.getItem('token')
-      if (localToken){
-        this.token = localToken
-      }
+
+      if (localToken) this.token = localToken
 
       if (!state.token) return undefined
 
-      const decToken = jwt_decode(state.token) as DecodedToken
-
-      // Modify expiration date and now date to check expiration
-      const tokenExpStr = decToken.exp.toString()
-      const nowStr = new Date().valueOf().toString().slice(0, tokenExpStr.length - 1)
-      const expired = parseInt(tokenExpStr) < parseInt(nowStr)
-
-      return { ...decToken, expired }
-    }
+      return jwt_decode(state.token) as DecodedToken
+    },
   },
   actions: {
     async loginUser(user: UserLoginInputData) {
@@ -69,7 +61,7 @@ export const useLocalUser = defineStore({
 
       localStorage.setItem('token', token)
       this.token = token
-  
+
       if (!this.decodedToken) return
       const loggedUser = await this.getUserByID(this.decodedToken.id)
 
@@ -88,23 +80,23 @@ export const useLocalUser = defineStore({
           url: '',
           method: 'post',
           data: {
-            query: print(mLogoutUser)
+            query: print(mLogoutUser),
           },
-        }) as unknown as GraphQLResponse<{ loggedOut: boolean}>
+        }) as unknown as GraphQLResponse<{ loggedOut: boolean }>
 
-        if (response.data.data && !!response.data.data.loggedOut){
-          router.push('/logout')
+        if (response.data.data && !!response.data.data.loggedOut) {
+          localStorage.removeItem('token')
 
           this.user = undefined
           this.token = undefined
 
-          localStorage.removeItem('token')
+          router.push('/logout')
 
           notify('success', 'Successfully logged out')
 
           return response.data.data.loggedOut
         }
-        else{
+        else {
           console.log('logout user error', response.data.errors)
           notifyRequestErrors(response.data.errors)
           return undefined
@@ -200,12 +192,12 @@ export const useLocalUser = defineStore({
           data: {
             query: print(qGetUserByID),
             variables: {
-              getUserByIdId: userID
+              getUserByIdId: userID,
             },
           },
         }) as unknown as GraphQLResponse<{ user: User }>
 
-        if (response.data.data){
+        if (response.data.data) {
           return response.data.data.user
         }
         else {
@@ -222,5 +214,5 @@ export const useLocalUser = defineStore({
         this.loading--
       }
     },
-  },  
+  },
 })

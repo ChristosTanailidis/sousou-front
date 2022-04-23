@@ -49,14 +49,14 @@
               >
                 <carbon-settings />
               </button>
-              <button
+              <router-link
                 class="flex items-center just rounded bg-gray-400 p-1"
                 dark="bg-red-500 text-dark-content-1"
                 hover="opacity-80"
-                @click="logout()"
+                :to="'/logout'"
               >
                 <carbon-logout />
-              </button>
+              </router-link>
             </div>
           </div>
 
@@ -90,17 +90,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import NavBarsTabs from '~/components/layout/nav-bars-tabs.vue'
-import { useLocalUser } from '~/stores/local-user';
+// import { useLocalUser } from '~/stores/local-user'
 
-// const router = useRouter()
-const localUser = useLocalUser()
+// const localUser = useLocalUser()
 
 const miniState = ref(false)
 
-const logout = async () => {
-  // todo: dialog before logging out
-  const result = await localUser.logoutUser()
+// const logout = async() => {
+//   // todo: dialog before logging out
+//   const result = await localUser.logoutUser()
 
-  if (!result) return
-}
+//   if (!result) return
+// }
 </script>

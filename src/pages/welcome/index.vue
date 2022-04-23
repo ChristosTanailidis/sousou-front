@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { FormKit } from '@formkit/vue';
+import { FormKit } from '@formkit/vue'
 
 // interfaces
 import type { UserLoginInputData } from '~/assets/entities/input-data/user'

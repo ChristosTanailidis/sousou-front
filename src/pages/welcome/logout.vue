@@ -5,7 +5,12 @@
 </template>
 
 <script setup lang="ts">
+import { useLocalUser } from '~/stores/local-user'
 
+onMounted(async() => {
+  if (localStorage.getItem('token'))
+    await useLocalUser().logoutUser()
+})
 </script>
 
 <route lang="yaml">

@@ -60,6 +60,22 @@ html.dark {
   flex flex-row no-wrap gap-x-1 items-center justify-center;
 }
 
+.group-list-item {
+  @apply flex flex-row no-wrap items-center gap-x-2 
+  bg-dark-base-3 rounded-md shadow-md
+  w-full overflow-hidden
+  cursor-pointer transform transition-all
+  hover:(-translate-y-[2px] shadow-xl bg-opacity-80);
+}
+
+.avatar-rounded {
+  @apply w-[35px] h-[35px] rounded-full p-2 
+  overflow-hidden flex items-center justify-center 
+  bg-gray-600 m-1;
+  
+  /* md:(w-[35px]); */
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

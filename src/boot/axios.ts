@@ -48,17 +48,27 @@ api.interceptors.request.use(
     // Checks if token is expired
     const token_expired = localUser.decodedToken ? Date.now() >= localUser.decodedToken.exp * 1000 : true
 
+    // Logs out user when token is expired
     if (token_expired && token) {
       localStorage.removeItem('token')
+      localUser.$reset()
+
       router.push('/logout')
 
+      notify('error', 'Your token is expired', 'Please logout and login again...')
+
+      // todo: this will be converted to a query
+      // if (config.data && config.data.query.includes('query logoutUser'))
+      //   return config
+
+      // Allows only logoutUser mutation to be executed
       if (config.data && config.data.query.includes('mutation logoutUser'))
         return config
 
-      notify('error', 'Your token is expired', 'Please logout and login again...')
       return
     }
 
+    // Adds Bearer token to Authorization in request header
     if (config && config.headers && token)
       config.headers = { Authorization: `Bearer ${token}` }
 

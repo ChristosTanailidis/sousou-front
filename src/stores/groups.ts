@@ -14,7 +14,7 @@ import { mCreateGroup } from '~/assets/gql/mutations/group'
 import { qGetGroups } from '~/assets/gql/queries/groups'
 
 // utils
-import notify, { notifyRequestErrors } from '~/utils/notify'
+import notify from '~/utils/notify'
 
 export const useGroups = defineStore({
   id: 'groups',
@@ -59,13 +59,11 @@ export const useGroups = defineStore({
           return true
         }
         else {
-          console.log('create group error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('create group error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {
@@ -95,13 +93,11 @@ export const useGroups = defineStore({
           return response.data.data.groups
         }
         else {
-          console.log('fetch groups error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('fetch groups error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {

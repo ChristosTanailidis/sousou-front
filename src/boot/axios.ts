@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 // interfaces
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 // stores
 import { useLocalUser } from '~/stores/local-user'
 
 // utils
-import notify from '~/utils/notify'
+import notify, { notifyRequestErrors } from '~/utils/notify'
 import { router } from '~/router'
 
 declare module '@vue/runtime-core' {
@@ -24,26 +24,51 @@ declare module '@vue/runtime-core' {
 // for each client)
 const api = axios.create({ baseURL: `${import.meta.env.VITE_SERVER_URL}/graphql` })
 
-api.interceptors.request.use(async(config: AxiosRequestConfig) => {
-  const localUser = useLocalUser()
-  const token = localUser.token ? localUser.token : localStorage.getItem('token')
+// Errors interceptor
+api.interceptors.response.use(
+  (response: AxiosResponse) => {
+    if (response.data.errors || !response)
+      notifyRequestErrors(response.data.errors)
 
-  const token_expired = localUser.decodedToken ? Date.now() >= localUser.decodedToken.exp * 1000 : true
-  // todo: fix this
-  if (token_expired && token) {
-    router.push('/logout')
+    return response
+  },
+  // Error interceptor
+  (error: { message: string }) => {
+    notify('error', error.message)
+    console.log('Response Error (<--)\n', error)
+    return Promise.reject(error)
+  })
 
-    if (config.data && config.data.query.includes('mutation logoutUser'))
-      return config
+// Authorization interceptor
+api.interceptors.request.use(
+  async(config: AxiosRequestConfig) => {
+    const localUser = useLocalUser()
+    const token = localUser.token ? localUser.token : localStorage.getItem('token')
 
-    notify('error', 'Your token is expired', 'Please logout and login again...')
-    return
-  }
+    // Checks if token is expired
+    const token_expired = localUser.decodedToken ? Date.now() >= localUser.decodedToken.exp * 1000 : true
 
-  if (config && config.headers && token)
-    config.headers = { Authorization: `Bearer ${token}` }
+    if (token_expired && token) {
+      localStorage.removeItem('token')
+      router.push('/logout')
 
-  return config
-})
+      if (config.data && config.data.query.includes('mutation logoutUser'))
+        return config
+
+      notify('error', 'Your token is expired', 'Please logout and login again...')
+      return
+    }
+
+    if (config && config.headers && token)
+      config.headers = { Authorization: `Bearer ${token}` }
+
+    return config
+  },
+  // Error interceptor
+  (error: { message: string }) => {
+    notify('error', error.message)
+    console.log('Request Error (-->)\n', error)
+    return Promise.reject(error)
+  })
 
 export { api }

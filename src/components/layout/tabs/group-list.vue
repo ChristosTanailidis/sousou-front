@@ -4,8 +4,8 @@
     class="flex flex-col items-center no-wrap gap-y-2 py-2 pl-2 h-full"
   >
     <div
-      v-if="groups.length"
-      v-for="(group, index) in groups" :key="group.id"
+      v-for="(group, index) in groups"
+      :key="group.id"
       class="flex flex-row items-center no-wrap gap-x-2 p-2 justify-center bg-gray-300 rounded-md h-18 w-full"
       :class="props.miniState ? 'justify-center' : 'justify-start'"
       :md="props.miniState ? 'justify-center h-18' : 'justify-start h-20'"
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div
-      v-else
+      v-if="!groups.length"
       class="text-lg h-full w-full flex items-start"
     >
       <div
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 // stores
-import { useGroups } from '~/stores/groups';
+import { useGroups } from '~/stores/groups'
 
 const props = defineProps({
   miniState: Boolean,
@@ -52,7 +52,7 @@ const props = defineProps({
 const groupStore = useGroups()
 
 // todo: temporary
-onMounted(async () => await groupStore.fetchUsersGroups())
+onMounted(async() => await groupStore.fetchUsersGroups())
 
 const groups = computed(() => groupStore.groups)
 

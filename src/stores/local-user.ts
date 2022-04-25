@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import jwt_decode from 'jwt-decode'
 import { print } from 'graphql'
 import { api } from '~/boot/axios'
+import { router } from '~/router'
 
 // interfaces
 import type { GraphQLResponse } from '~/assets/entities/axios-response'
@@ -12,8 +13,9 @@ import type User from '~/assets/entities/user'
 // graphql
 import { mCreateUser, mLoginUser, mLogoutUser } from '~/assets/gql/mutations/user'
 import { qGetUserByID } from '~/assets/gql/queries/user'
-import notify, { notifyRequestErrors } from '~/utils/notify'
-import { router } from '~/router'
+
+// utils
+import notify from '~/utils/notify'
 
 interface DecodedToken {
   id: string
@@ -90,20 +92,19 @@ export const useLocalUser = defineStore({
           this.user = undefined
           this.token = undefined
 
-          router.push('/logout')
+          if (router.currentRoute.value.path !== '/logout')
+            router.push('/logout')
 
           notify('success', 'Successfully logged out')
 
           return response.data.data.loggedOut
         }
         else {
-          console.log('logout user error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('logout user error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {
@@ -131,13 +132,11 @@ export const useLocalUser = defineStore({
           return response.data.data.token
         }
         else {
-          console.log('login user error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('login user error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {
@@ -169,13 +168,11 @@ export const useLocalUser = defineStore({
           return response.data.data.registerUser
         }
         else {
-          console.log('register user error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('register user error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {
@@ -201,13 +198,11 @@ export const useLocalUser = defineStore({
           return response.data.data.user
         }
         else {
-          console.log('get user by id error', response.data.errors)
-          notifyRequestErrors(response.data.errors)
+          console.log('get user by id error')
           return undefined
         }
       }
       catch (e) {
-        console.log(e)
         return undefined
       }
       finally {

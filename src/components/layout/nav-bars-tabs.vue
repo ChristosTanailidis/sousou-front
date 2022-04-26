@@ -23,13 +23,13 @@
       >
         <div
           class="btn w-full"
-          @click="flags.createGroup = true"
+          @click="flags.create_group = true"
         >
           <carbon-add-alt />
         </div>
         <div
           class="btn w-full"
-          @click="flags.addFriend = true"
+          @click="flags.add_friend = true"
         >
           <carbon-face-add />
         </div>
@@ -48,8 +48,8 @@
 
     <!-- #DIALOGS -->
     <!-- #CREATE-GROUP-DIALOG -->
-    <create-group-dialog v-model:value="flags.createGroup" />
-    <add-friend-dialog v-model:value="flags.addFriend" />
+    <create-group-dialog v-model:value="flags.create_group" />
+    <add-friend-dialog v-model:value="flags.add_friend" />
   </div>
 </template>
 
@@ -68,8 +68,8 @@ const tabs = ['Groups', 'Friends']
 const selectedTab = ref(0)
 
 const flags = ref({
-  createGroup: false,
-  addFriend: false,
+  create_group: false,
+  add_friend: false,
 })
 
 </script>

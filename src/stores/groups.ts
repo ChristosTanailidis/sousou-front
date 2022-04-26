@@ -35,6 +35,42 @@ export const useGroups = defineStore({
     //
   },
   actions: {
+    /* QUERIES */
+    async fetchUsersGroups() {
+      try {
+        this.loading++
+        const response = await api({
+          url: '',
+          method: 'post',
+          data: {
+            query: print(qGetGroups),
+            variables: {
+              paginationInputData: this.pagination
+                ? { ...this.pagination }
+                : { limit: 0, page: 1 }, // fetch all
+            },
+          },
+        }) as unknown as GraphQLResponse<{ groups: { data: Array<Group>; total: number } }>
+
+        if (response.data.data) {
+          this.groups = response.data.data.groups.data
+          this.total = response.data.data.groups.total
+          return response.data.data.groups
+        }
+        else {
+          console.log('fetch groups error')
+          return undefined
+        }
+      }
+      catch (e) {
+        return undefined
+      }
+      finally {
+        this.loading--
+      }
+    },
+
+    /* MUTATIONS */
     async createGroup(group: GroupInputData) {
       try {
         this.loading++
@@ -60,40 +96,6 @@ export const useGroups = defineStore({
         }
         else {
           console.log('create group error')
-          return undefined
-        }
-      }
-      catch (e) {
-        return undefined
-      }
-      finally {
-        this.loading--
-      }
-    },
-
-    async fetchUsersGroups() {
-      try {
-        this.loading++
-        const response = await api({
-          url: '',
-          method: 'post',
-          data: {
-            query: print(qGetGroups),
-            variables: {
-              paginationInputData: this.pagination
-                ? { ...this.pagination }
-                : { limit: 0, page: 1 }, // fetch all
-            },
-          },
-        }) as unknown as GraphQLResponse<{ groups: { data: Array<Group>; total: number } }>
-
-        if (response.data.data) {
-          this.groups = response.data.data.groups.data
-          this.total = response.data.data.groups.total
-          return response.data.data.groups
-        }
-        else {
-          console.log('fetch groups error')
           return undefined
         }
       }

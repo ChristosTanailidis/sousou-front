@@ -1,19 +1,20 @@
 <template>
   <!-- GROUPS -->
   <div
-    class="flex flex-col items-center no-wrap gap-y-2 py-2 pl-2 h-full"
+    class="flex flex-col items-center no-wrap gap-y-2 py-2 pl-2"
   >
     <group-list-item
       v-for="group in groups"
       :key="group.id"
       :value="group"
       :mini-state="props.miniState"
+      class="h-[43px]"
     />
     <div
-      v-if="!groups.length"
-      class="text-lg h-full w-full flex items-start"
+      v-if="!groups || !groups.length"
+      class="text-lg w-full flex items-start"
     >
-      <div class="chip bg-dark-base-3 w-full">
+      <div class="chip h-[43px] bg-dark-base-3 w-full">
         No groups 😓
       </div>
     </div>

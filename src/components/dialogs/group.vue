@@ -6,9 +6,6 @@
     <div
       class="dialog-container"
     >
-      <pre>
-        {{ groupObj }}
-      </pre>
       <FormKit
         v-model="groupObj"
         type="form"
@@ -45,7 +42,6 @@ import type GroupInputData from '~/assets/entities/input-data/group'
 
 // stores
 import { useGroups } from '~/stores/groups'
-// import { useLocalUser } from '~/stores/local-user'
 
 const emits = defineEmits(['update:value'])
 
@@ -58,7 +54,7 @@ const groupObj = ref<Group|undefined>()
 const groupsStore = useGroups()
 
 // todo: check this when resolver is ready
-const submitHandler = async () => {
+const submitHandler = async() => {
   const payload = {
     ...groupObj.value,
   } as GroupInputData

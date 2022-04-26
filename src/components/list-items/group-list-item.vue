@@ -33,7 +33,7 @@
   >
     <div
       class="avatar-rounded"
-      :class="`bg-[${group.color}]`"
+      :class="`bg-hex-[${group.color}]`"
     >
       <!-- todo: this will become the src of an img -->
       <div>
@@ -49,9 +49,9 @@
     </div>
     <div
       v-if="!props.miniState"
-      class="h-full w-[10px] hidden bg-gray-400"
+      :class="`!bg-hex-[${group.color}]`"
+      class="h-full w-[10px] hidden "
       md="block"
-      :class="`bg-[${group.color}]`"
     />
   </div>
 </template>

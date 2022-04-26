@@ -12,6 +12,8 @@ declare module 'vue' {
     CarbonLogout: typeof import('~icons/carbon/logout')['default']
     CarbonSettings: typeof import('~icons/carbon/settings')['default']
     FriendList: typeof import('./components/layout/tabs/friend-list.vue')['default']
+    FriendListItem: typeof import('./components/list-items/friend-list-item.vue')['default']
+    FriendRequestList: typeof import('./components/dialogs/friend-request-list.vue')['default']
     Group: typeof import('./components/dialogs/group.vue')['default']
     GroupList: typeof import('./components/layout/tabs/group-list.vue')['default']
     GroupListItem: typeof import('./components/list-items/group-list-item.vue')['default']

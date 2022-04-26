@@ -56,7 +56,7 @@ html.dark {
 }
 
 .chip {
-  @apply p-[10px] rounded-md shadow bg-gray-500
+  @apply p-[5px] rounded-md shadow bg-gray-500
   flex flex-row no-wrap gap-x-1 items-center justify-center;
 }
 

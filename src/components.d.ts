@@ -17,6 +17,7 @@ declare module 'vue' {
     Group: typeof import('./components/dialogs/group.vue')['default']
     GroupList: typeof import('./components/layout/tabs/group-list.vue')['default']
     GroupListItem: typeof import('./components/list-items/group-list-item.vue')['default']
+    LocalUserInfo: typeof import('./components/layout/local-user-info.vue')['default']
     NavBarsTabs: typeof import('./components/layout/nav-bars-tabs.vue')['default']
   }
 }

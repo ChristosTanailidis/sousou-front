@@ -21,7 +21,7 @@
       </div>
       <div
         v-if="!props.miniState"
-        class="flex flex-col no-wrap items-center hidden"
+        class="flex flex-col no-wrap items-center hidden w-full"
         md="block"
       >
         <div class="text-xl">
@@ -30,8 +30,14 @@
         <div class="font-thin">
           {{ user.displayName }} (#{{ user.code }})
         </div>
-        <div>
-          {{ tokenTimeLeft }}
+        <div
+          class="w-full bg-dark-base-1 mt-2 transition-all rounded-lg"
+          :class="tokenTimeLeft < 20 ? 'animate-pulse' : ''"
+        >
+          <div
+            class=" h-1 rounded transition-all"
+            :class="`w-[${tokenTimeLeft >= 0 ? tokenTimeLeft : '0'}%] ${tokenTimeLeft < 20 ? 'bg-red-500' : 'bg-green-500'}`"
+          />
         </div>
       </div>
     </div>
@@ -62,8 +68,6 @@
 </template>
 
 <script setup lang="ts">
-import moment from 'moment'
-
 // stores
 import { useLocalUser } from '~/stores/local-user'
 
@@ -71,21 +75,28 @@ const localUserStore = useLocalUser()
 
 const { user } = localUserStore
 
-const tokenTimeLeft = ref('0')
+const tokenTimeLeft = ref(0)
+
+const tokenExpirationLimit = 60 * 60 * 1000 // 1h
 
 // todo: fix this
 const timeLeft = () => {
   if (!localUserStore.decodedToken) {
-    tokenTimeLeft.value = 'ERROR'
+    tokenTimeLeft.value = -1
     return
   }
 
-  const exp = localUserStore.decodedToken?.exp * 1000
+  const exp = localUserStore.decodedToken.exp * 1000
 
-  tokenTimeLeft.value = moment(exp - Date.now()).format('hh:mm:ss')
+  const diff = exp - Date.now()
+
+  tokenTimeLeft.value = parseInt((diff / tokenExpirationLimit * 100).toFixed(0))
 }
 
-onMounted(() => setInterval(timeLeft, 1000))
+onMounted(() => {
+  if (tokenTimeLeft.value >= 0)
+    setInterval(timeLeft, 1000)
+})
 
 const props = defineProps({
   miniState: Boolean,

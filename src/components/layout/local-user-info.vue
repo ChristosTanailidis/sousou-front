@@ -36,7 +36,8 @@
         >
           <div
             class=" h-1 rounded transition-all"
-            :class="`w-[${tokenTimeLeft >= 0 ? tokenTimeLeft : '0'}%] ${tokenTimeLeft < 20 ? 'bg-red-500' : 'bg-green-500'}`"
+            :style="`width: ${tokenTimeLeft >= 0 ? tokenTimeLeft : '0'}%;`"
+            :class="`${tokenTimeLeft < 20 ? 'bg-red-500' : 'bg-green-500'}`"
           />
         </div>
       </div>

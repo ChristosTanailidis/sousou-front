@@ -8,7 +8,7 @@
 import { useLocalUser } from '~/stores/local-user'
 
 onMounted(async() => {
-  if (localStorage.getItem('token'))
+  if (localStorage.getItem('token') || useLocalUser().token)
     await useLocalUser().logoutUser()
 })
 </script>

@@ -47,9 +47,7 @@ const submitHandler = async() => {
     password: formData.value.password,
   }
 
-  const result = await localUser.loginUser(userInputData)
-
-  if (!result) return
+  await localUser.loginUser(userInputData)
 }
 
 </script>

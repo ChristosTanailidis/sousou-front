@@ -33,7 +33,7 @@
   >
     <div
       class="avatar-rounded"
-      :class="`bg-hex-[${group.color}]`"
+      :style="`background-color: ${group.color}`"
     >
       <!-- todo: this will become the src of an img -->
       <div>
@@ -47,9 +47,10 @@
     >
       {{ group.name }}
     </div>
+    <!-- todo: resolve the issue of bg-[${var}] -->
     <div
       v-if="!props.miniState"
-      :class="`!bg-hex-[${group.color}]`"
+      :style="`background-color: ${group.color}`"
       class="h-full w-[10px] hidden "
       md="block"
     />

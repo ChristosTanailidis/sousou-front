@@ -1,8 +1,9 @@
 import gql from 'graphql-tag'
 
-export const qGetUserByID = gql`
-  query GetUserById($getUserByIdId: String!) {
-    user: getUserById(id: $getUserByIdId) {
+export function qGetUserByID(kati = true) {
+  return gql`
+  query {
+    user: getLoggedUser {
       id
       username
       displayName
@@ -39,12 +40,14 @@ export const qGetUserByID = gql`
       friendList {
         id
       }
-      personalConversations {
+      personalChats {
         id
       }
+      ${kati ? 'kalisper(kati: "kalispera file mou")' : ''}
     }
   }
 `
+}
 
 // todo: add a different query for this when added
 export const qGetFriends = gql`

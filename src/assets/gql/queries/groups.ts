@@ -1,26 +1,28 @@
 import gql from 'graphql-tag'
 
-export const qGetGroups = gql`
-  query GetGroups($paginationInputData: PaginatedInputData!) {
-    groups: getGroups(paginationInputData: $paginationInputData) {
-      data {
-        id
-        name
-        icon
-        invitationPermissionUsers {
+export function qGetGroups(testIfICan: boolean) {
+  return gql`
+    query GetGroups($paginationInputData: PaginatedInputData!) {
+      groups: getGroups(paginationInputData: $paginationInputData) {
+        data {
           id
+          icon
+          invitationPermissionUsers {
+            id
+          }
+          color
+          createdAt
+          preferences
+          owner {
+            id
+          }
+          members {
+            id
+          }
+          ${testIfICan ? 'name' : ''}
         }
-        color
-        createdAt
-        preferences
-        owner {
-          id
-        }
-        members {
-          id
-        }
+        total
       }
-      total
     }
-  }
-`
+  `
+}

@@ -65,7 +65,7 @@ export const useLocalUser = defineStore({
       this.token = token
 
       if (!this.decodedToken) return
-      const loggedUser = await this.getUserByID(this.decodedToken.id)
+      const loggedUser = await this.getUserByID()
 
       if (!loggedUser) return
       this.user = { ...loggedUser, token }
@@ -180,17 +180,14 @@ export const useLocalUser = defineStore({
       }
     },
 
-    async getUserByID(userID: string) {
+    async getUserByID() {
       try {
         this.loading++
         const response = await api({
           url: '',
           method: 'post',
           data: {
-            query: print(qGetUserByID),
-            variables: {
-              getUserByIdId: userID,
-            },
+            query: print(qGetUserByID(false)),
           },
         }) as unknown as GraphQLResponse<{ user: User }>
 

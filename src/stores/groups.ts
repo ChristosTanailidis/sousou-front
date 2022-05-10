@@ -43,7 +43,7 @@ export const useGroups = defineStore({
           url: '',
           method: 'post',
           data: {
-            query: print(qGetGroups),
+            query: print(qGetGroups(true)),
             variables: {
               paginationInputData: this.pagination
                 ? { ...this.pagination }

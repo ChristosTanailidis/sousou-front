@@ -12,7 +12,7 @@ import type User from '~/assets/entities/user'
 
 // graphql
 import { mCreateUser, mLoginUser, mLogoutUser } from '~/assets/gql/mutations/user'
-import { qGetUserByID } from '~/assets/gql/queries/user'
+import { qGetLoggedUser, qGetUserByID } from '~/assets/gql/queries/user'
 
 // utils
 import notify from '~/utils/notify'
@@ -64,8 +64,7 @@ export const useLocalUser = defineStore({
       localStorage.setItem('token', token)
       this.token = token
 
-      if (!this.decodedToken) return
-      const loggedUser = await this.getUserByID(this.decodedToken.id)
+      const loggedUser = await this.getLoggedUser()
 
       if (!loggedUser) return
       this.user = { ...loggedUser, token }
@@ -169,6 +168,33 @@ export const useLocalUser = defineStore({
         }
         else {
           console.log('register user error')
+          return undefined
+        }
+      }
+      catch (e) {
+        return undefined
+      }
+      finally {
+        this.loading--
+      }
+    },
+
+    async getLoggedUser() {
+      try {
+        this.loading++
+        const response = await api({
+          url: '',
+          method: 'post',
+          data: {
+            query: print(qGetLoggedUser),
+          },
+        }) as unknown as GraphQLResponse<{ user: User }>
+
+        if (response.data.data) {
+          return response.data.data.user
+        }
+        else {
+          console.log('get logged user error')
           return undefined
         }
       }

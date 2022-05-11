@@ -1,7 +1,5 @@
 import type { Router } from 'vue-router'
-import jwt_decode from 'jwt-decode'
 import { useLocalUser } from './stores/local-user'
-import type User from './assets/entities/user'
 
 // eslint-disable-next-line import/no-mutable-exports
 let router: Router
@@ -15,8 +13,7 @@ export function setRouter(r: Router): void {
 
     // If localUser is removed refetch him based on the token
     if (token && !localUser.user) {
-      const jwtUser = (jwt_decode(token) as User)
-      const user = await localUser.getUserByID(jwtUser.id)
+      const user = await localUser.getLoggedUser()
       localUser.user = user
       localUser.token = token
     }

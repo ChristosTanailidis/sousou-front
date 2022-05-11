@@ -46,6 +46,44 @@ export const qGetUserByID = gql`
   }
 `
 
+export const qGetLoggedUser = gql`
+  query GetLoggedUser {
+    user: getLoggedUser {
+      id
+      username
+      displayName
+      email
+      code
+      confirmEmailToken
+      createdAt
+      icon
+      emailConfirm
+      preferences
+      connectedVoiceChannel {
+        id
+      }
+      groups {
+        id
+      }
+      ownedGroups {
+        id
+      }
+      friendRequests {
+        id
+      }
+      myFriendRequests {
+        id
+      }
+      friendList {
+        id
+      }
+      personalChats {
+        id
+      }
+    }
+  }
+`
+
 // todo: add a different query for this when added
 export const qGetFriends = gql`
   query GetFriends($paginatedData: PaginatedInputData!) {

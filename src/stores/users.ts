@@ -11,7 +11,7 @@ import type { UserPagination } from '~/assets/entities/pagination/users'
 
 // graphql
 import type { GraphQLResponse } from '~/assets/entities/axios-response'
-import { qGetFriendRequests, qGetFriends } from '~/assets/gql/queries/user'
+import { qGetFriendRequests, qGetFriends, qGetUsers } from '~/assets/gql/queries/user'
 import { mCreateFriendRequest } from '~/assets/gql/mutations/user'
 
 // utils
@@ -25,7 +25,7 @@ export const useUsers = defineStore({
 
     const friendRequests = undefined as { data: FriendRequest[]; total: number } | undefined
 
-    const pagination = undefined as UserPagination | undefined
+    const pagination = ref<UserPagination | undefined>()
     const loading = 0
 
     return {
@@ -42,6 +42,39 @@ export const useUsers = defineStore({
   },
   actions: {
     /* QUERIES */
+    async fetchUsers() {
+      try {
+        this.loading++
+        const response = await api({
+          url: '',
+          method: 'post',
+          data: {
+            query: print(qGetUsers),
+            variables: {
+              paginatedData: this.pagination
+                ? { ...this.pagination }
+                : { limit: 0, page: 1 }, // fetch all
+            },
+          },
+        }) as unknown as GraphQLResponse<{ users: { data: User[]; total: number } }>
+
+        if (response.data.data) {
+          this.users = response.data.data.users
+          return this.users
+        }
+        else {
+          console.log('fetch users error')
+          return undefined
+        }
+      }
+      catch (e) {
+        return undefined
+      }
+      finally {
+        this.loading--
+      }
+    },
+
     async fetchFriends() { // todo: fetches all friends in the app
       try {
         this.loading++

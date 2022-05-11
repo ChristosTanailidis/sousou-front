@@ -48,8 +48,8 @@
 
     <!-- #DIALOGS -->
     <!-- #CREATE-GROUP-DIALOG -->
-    <create-group-dialog v-model:value="flags.create_group" />
-    <add-friend-dialog v-model:value="flags.add_friend" />
+    <create-group-dialog v-if="flags.create_group" v-model:value="flags.create_group" />
+    <add-friend-dialog v-if="flags.add_friend" v-model:value="flags.add_friend" />
   </div>
 </template>
 

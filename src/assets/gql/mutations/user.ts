@@ -22,6 +22,19 @@ export const mLogoutUser = gql`
 
 export const mCreateFriendRequest = gql`
   mutation CreateFriendRequest($data: FriendRequestInputData!) {
-    created: createFriendRequest(data: $data)
+    created: createFriendRequest(data: $data) {
+      id
+      message
+      createdAt
+      updatedAt
+      answer
+      canceled
+      fromUser {
+        id
+      }
+      toUser {
+        id
+      }
+    }
   }
 `

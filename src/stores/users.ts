@@ -127,6 +127,7 @@ export const useUsers = defineStore({
           data: {
             query: print(qGetFriendRequests),
             variables: {
+              forMe: true,
               paginatedData: this.pagination
                 ? { ...this.pagination }
                 : { limit: 0, page: 1 }, // fetch all
@@ -135,9 +136,7 @@ export const useUsers = defineStore({
         }) as unknown as GraphQLResponse<{ friendRequests: { data: Array<FriendRequest>; total: number } }>
 
         if (response.data.data) {
-          this.friendRequests = {
-            ...response.data.data.friendRequests,
-          }
+          this.friendRequests = response.data.data.friendRequests
           return response.data.data.friendRequests.data
         }
         else {

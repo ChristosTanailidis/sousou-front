@@ -21,8 +21,8 @@
     ],
     "paths": {
       "~/*": ["src/*"]
-    }
+    },
+    "jsx": "preserve"
   },
   "exclude": ["dist", "node_modules"],
-  "jsx": "preserve"
 }

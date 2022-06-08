@@ -6,10 +6,10 @@
     <div
       class="dialog-container"
     >
-      Work in progress
       <!-- Friend Request Item -->
+      {{ friendRequests }}
       <div
-        v-for="fr in friendRequests"
+        v-for="fr in friendRequests?.data"
         :key="fr.id"
       >
         <pre>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 // interfaces
 
+import { storeToRefs } from 'pinia'
 import { useUsers } from '~/stores/users'
 
 // stores
@@ -35,6 +36,11 @@ const props = defineProps({
 
 const usersStore = useUsers()
 
-const { friendRequests } = usersStore
+onMounted(async() => {
+  console.log('fetching...')
+  await usersStore.fetchFriendRequests()
+})
+
+const { friendRequests } = storeToRefs(usersStore)
 
 </script>

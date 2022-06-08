@@ -142,26 +142,26 @@ export const qGetFriends = gql`
           emailConfirm
         }
       }
-      total
+      # total
     }
   }
 `
 
 export const qGetFriendRequests = gql`
-  # todo: add this when ready
-  query GetFriends($paginatedData: PaginatedInputData!) {
-    users: getUsers(paginatedData: $paginatedData) {
+  query GetFriendRequests($forMe: Boolean!, $paginatedData: PaginatedInputData!) {
+    friendRequests: getFriendRequests(forMe: $forMe, paginatedData: $paginatedData) {
       data {
-        friends: friendList {
+        id
+        message
+        createdAt
+        updatedAt
+        answer
+        canceled
+        fromUser {
           id
-          username
-          displayName
-          email
-          code
-          icon
-          createdAt
-          confirmEmailToken
-          emailConfirm
+        }
+        toUser {
+          id
         }
       }
       total

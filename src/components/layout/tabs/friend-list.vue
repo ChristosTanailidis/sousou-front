@@ -10,8 +10,8 @@
       <div>
         See your requests
       </div>
-      <div v-if="usersStore.friendRequests">
-        {{ usersStore.friendRequests.length ? usersStore.friendRequests.length : '' }}
+      <div v-if="usersStore.friendRequests?.total">
+        {{ usersStore.friendRequests.total }}
       </div>
     </button>
     <friend-list-item

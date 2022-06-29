@@ -11,7 +11,6 @@
       </div>
     </div>
     <div
-      v-if="!props.miniState"
       class="text-lg font-bold flex-grow hidden"
       md="block"
     >
@@ -38,11 +37,6 @@ const props = defineProps({
   value: {
     type: Object as PropType<User>,
     required: true,
-  },
-  miniState: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
 })
 

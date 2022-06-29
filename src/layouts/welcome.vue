@@ -4,7 +4,7 @@
     dark="text-dark-content-1 bg-dark-base-1"
   >
     <div class="w-full p-2">
-      <div class="flex flex-col no-wrap items-center w-full">
+      <div class="flex flex-col items-center w-full">
         <div
           class="text-4xl"
           dark="text-gray-300"
@@ -35,7 +35,7 @@
 <script setup lang="ts">
 const router = useRouter()
 
-const loginPage = computed(() => 
-  ['/welcome', '/welcome/login'].includes(router.currentRoute.value.path)
+const loginPage = computed(() =>
+  ['/welcome', '/welcome/login'].includes(router.currentRoute.value.path),
 )
 </script>

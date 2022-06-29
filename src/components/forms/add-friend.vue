@@ -1,49 +1,40 @@
 <template>
   <div
-    v-if="props.value" class="dialog"
-    @click.self="emits('update:value', false)"
+    v-if="users"
+    class="flex flex-col w-full gap-2"
   >
+    <!-- todo: user-list.vue => user-list-item.vue - with selections props -->
+    <FormKit
+      v-if="usersStore.pagination"
+      v-model="usersStore.pagination.filter"
+      :delay="800"
+      label="Search User"
+      type="text"
+    />
     <div
-      class="dialog-container"
+      v-for="user in users.data"
+      :key="user.id"
+      class="rounded bg-opacity-10 bg-white text-center cursor-pointer"
+      :class="selectedUser?.id === user.id ? 'bg-opacity-20' : ''"
+      @click="selectedUser = user"
     >
-      <div
-        v-if="users"
-        class="flex flex-col w-full gap-2"
-      >
-        <!-- todo: user-list.vue => user-list-item.vue - with selections props -->
-        <FormKit
-          v-if="usersStore.pagination"
-          v-model="usersStore.pagination.filter"
-          :delay="800"
-          label="Search User"
-          type="text"
-        />
-        <div
-          v-for="user in users.data"
-          :key="user.id"
-          class="rounded bg-opacity-10 bg-white text-center cursor-pointer"
-          :class="selectedUser?.id === user.id ? 'bg-opacity-20' : ''"
-          @click="selectedUser = user"
-        >
-          {{ user.username }} #{{ user.code }}
-        </div>
-      </div>
-      <!-- debounce -->
-
-      <FormKit
-        v-if="selectedUser"
-        type="form"
-        submit-label="Add Friend"
-        @submit="submitHandler"
-      >
-        <FormKit
-          v-model="message"
-          label="Message"
-          type="text"
-        />
-      </FormKit>
+      {{ user.username }} #{{ user.code }}
     </div>
   </div>
+  <!-- debounce -->
+
+  <FormKit
+    v-if="selectedUser"
+    type="form"
+    submit-label="Add Friend"
+    @submit="submitHandler"
+  >
+    <FormKit
+      v-model="message"
+      label="Message"
+      type="text"
+    />
+  </FormKit>
 </template>
 
 <script setup lang="ts">
@@ -55,12 +46,6 @@ import type User from '~/assets/entities/user'
 // stores
 import { useLocalUser } from '~/stores/local-user'
 import { useUsers } from '~/stores/users'
-
-const emits = defineEmits(['update:value'])
-
-const props = defineProps({
-  value: Boolean,
-})
 
 const localUserStore = useLocalUser()
 const usersStore = useUsers()
@@ -96,8 +81,6 @@ const submitHandler = async() => {
   const result = await usersStore.createFriendRequest(friendRequestID)
 
   if (!result) return
-
-  emits('update:value', false)
 
   console.log(result)
 }

@@ -1,74 +1,80 @@
 <template>
-  <div class="flex flex-col no-wrap gap-y-1">
+  <div class="flex flex-col gap-y-1">
     <!-- TODO: Make this a component -->
     <!-- USER INFO -->
     <div
-      class="flex flex-row justify-start no-wrap items-center gap-x-4 p-2
-                  bg-gray-200 rounded-t-md rounded-l-md rounded-r-md h-24"
-      dark="bg-dark-base-2"
-      :md="props.miniState ? '' : 'rounded-r-none rounded-t-md'"
+      v-if="user"
+      class="flex flex-row justify-start items-center gap-4 p-2 bg-secondary min-h-[100px] rounded"
     >
       <img
-        v-if="!user.icon || !user.icon.length"
+        v-if="!user.icon"
         src="https://png.pngtree.com/png-vector/20191101/ourmid/pngtree-cartoon-color-simple-male-avatar-png-image_1934459.jpg"
-        class="rounded-full w-20 h-20"
+        class="rounded-full w-[90px] object-cover border-1 border-primary shadow-md"
       >
       <div
         v-else
-        class="rounded-full w-20 h-20"
+        class="rounded-full w-[90px] object-cover"
       >
         {{ user.icon }}
       </div>
+
       <div
-        v-if="!props.miniState"
-        class="flex flex-col no-wrap items-center hidden w-full"
-        md="block"
+        class="flex flex-col gap-1 justify-between flex-grow h-full"
       >
         <div class="text-xl">
           {{ user.username }}
         </div>
+
         <div class="font-thin">
-          {{ user.displayName }} (#{{ user.code }})
+          {{ user.displayName }}#{{ user.code }}
         </div>
+
         <div
-          class="w-full bg-dark-base-1 mt-2 transition-all rounded-lg"
-          :class="tokenTimeLeft < 20 ? 'animate-pulse' : ''"
+          class="flex flex-row items-center gap-x-2 self-end my-1 px-2"
         >
           <div
-            class=" h-1 rounded transition-all"
-            :style="`width: ${tokenTimeLeft >= 0 ? tokenTimeLeft : '0'}%;`"
-            :class="`${tokenTimeLeft < 20 ? 'bg-red-500' : 'bg-green-500'}`"
-          />
-        </div>
-      </div>
-    </div>
+            class="btn w-full"
+            @click="openDialog(CreateGroupDialog)"
+          >
+            <carbon-add-alt />
+          </div>
+          <div
+            class="btn w-full"
+            @click="openDialog(AddFriendDialog)"
+          >
+            <carbon-face-add />
+          </div>
+          <button
+            class="btn"
+          >
+            <carbon-settings />
+          </button>
 
-    <!-- USER SETTINGS AND OPTIONS -->
-    <div
-      class="flex flex-row justify-end no-wrap items-center gap-x-4 p-2 self-center bg-gray-200 rounded-b-md"
-      dark="bg-dark-base-2"
-      :md="props.miniState ? 'self-center' : 'self-end'"
-    >
-      <button
-        class="flex items-center rounded bg-gray-400 p-1"
-        dark="bg-dark-base-3 text-dark-content-1"
-        hover="opacity-80"
-      >
-        <carbon-settings />
-      </button>
-      <router-link
-        class="flex items-center just rounded bg-gray-400 p-1"
-        dark="bg-red-500 text-dark-content-1"
-        hover="opacity-80"
-        :to="'/logout'"
-      >
-        <carbon-logout />
-      </router-link>
+          <!-- .btn-logout class -->
+          <router-link
+            class="btn bg-red-500"
+            :to="'/logout'"
+          >
+            <carbon-logout />
+          </router-link>
+        </div>
+
+        <loading-bar
+          :percentage="tokenTimeLeft"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { openDialog } from '../core/dialog-manager'
+
+// component
+import LoadingBar from '../common/loading-bar.vue'
+import CreateGroupDialog from '../forms/group.vue'
+import AddFriendDialog from '../forms/add-friend.vue'
+
 // stores
 import { useLocalUser } from '~/stores/local-user'
 
@@ -99,7 +105,4 @@ onMounted(() => {
     setInterval(timeLeft, 1000)
 })
 
-const props = defineProps({
-  miniState: Boolean,
-})
 </script>

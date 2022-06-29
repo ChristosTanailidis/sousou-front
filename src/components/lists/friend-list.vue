@@ -1,11 +1,18 @@
 <template>
   <!-- GROUPS -->
   <div
-    class="flex flex-col items-center no-wrap gap-y-2 py-2 pl-2"
+    class="flex flex-col items-center gap-y-2 py-2 pl-2"
   >
+    <div
+      class="btn chip w-full flex justify-center"
+    >
+      <!-- todo -->
+      Add a friend
+    </div>
+
     <button
-      class="btn chip w-full flex no-wrap justify-center"
-      @click="flags.show_friend_requests = true"
+      class="btn chip w-full flex justify-center"
+      @click="openDialog(FriendRequestList)"
     >
       <div>
         See your requests
@@ -14,11 +21,11 @@
         {{ usersStore.friendRequests.total }}
       </div>
     </button>
+
     <friend-list-item
       v-for="friend in friends"
       :key="friend.id"
       :value="friend"
-      :mini-state="props.miniState"
       class="h-[43px]"
     />
     <div
@@ -28,22 +35,16 @@
       No friends 😓
     </div>
   </div>
-
-  <!-- #DIALOGS -->
-  <!-- #CREATE-GROUP-DIALOG -->
-  <friend-request-list v-model:value="flags.show_friend_requests" />
 </template>
 
 <script setup lang="ts">
 import { useUsers } from '~/stores/users'
 
 // components
-import FriendListItem from '~/components/list-items/friend-list-item.vue'
-import FriendRequestList from '~/components/dialogs/friend-request-list.vue'
+import { openDialog } from '~/components/core/dialog-manager'
 
-const props = defineProps({
-  miniState: Boolean,
-})
+import FriendListItem from '~/components/lists/list-items/friend-list-item.vue'
+import FriendRequestList from '~/components/lists/friend-request-list.vue'
 
 const usersStore = useUsers()
 
@@ -51,9 +52,5 @@ const usersStore = useUsers()
 onMounted(async() => await usersStore.fetchFriends())
 
 const friends = computed(() => usersStore.friends)
-
-const flags = ref({
-  show_friend_requests: false,
-})
 
 </script>

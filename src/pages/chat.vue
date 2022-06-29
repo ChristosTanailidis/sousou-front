@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col-reverse no-wrap w-full p-2 gap-y-2 overflow-y-scroll"
+    class="flex flex-col-reverse w-full p-2 gap-y-2 overflow-y-scroll"
   >
     <button
       @click="test"
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import type Group from '~/assets/entities/group'
 import { openDialog } from '~/components/core/dialog-manager'
-import groupListItemVue from '~/components/list-items/group-list-item.vue'
+import groupListItemVue from '~/components/lists/list-items/group-list-item.vue'
 import { useLocalUser } from '~/stores/local-user'
 
 const test = () => {

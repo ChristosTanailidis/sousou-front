@@ -28,12 +28,23 @@ html.dark {
   height: 2px;
 }
 
+* {
+  @apply select-none text-context;
+}
+
 .btn {
-  @apply px-2 py-1 rounded inline-block
-    bg-teal-600 text-white cursor-pointer
-    hover:bg-teal-700
-    disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50
-    flex items-center justify-center;
+  @apply flex items-center rounded 
+  bg-accent hover:bg-primary p-1 
+  cursor-pointer transition-all;
+}
+
+.tab {
+  @apply flex-grow text-center p-1 cursor-pointer capitalize transition-all
+  bg-gray-500 bg-opacity-50 hover:bg-opacity-100;
+}
+
+.tab-selected {
+  @apply tab bg-primary;
 }
 
 .icon-btn {
@@ -44,25 +55,25 @@ html.dark {
 }
 
 .dialog {
-  @apply fixed top-0 left-0 
+  @apply absolute top-0 left-0 z-50
   w-full h-full 
   flex items-center justify-center 
   bg-black bg-opacity-70;
 }
 
 .dialog-container {
-  @apply bg-dark-base-1 rounded-md 
+  @apply bg-secondary rounded-md 
   p-5 shadow shadow-dark-600;
 }
 
 .chip {
   @apply p-[5px] rounded-md shadow bg-gray-500
-  flex flex-row no-wrap gap-x-1 items-center justify-center;
+  flex flex-row gap-x-1 items-center justify-center;
 }
 
 .group-list-item {
-  @apply flex flex-row no-wrap items-center gap-x-2 
-  bg-dark-base-3 rounded-md shadow-md
+  @apply flex flex-row items-center gap-x-2 
+  bg-accent rounded shadow
   w-full overflow-hidden
   cursor-pointer transform transition-all
   hover:(-translate-y-[2px] shadow-xl bg-opacity-80);
@@ -84,7 +95,7 @@ html.dark {
 /* Track */
 ::-webkit-scrollbar-track {
   border-radius: 20px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.0);
   border: 3px solid transparent;
   background-clip: content-box;
 }

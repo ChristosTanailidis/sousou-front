@@ -4,22 +4,22 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AddFriend: typeof import('./components/dialogs/add-friend.vue')['default']
+    AddFriend: typeof import('./components/forms/add-friend.vue')['default']
     CarbonAddAlt: typeof import('~icons/carbon/add-alt')['default']
-    CarbonChevronLeft: typeof import('~icons/carbon/chevron-left')['default']
-    CarbonChevronRight: typeof import('~icons/carbon/chevron-right')['default']
     CarbonFaceAdd: typeof import('~icons/carbon/face-add')['default']
     CarbonLogout: typeof import('~icons/carbon/logout')['default']
     CarbonSettings: typeof import('~icons/carbon/settings')['default']
     DialogTemplate: typeof import('./components/core/dialog-template.vue')['default']
     FriendList: typeof import('./components/layout/tabs/friend-list.vue')['default']
     FriendListItem: typeof import('./components/list-items/friend-list-item.vue')['default']
-    FriendRequestList: typeof import('./components/dialogs/friend-request-list.vue')['default']
-    Group: typeof import('./components/dialogs/group.vue')['default']
+    FriendRequestList: typeof import('./components/lists/friend-request-list.vue')['default']
+    Group: typeof import('./components/forms/group.vue')['default']
     GroupList: typeof import('./components/layout/tabs/group-list.vue')['default']
     GroupListItem: typeof import('./components/list-items/group-list-item.vue')['default']
+    LoadingBar: typeof import('./components/common/loading-bar.vue')['default']
     LocalUserInfo: typeof import('./components/layout/local-user-info.vue')['default']
     NavBarsTabs: typeof import('./components/layout/nav-bars-tabs.vue')['default']
+    NavbarTabs: typeof import('./components/layout/navbar-tabs.vue')['default']
   }
 }
 

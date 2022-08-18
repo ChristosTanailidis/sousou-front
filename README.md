@@ -1,19 +1,33 @@
-# Sousou app (front)
+# Sou-Sou App (sou-sou-front)
 
-A UI made with Vue.js for the Sousou web application.
+A text and voice comunacation app
 
-## Installation
-Install the pnpm package manager if not installed.
+## Install the dependencies
 ```bash
-npm install -g pnpm
+yarn
+# or
+npm install
 ```
 
-Install all packages.
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
-pnpm install
+quasar dev
 ```
 
-## Run
+
+### Lint the files
 ```bash
-npx vite --port=4000
+yarn lint
+# or
+npm run lint
 ```
+
+
+
+### Build the app for production
+```bash
+quasar build
+```
+
+### Customize the configuration
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).

@@ -1,18 +1,12 @@
-import axios from 'axios'
-
-// interfaces
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-
-// stores
-import { useLocalUser } from '~/stores/local-user'
+import { boot } from 'quasar/wrappers'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 // utils
-import notify, { notifyRequestErrors } from '~/utils/notify'
-import { router } from '~/router'
+import notify from 'src/utils/notify'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $axios: AxiosInstance
+    $axios: AxiosInstance;
   }
 }
 
@@ -22,13 +16,23 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: `${import.meta.env.VITE_SERVER_URL}/graphql` })
+const api = axios.create({ baseURL: process.env.API_URL })
 
-// Errors interceptor
+api.interceptors.request.use(
+  async (config: AxiosRequestConfig) => {
+    const token = localStorage.getItem('sousou_token')
+    if (token) {
+      config.headers = { Authorization: `Bearer ${token}` }
+    }
+    return config
+  }
+)
+
 api.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (response.data.errors || !response)
-      notifyRequestErrors(response.data.errors)
+    if (response.data.errors || !response) {
+      notify('error', response.data.errors.map((err: { message: string }) => err.message))
+    }
 
     return response
   },
@@ -39,45 +43,16 @@ api.interceptors.response.use(
     return Promise.reject(error)
   })
 
-// Authorization interceptor
-api.interceptors.request.use(
-  async(config: AxiosRequestConfig) => {
-    const localUser = useLocalUser()
-    const token = localUser.token ? localUser.token : localStorage.getItem('token')
+export default boot(({ app }) => {
+  // for use inside Vue files (Options API) through this.$axios and this.$api
 
-    // Checks if token is expired
-    const token_expired = localUser.decodedToken ? Date.now() >= localUser.decodedToken.exp * 1000 : true
+  app.config.globalProperties.$axios = axios
+  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
+  //       so you won't necessarily have to import axios in each vue file
 
-    // Logs out user when token is expired
-    if (token_expired && token) {
-      localStorage.removeItem('token')
-
-      router.push('/logout')
-
-      // todo: this will be converted to a query
-      // if (config.data && config.data.query.includes('query logoutUser'))
-      //   return config
-
-      // Allows only logoutUser mutation to be executed
-      if (config.data && config.data.query.includes('mutation logoutUser'))
-        return config
-
-      notify('error', 'Your token is expired', 'Please logout and login again...')
-
-      return
-    }
-
-    // Adds Bearer token to Authorization in request header
-    if (config && config.headers && token)
-      config.headers = { Authorization: `Bearer ${token}` }
-
-    return config
-  },
-  // Error interceptor
-  (error: { message: string }) => {
-    notify('error', error.message)
-    console.log('Request Error (-->)\n', error)
-    return Promise.reject(error)
-  })
+  app.config.globalProperties.$api = api
+  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
+  //       so you can easily perform requests against your app's API
+})
 
 export { api }

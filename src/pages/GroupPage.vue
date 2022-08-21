@@ -48,46 +48,24 @@
 
           <q-space />
 
-          <div class="flex no-wrap my-1 mr-5">
+          <div class="flex no-wrap gap-1 my-1 mr-5">
+            <q-btn
+              flat
+              round
+              unelevated
+              icon="group_add"
+              color="primary"
+              @click="manageGroupInvitesDialog"
+            />
             <q-btn
               flat
               round
               unelevated
               icon="settings"
-              @click="settingsMenu = !settingsMenu"
+              @click="manageGroupSettingsDialog"
             />
           </div>
         </div>
-        <q-menu
-          v-model="settingsMenu"
-          anchor="bottom right"
-          self="top right"
-          class="bg-dark-300"
-          style="min-width: 150px"
-          no-parent-event
-          square
-        >
-          <q-slide-transition
-            :appear="settingsMenu"
-            :duration="150"
-          >
-            <q-list>
-              <q-item
-                v-for="option in settingOptions"
-                :key="option.type"
-                v-close-popup
-                clickable
-                :style="{color: option.color}"
-                @click="option.action"
-              >
-                <q-item-section>{{ option.label }}</q-item-section>
-                <q-item-section avatar>
-                  <q-icon :name="option.icon" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-slide-transition>
-        </q-menu>
       </div>
       <div
         class="grid grid-cols-10 h-full"
@@ -158,7 +136,8 @@
             <q-list
               :style="{
                 maxHeight: `calc(100vh - ( 250px + ${headerRef ? headerRef.clientHeight : '0px'} ))`,
-                overflowY: 'auto'}"
+                overflowY: 'auto'
+              }"
             >
               <q-item
                 v-for="i in 50"
@@ -239,11 +218,12 @@
 </template>
 
 <script lang="ts">
-import { Component, computed, defineComponent, ref, watch } from 'vue'
+import { Component, defineComponent, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
 import ManageGroup from 'src/components/dialogs/ManageGroup.vue'
+import GroupInvites from 'src/components/dialogs/GroupInvites.vue'
 
 // models
 import { Group } from 'src/models/Group'
@@ -290,62 +270,20 @@ export default defineComponent({
       })
     }
 
-    const settingOptions = [
-      {
-        type: 'edit',
-        label: 'Edit',
-        icon: 'edit',
-        action: () => manageDialogs(ManageGroup, { group: group.value })
-      },
-      {
-        type: 'manage_group_invites',
-        label: 'Group Invites',
-        icon: 'manage_accounts',
-        action: () => manageDialogs(ManageGroup, { group: group.value })
-      },
-      {
-        type: 'delete',
-        label: 'Delete',
-        icon: 'delete',
-        action: () => manageDialogs(ManageGroup, { group: group.value }),
-        color: 'var(--q-negative)'
-      }
-    ]
-
-    // css related
+    const manageGroupSettingsDialog = () => manageDialogs(ManageGroup, { group: group.value })
+    const manageGroupInvitesDialog = () => manageDialogs(GroupInvites, { group: group.value })
 
     return {
       group,
       user,
-      settingOptions,
-      textColor: computed(() => getTextColor(group.value?.color)),
+
+      manageGroupSettingsDialog,
+      manageGroupInvitesDialog,
+
       settingsMenu: ref(false),
       headerRef: ref()
     }
   }
 })
-
-const hexToRGB = (hex: string) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null
-}
-
-const getTextColor = (hex?: string) => {
-  if (!hex) {
-    return 'white'
-  }
-  const rgb = hexToRGB(hex)
-  const brightness = rgb
-    ? Math.round((rgb.r * 299) +
-      (rgb.g * 587) +
-      (rgb.b * 114) / 1000)
-    : 0
-  console.log(brightness)
-  return (brightness > 125) ? 'black' : 'white'
-}
 
 </script>

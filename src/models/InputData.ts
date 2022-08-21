@@ -16,6 +16,12 @@ export interface GroupInputData {
   color: string
 }
 
+export interface GroupInviteData {
+  toUserId: string
+  message: string
+  groupId: string
+}
+
 export interface FriendRequestInputData {
   toUserId: string
   message: string

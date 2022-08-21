@@ -48,7 +48,11 @@
             size="40px"
             :color="group.color"
           >
-            <img :src="group.icon">
+            <q-img
+              :src="group.icon"
+              class="w-full h-full"
+              fit="cover"
+            />
           </q-avatar>
         </q-item-section>
 

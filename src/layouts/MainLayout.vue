@@ -10,7 +10,7 @@
       <div
         class="flex flex-col gap-2 h-full p-2"
       >
-        <user-info />
+        <UserInfo />
 
         <div
           class="overflow-hidden rounded flex-grow "

@@ -47,7 +47,7 @@
               flat
               round
               icon="notifications"
-              color="primary"
+              :color="user?.friendRequests.length ? 'primary' : 'grey-5'"
               size="sm"
               @click="notificationsMenu = !notificationsMenu"
             />
@@ -121,7 +121,7 @@ import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
-import FriendRequests from 'src/components/dialogs/FriendRequests.vue'
+import MyFriendRequests from 'src/components/dialogs/MyFriendRequests.vue'
 
 // models
 
@@ -148,7 +148,7 @@ export default defineComponent({
         badge: user.value?.friendRequests.length,
         action: () => {
           $q.dialog({
-            component: FriendRequests
+            component: MyFriendRequests
           }).onOk(async () => {
             // todo: if changes where made!
             await userStore.fetchUser()
@@ -156,8 +156,8 @@ export default defineComponent({
         }
       },
       {
-        type: 'group_request',
-        label: 'Group Requests',
+        type: 'group_invite',
+        label: 'Group Invites',
         icon: 'o_workspaces',
         badge: user.value?.groups.length,
         action: () => undefined

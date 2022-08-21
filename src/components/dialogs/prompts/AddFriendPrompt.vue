@@ -72,7 +72,7 @@ export default defineComponent({
     })
 
     const sendFriendRequest = async () => {
-      const response = await usersStore.createFriendReqeust(friendRequestData.value)
+      const response = await usersStore.createFriendRequest(friendRequestData.value)
 
       if (!response) {
         return

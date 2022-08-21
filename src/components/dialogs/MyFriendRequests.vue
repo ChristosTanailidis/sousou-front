@@ -48,7 +48,7 @@
                   color="primary"
                   label="Decline"
                   class="w-18"
-                  @click="answerFriendRequest(false, fr.id)"
+                  @click="friendRequestAction(false, fr.id)"
                 />
                 <q-btn
                   dense
@@ -57,7 +57,7 @@
                   color="primary"
                   label="Accept"
                   class="w-18"
-                  @click="answerFriendRequest(true, fr.id)"
+                  @click="friendRequestAction(true, fr.id)"
                 />
               </div>
             </q-item-section>
@@ -103,7 +103,7 @@ export default defineComponent({
 
     const usersStore = useUsersStore()
 
-    const answerFriendRequest = async (accept: boolean, id: string) => {
+    const friendRequestAction = async (accept: boolean, id: string) => {
       await usersStore.answerFriendRequest(accept, id)
       await userStore.fetchUser()
     }
@@ -115,7 +115,7 @@ export default defineComponent({
       user,
       hoveredItem: ref(),
 
-      answerFriendRequest
+      friendRequestAction
     }
   }
 })

@@ -92,11 +92,7 @@ export default defineComponent({
 
     const search = ref('')
 
-    const groups = computed(() => {
-      const userGroups = user.value?.ownedGroups ? user.value.ownedGroups : [] as Group[]
-      const groups = userGroups?.concat(user.value?.groups ? user.value?.groups : [])
-      return groups.filter(g => g.name.includes(search.value))
-    })
+    const groups = computed(() => user.value?.groups)
 
     const $q = useQuasar()
 

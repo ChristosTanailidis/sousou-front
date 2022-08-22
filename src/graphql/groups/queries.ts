@@ -25,6 +25,32 @@ query GetGroups($paginationInputData: PaginatedInputData!) {
 }
 `
 
+export const qGetGroupById = gql`
+query GetGroupById($getGroupByIdId: String!) {
+  getGroupById(id: $getGroupByIdId) {
+    id
+    name
+    invitationPermissionUsers {
+      id
+    }
+    icon
+    color
+    createdAt
+    preferences
+    owner {
+      id
+    }
+    members {
+      id
+      username
+      displayName
+      email
+      code
+      icon
+    }
+  }
+}`
+
 export const qGetGroupInvites = gql`
 query GetGroupInvites($forMe: Boolean!, $paginationInputData: PaginatedInputData!) {
   getGroupInvites(forMe: $forMe, paginationInputData: $paginationInputData) {

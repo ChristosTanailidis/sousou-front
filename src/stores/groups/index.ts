@@ -8,11 +8,12 @@ import { Group } from 'src/models/Group'
 
 // gql
 import { mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
-import { qGetGroups } from 'src/graphql/groups/queries'
+import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
 
 export default defineStore('group-store', {
   state: () => ({
     groups: undefined as undefined | Group[],
+    group: undefined as undefined | Group,
     total: 0,
     loading: false
   }),
@@ -25,6 +26,18 @@ export default defineStore('group-store', {
           this.groups = res.data
           this.total = res.total
           return this.groups
+        })
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async fetchGroup (getGroupByIdId: string) {
+      this.loading = true
+      return await Request(qGetGroupById, { getGroupByIdId })
+        .then((response) => {
+          const res = (response as { getGroupById: Group }).getGroupById
+          this.group = res
+          return this.group
         })
         .catch(() => undefined)
         .finally(() => { this.loading = false })

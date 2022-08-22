@@ -58,7 +58,7 @@
         />
 
         <router-link
-          to="/login"
+          to="/auth/login"
         >
           <q-btn
             label="Login"
@@ -100,9 +100,9 @@ export default defineComponent({
 
     const register = async () => {
       const registered = await userStore.register(registerData.value)
-      console.log('Confirm Your Email Here ➡', `http://localhost:9000/confirm-email/${registered}`)
+      console.log('Confirm Your Email Here ➡', `http://localhost:9000/auth/confirm-email/${registered}`)
       if (registered) {
-        router.push('/login')
+        router.push('/auth/login')
       }
     }
 

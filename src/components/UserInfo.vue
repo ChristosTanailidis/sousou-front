@@ -1,7 +1,7 @@
 <template>
   <div ref="userInfoCard">
     <q-card
-      class="my-card bg-dark-300"
+      class="my-card bg-dark-500"
       flat
     >
       <q-card-section
@@ -66,7 +66,7 @@
               <q-btn
                 flat
                 round
-                to="/logout"
+                to="/auth/logout"
                 icon="logout"
                 color="negative"
                 size="sm"

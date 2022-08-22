@@ -28,7 +28,7 @@
         />
 
         <router-link
-          to="/register"
+          to="/auth/register"
         >
           <q-btn
             label="Register"
@@ -72,7 +72,7 @@ export default defineComponent({
         router.push('/')
       } else {
         if (response.includes('EMAIL_NOT_CONFIRMED')) {
-          router.push(`/resend-email-confirmation/${loginData.value.email}`)
+          router.push(`/auth/resend-email-confirmation/${loginData.value.email}`)
         }
       }
     }

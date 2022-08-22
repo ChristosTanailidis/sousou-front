@@ -5,7 +5,7 @@
       show-if-above
       side="left"
       behavior="desktop"
-      class="bg-dark-500"
+      class="bg-dark-900"
     >
       <div
         class="flex flex-col gap-2 h-full p-2"
@@ -17,11 +17,11 @@
         >
           <q-tabs
             v-model="selectedTab"
-            class="bg-dark-100"
+            class="bg-dark-300"
             dense
             indicator-color="transparent"
             active-color="primary"
-            active-class="bg-dark-300"
+            active-class="bg-dark-500"
           >
             <q-tab
               v-for="tab in tabs"
@@ -35,7 +35,7 @@
 
           <q-tab-panels
             v-model="selectedTab"
-            class="bg-dark-300 h-full"
+            class="bg-dark-500 h-full"
             animated
           >
             <q-tab-panel
@@ -53,7 +53,7 @@
       </div>
     </q-drawer>
 
-    <q-page-container class="bg-dark-500">
+    <q-page-container class="bg-dark-900">
       <q-page class="h-screen p-2">
         <router-view />
       </q-page>
@@ -106,7 +106,7 @@ export default defineComponent({
 
       if (!hasToken) {
         consoleOn && console.log('AUTH: No token in local storage, redirecting for login')
-        useRouter().push('/login')
+        useRouter().push('/auth/login')
       } else {
         consoleOn && console.log('AUTH: Has token with state: ', !isValid ? '❌ EXPIRED' : '✔ VALID')
         if (isValid) {
@@ -128,7 +128,7 @@ export default defineComponent({
           }
         } else {
           console.log('AUTH: Token cannot be refreshed anymore, rerouting to logout')
-          useRouter().push('/login')
+          useRouter().push('/auth/login')
         }
       }
     }

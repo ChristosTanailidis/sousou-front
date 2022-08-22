@@ -42,7 +42,7 @@ export default defineComponent({
       const confirmed = await userStore.resendConfirmation(props.email)
 
       if (confirmed) {
-        console.log('Confirm Your Email Here ➡', `http://localhost:9000/confirm-email/${confirmed}`)
+        console.log('Confirm Your Email Here ➡', `http://localhost:9000/auth/confirm-email/${confirmed}`)
         router.push('/')
       }
     }

@@ -5,7 +5,7 @@
       <q-btn
         color="primary"
         label="Login"
-        to="/login"
+        to="/auth/login"
       />
     </div>
     <div

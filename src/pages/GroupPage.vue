@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded overflow-hidden h-full bg-dark-300"
+    class="rounded overflow-hidden h-full bg-dark-500"
   >
     <div
       v-if="group"
@@ -32,7 +32,7 @@
               </div>
               <div class="flex flex-nowrap gap-2 items-center">
                 <div class="font-thin text-xs">
-                  {{ group.members.length }} members on this group
+                  {{ group.members.length }} members on {{ group.owner.id === user?.id ? 'your' : 'this' }} group
                 </div>
                 <div v-if="group.owner.id === user?.id">
                   <q-icon
@@ -71,32 +71,84 @@
         class="grid grid-cols-10 h-full"
       >
         <div
-          class="col-span-2 flex flex-col flex-nowrap w-full h-full bg-dark-200"
+          class="col-span-2 flex flex-col flex-nowrap w-full h-full bg-dark-400 shadow-2xl"
         >
           <q-expansion-item
-            group="group"
             default-opened
+            group="group"
             icon="group"
             label="Members"
             caption="4 Online"
             expand-icon="none"
+            header-class="bg-dark-400"
           >
             <q-list
               :style="{
                 maxHeight: `calc(100vh - ( 250px + ${headerRef ? headerRef.clientHeight : '0px'} ))`,
                 overflowY: 'auto'}"
+              class="bg-dark-300"
             >
               <q-item
+                v-for="member in group.members"
+                :key="member.id"
                 v-ripple
                 clickable
               >
                 <q-item-section avatar>
-                  <q-icon
-                    color="primary"
-                    name="bluetooth"
-                  />
+                  <q-avatar :style="{backgroundColor: group.color}">
+                    <q-img
+                      :src="member.icon"
+                      spinner-color="primary"
+                      fit="cover"
+                      class="h-full w-full"
+                    >
+                      <template #error>
+                        <q-img
+                          src="https://placeimg.com/500/300/nature"
+                          spinner-color="primary"
+                          fit="cover"
+                          class="h-full w-full"
+                        />
+                      </template>
+                    </q-img>
+                  </q-avatar>
                 </q-item-section>
-                <q-item-section>Icon as avatar</q-item-section>
+                <q-item-section>
+                  <div>
+                    <span>
+                      {{ member.displayName }}
+                    </span>
+                    <span class="font-thin text-gray-300">
+                      #{{ member.code }}
+                    </span>
+                  </div>
+                </q-item-section>
+
+                <q-menu touch-position>
+                  <q-list
+                    separator
+                    style="min-width: 100px"
+                  >
+                    <q-item
+                      v-close-popup
+                      clickable
+                    >
+                      <q-item-section>Add Friend</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                    >
+                      <q-item-section>View Profile</q-item-section>
+                    </q-item>
+                    <q-item
+                      v-close-popup
+                      clickable
+                    >
+                      <q-item-section>more...</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
               </q-item>
             </q-list>
           </q-expansion-item>
@@ -106,11 +158,13 @@
             label="Text Channel"
             caption="2 Online"
             expand-icon="none"
+            header-class="bg-dark-400"
           >
             <q-list
               :style="{
                 maxHeight: `calc(100vh - ( 250px + ${headerRef ? headerRef.clientHeight : '0px'} ))`,
                 overflowY: 'auto'}"
+              class="bg-dark-300"
             >
               <q-item
                 v-ripple
@@ -132,12 +186,13 @@
             label="Voice Channel"
             caption="50 Connected"
             expand-icon="none"
+            header-class="bg-dark-400"
           >
             <q-list
               :style="{
                 maxHeight: `calc(100vh - ( 250px + ${headerRef ? headerRef.clientHeight : '0px'} ))`,
-                overflowY: 'auto'
-              }"
+                overflowY: 'auto' }"
+              class="bg-dark-300"
             >
               <q-item
                 v-for="i in 50"
@@ -157,7 +212,7 @@
           </q-expansion-item>
         </div>
 
-        <div class="col-span-8">
+        <div class="col-span-8 bg-dark-200">
           <!-- todo: component gia chat/voice -->
           <div class="flex flex-col flex-nowrap gap-2 h-full">
             <div class="flex-grow q-pa-md row justify-center">
@@ -220,17 +275,17 @@
 <script lang="ts">
 import { Component, defineComponent, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useQuasar } from 'quasar'
 
 // components
 import ManageGroup from 'src/components/dialogs/ManageGroup.vue'
 import GroupInvites from 'src/components/dialogs/GroupInvites.vue'
 
 // models
-import { Group } from 'src/models/Group'
 
 // stores
+import useGroupsStore from 'src/stores/groups'
 import useUserStore from 'src/stores/auth-user'
-import { useQuasar } from 'quasar'
 
 // utils
 
@@ -244,15 +299,14 @@ export default defineComponent({
   },
   emits: [],
   setup (props) {
+    const groupsStore = useGroupsStore()
     const userStore = useUserStore()
+
+    const { group } = storeToRefs(groupsStore)
     const { user } = storeToRefs(userStore)
 
-    const group = ref<Group>()
-
-    // todo: na ginetai me fetch anti gia auth thn paparia
-
-    watch(() => props.groupId, () => {
-      group.value = user.value?.ownedGroups.find(g => g.id === props.groupId)
+    watch(() => props.groupId, async () => {
+      await groupsStore.fetchGroup(props.groupId)
     }, { immediate: true })
 
     const $q = useQuasar()

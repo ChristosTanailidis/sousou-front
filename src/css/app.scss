@@ -1,7 +1,24 @@
 // app global css in SCSS form
 @windicss;
 
+// -==[ Glass Effect ]==-
+.bg-glass{
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(3rem);
+  -webkit-backdrop-filter: blur(3rem);
+  // border: 1px solid rgba(#17141d, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.418),
+}
+// -==[ Glass Effect ]==-
 
+// -==[ Gradient Background ]==-
+.bg-gradient, .container  {
+  background: linear-gradient(90deg,var(--q-primary),var(--q-secondary));
+}
+// -==[ Gradient Background ]==-
+
+// -==[ Scrollbar ]==-
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -40,3 +57,4 @@
   border: 3px solid transparent;
   background-clip: content-box;
 }
+// -==[ Scrollbar ]==-

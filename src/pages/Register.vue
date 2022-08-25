@@ -1,73 +1,77 @@
 <template>
   <div class="q-pa-md flex justify-center items-center w-full h-screen">
-    <q-form
-      class="q-gutter-md"
-      @submit="register"
-    >
-      <q-input
-        v-model="registerData.displayName"
-        type="text"
-        label="Displayed Name"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Please enter your displayed name' ]"
-      />
-
-      <q-input
-        v-model="registerData.email"
-        type="email"
-        label="Email"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Please enter your email' ]"
-      />
-
-      <q-input
-        v-model="registerData.username"
-        type="text"
-        label="Username"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Please enter your username' ]"
-      />
-
-      <q-input
-        v-model="registerData.password"
-        type="password"
-        label="Password"
-        lazy-rules
-        reactive-rules
-        :rules="[ val => val && val.length > 0 || 'Please enter your password' ]"
-      />
-
-      <q-input
-        v-model="passwordConfirm"
-        type="password"
-        label="Confirm Password"
-        lazy-rules
-        reactive-rules
-        :rules="[
-          val => val && val.length > 0 || 'Please repeat your password',
-          val => val === registerData.password || 'Your passwords don\'t match'
-        ]"
-      />
-
-      <div class="flex flex-col gap-2">
-        <q-btn
-          label="Register"
-          type="submit"
-          color="primary"
-          class="w-full"
+    <div class="p-10 bg-glass min-w-96">
+      <q-form
+        class="q-gutter-md"
+        @submit="register"
+      >
+        <q-input
+          v-model="registerData.displayName"
+          type="text"
+          label="Displayed Name"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter your displayed name' ]"
         />
 
-        <router-link
-          to="/auth/login"
-        >
+        <q-input
+          v-model="registerData.email"
+          type="email"
+          label="Email"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter your email' ]"
+        />
+
+        <q-input
+          v-model="registerData.username"
+          type="text"
+          label="Username"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter your username' ]"
+        />
+
+        <q-input
+          v-model="registerData.password"
+          type="password"
+          label="Password"
+          lazy-rules
+          reactive-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter your password' ]"
+        />
+
+        <q-input
+          v-model="passwordConfirm"
+          type="password"
+          label="Confirm Password"
+          lazy-rules
+          reactive-rules
+          :rules="[
+            val => val && val.length > 0 || 'Please repeat your password',
+            val => val === registerData.password || 'Your passwords don\'t match'
+          ]"
+        />
+
+        <div class="flex flex-col gap-3">
           <q-btn
-            label="Login"
-            color="secondary"
+            unelevated
+            label="Register"
+            type="submit"
+            color="primary"
             class="w-full"
           />
-        </router-link>
-      </div>
-    </q-form>
+
+          <router-link
+            to="/auth/login"
+          >
+            <q-btn
+              unelevated
+              label="Login"
+              color="secondary"
+              class="w-full"
+            />
+          </router-link>
+        </div>
+      </q-form>
+    </div>
   </div>
 </template>
 

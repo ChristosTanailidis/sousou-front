@@ -1,6 +1,15 @@
 // app global css in SCSS form
 @windicss;
 
+// -==[ Disables the autofill background in inputs]==-
+input, select {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  -webkit-background-clip: text !important;
+  background-clip:  text !important;
+}
+// -==[ Disables the autofill background in inputs]==-
+
 // -==[ Glass Effect ]==-
 .bg-glass{
   background: rgba(255, 255, 255, 0.2);

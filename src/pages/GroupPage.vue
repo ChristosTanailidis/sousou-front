@@ -14,7 +14,6 @@
           <div>
             <q-avatar
               class="h-[78px] w-[78px]"
-              color="primary"
               square
             >
               <q-img

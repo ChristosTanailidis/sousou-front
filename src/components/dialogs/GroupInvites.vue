@@ -7,7 +7,7 @@
       <UserList
         v-model:pagination="pagination"
         :users="users"
-        @availability-change="manageInvitation"
+        @user-select="manageInvitation"
       />
     </q-card>
   </q-dialog>
@@ -30,7 +30,7 @@ import { User } from 'src/models/User'
 
 // stores
 import usUsersToInviteStore from 'src/stores/groups/users-to-invite'
-import useGroupsStore from 'src/stores/groups'
+// import useGroupsStore from 'src/stores/groups'
 
 // utils
 
@@ -47,7 +47,7 @@ export default defineComponent({
     const { dialogRef, onDialogHide } = useDialogPluginComponent()
 
     const usersToInvite = usUsersToInviteStore()
-    const groupsStore = useGroupsStore()
+    // const groupsStore = useGroupsStore()
 
     const { users } = storeToRefs(usersToInvite)
     // const { groups } = storeToRefs(groupsStore)
@@ -70,8 +70,9 @@ export default defineComponent({
     const $q = useQuasar()
 
     // todo: to existing paizei na mhn xreiazetai an erxetai apo ton user
-    const manageInvitation = (existing: boolean, user: User) => {
-      if (existing) {
+    const manageInvitation = (user: User) => {
+      // todo: if user.available
+      if (user) {
         // todo: efoson einai existing to invite, kane find sta invites pou den uparxoun twra
         // kai des to id tou invite vasei tou xrhsth kai tou group,
         // better solution: to existing ginetai [inviteId?: string]

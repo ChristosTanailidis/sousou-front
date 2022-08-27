@@ -4,103 +4,12 @@
     @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin">
-      <q-card-section>
-        <q-input
-          v-model="pagination.filter"
-          dense
-          borderless
-          rounded
-          debounce="750"
-          type="search"
-          placeholder="Find users"
-          class="w-full bg-dark-50 rounded px-2"
-        >
-          <template #append>
-            <q-icon
-              name="search"
-              color="primary"
-            />
-          </template>
-        </q-input>
-      </q-card-section>
-      <q-card-section>
-        <q-table
-          :rows="users"
-          hide-header
-          hide-pagination
-          row-key="id"
-          class="h-[400px]"
-          flat
-        >
-          <template #body="props">
-            <q-tr>
-              <q-item
-                clickable
-                class="my-2 rounded overflow-hidden"
-                @click="promptAddFriend(props.row)"
-              >
-                <q-item-section
-                  top
-                  avatar
-                >
-                  <q-avatar
-                    color="primary"
-                    size="40px"
-                  >
-                    <q-img
-                      :src="props.row.icon"
-                      object="cover"
-                    />
-                  </q-avatar>
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label>{{ props.row.displayName }}</q-item-label>
-                  <q-item-label
-                    caption
-                    lines="2"
-                  >
-                    #{{ props.row.code }}
-                  </q-item-label>
-                </q-item-section>
-
-                <q-item-section
-                  side
-                  top
-                >
-                  <!-- todo: owned groups will be removed, only groups will remain -->
-                  <q-item-label caption>
-                    In {{ props.row.groups.length + props.row.ownedGroups.length }} groups
-                  </q-item-label>
-
-                  <q-item-section
-                    class="relative w-full h-full"
-                  >
-                    <q-avatar
-                      v-for="n in props.row.ownedGroups.length < 3 ? props.row.ownedGroups.length : 3"
-                      :key="n"
-                      size="20px"
-                      class="overlapping"
-                      :style="`left: ${n * 17}px`"
-                    >
-                      <img :src="props.row.ownedGroups[n]?.icon">
-                    </q-avatar>
-                  </q-item-section>
-                </q-item-section>
-              </q-item>
-            </q-tr>
-          </template>
-        </q-table>
-      </q-card-section>
-
-      <!-- buttons example -->
-      <q-card-actions align="right">
-        <q-btn
-          color="primary"
-          label="Cancel"
-          @click="onCancelClick"
-        />
-      </q-card-actions>
+      <UserList
+        v-if="users"
+        v-model:pagination="pagination"
+        :users="users"
+        @user-select="promptAddFriend"
+      />
     </q-card>
   </q-dialog>
 </template>
@@ -111,6 +20,7 @@ import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
+import UserList from '../reusables/UserList.vue'
 import AddFriendPrompt from './prompts/AddFriendPrompt.vue'
 
 // models
@@ -123,7 +33,7 @@ import useUsersStore from 'src/stores/users'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { UserList },
   props: {},
   emits: [...useDialogPluginComponent.emits],
   setup () {
@@ -173,6 +83,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+// todo: delete this
 .overlapping
   position: absolute
 </style>

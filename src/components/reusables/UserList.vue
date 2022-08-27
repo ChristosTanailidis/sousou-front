@@ -31,60 +31,12 @@
       >
         <template #body="props">
           <q-tr>
-            <q-item
-              clickable
-              class="my-2 rounded overflow-hidden"
-              @click="$emit('availabilityChange', false, props.row)"
-            >
-              <q-item-section
-                top
-                avatar
-              >
-                <q-avatar
-                  color="primary"
-                  size="40px"
-                >
-                  <q-img
-                    :src="props.row.icon"
-                    object="cover"
-                  />
-                </q-avatar>
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label>{{ props.row.displayName }}</q-item-label>
-                <q-item-label
-                  caption
-                  lines="2"
-                >
-                  #{{ props.row.code }}
-                </q-item-label>
-              </q-item-section>
-
-              <q-item-section
-                side
-                top
-              >
-                <!-- todo: owned groups will be removed, only groups will remain -->
-                <q-item-label caption>
-                  In {{ props.row.groups.length + props.row.ownedGroups.length }} groups
-                </q-item-label>
-
-                <q-item-section
-                  class="relative w-full h-full"
-                >
-                  <q-avatar
-                    v-for="n in props.row.ownedGroups.length < 3 ? props.row.ownedGroups.length : 3"
-                    :key="n"
-                    size="20px"
-                    class="overlapping"
-                    :style="`left: ${n * 17}px`"
-                  >
-                    <img :src="props.row.ownedGroups[n]?.icon">
-                  </q-avatar>
-                </q-item-section>
-              </q-item-section>
-            </q-item>
+            <UserItem
+              code
+              groups-indicator
+              :user="props.row"
+              @click="$emit('userSelect', props.row)"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -96,6 +48,7 @@
 import { defineComponent, PropType, ref, watch } from 'vue'
 
 // components
+import UserItem from './UserItem.vue'
 
 // models
 import { PaginationData } from 'src/models/PaginationData'
@@ -106,7 +59,7 @@ import { User } from 'src/models/User'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { UserItem },
   props: {
     users: {
       type: Array as PropType<User[]>,
@@ -117,7 +70,7 @@ export default defineComponent({
       default: undefined
     }
   },
-  emits: ['update:pagination', 'availabilityChange'],
+  emits: ['update:pagination', 'userSelect'],
   setup (props, { emit }) {
     const paginationObj = ref({ ...props.pagination })
 
@@ -134,6 +87,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+// todo: delete this
 .overlapping
   position: absolute
 </style>

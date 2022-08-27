@@ -32,41 +32,33 @@
     </q-item>
 
     <!-- Friend -->
-    <q-item
+    <UserItem
       v-for="friend in friends"
       :key="friend.id"
-      v-ripple
-      clickable
-    >
-      <q-item-section avatar>
-        <q-icon
-          color="primary"
-          name="bluetooth"
-        />
-      </q-item-section>
-      <q-item-section>{{ friend.displayName }}</q-item-section>
-    </q-item>
+      :user="friend"
+    />
   </q-list>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useQuasar } from 'quasar'
 
 // components
+import AddFriends from './dialogs/AddFriends.vue'
+import UserItem from './reusables/UserItem.vue'
 
 // models
 import { User } from 'src/models/User'
 
 // stores
 import useUserStore from 'src/stores/auth-user'
-import { useQuasar } from 'quasar'
-import AddFriends from './dialogs/AddFriends.vue'
 
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { UserItem },
   props: { },
   emits: [],
   setup () {

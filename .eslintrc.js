@@ -107,6 +107,11 @@ module.exports = {
 
     'vue/multi-word-component-names': ["error", {
       "ignores": ['Login', 'Logout', 'Register']
+    }],
+
+    "vue/component-name-in-template-casing": ["error", "PascalCase", {
+      "registeredComponentsOnly": true,
+      "ignores": []
     }]
   }
 }

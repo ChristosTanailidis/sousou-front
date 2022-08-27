@@ -277,7 +277,7 @@ import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
-import ManageGroup from 'src/components/dialogs/ManageGroup.vue'
+import GroupSettings from 'src/components/dialogs/GroupSettings.vue'
 import GroupInvites from 'src/components/dialogs/GroupInvites.vue'
 
 // models
@@ -323,7 +323,7 @@ export default defineComponent({
       })
     }
 
-    const manageGroupSettingsDialog = () => manageDialogs(ManageGroup, { group: group.value })
+    const manageGroupSettingsDialog = () => manageDialogs(GroupSettings, { group: group.value })
     const manageGroupInvitesDialog = () => manageDialogs(GroupInvites, { group: group.value })
 
     return {

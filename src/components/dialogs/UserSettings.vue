@@ -10,7 +10,7 @@
       <q-card-actions>
         <div class="flex flex-nowrap justify-between w-full">
           <div class="text-xl font-extralight">
-            Edit Groups Preferences
+            Edit User Preferences
           </div>
           <div class="row gap-2">
             <q-btn
@@ -53,10 +53,7 @@
               :key="tab.name"
               :name="tab.name"
             >
-              <component
-                :is="tab.component"
-                v-bind="tab.componentProps"
-              />
+              <component :is="tab.component" />
             </q-tab-panel>
           </q-tab-panels>
         </div>
@@ -66,16 +63,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
 
 // components
-import GroupGeneralSettings from '../settings/group/GroupGeneralSettings.vue'
-import GroupPreferencesSettings from '../settings/group/GroupPreferencesSettings.vue'
-import GroupMembersSettings from '../settings/group/GroupMembersSettings.vue'
+import UserGeneralSettings from '../settings/user/UserGeneralSettings.vue'
+import UserPreferencesSettings from '../settings/user/UserPreferencesSettings.vue'
 
 // models
-import { Group } from 'src/models/Group'
 
 // stores
 
@@ -83,36 +78,21 @@ import { Group } from 'src/models/Group'
 
 export default defineComponent({
   components: {},
-  props: {
-    group: {
-      type: Object as PropType<Group>,
-      required: true
-    }
-  },
+  props: { },
   emits: [...useDialogPluginComponent.emits],
-  setup (props) {
+  setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
-
-    const groupData = ref({ ...props.group })
 
     const tabs = [
       {
         name: 'general',
         label: 'General',
-        component: GroupGeneralSettings,
-        componentProps: { group: groupData.value }
+        component: UserGeneralSettings
       },
       {
         name: 'preferences',
         label: 'Preferences',
-        component: GroupPreferencesSettings,
-        componentProps: { group: groupData.value }
-      },
-      {
-        name: 'members_and_invites',
-        label: 'Members & Invites',
-        component: GroupMembersSettings,
-        componentProps: { group: groupData.value }
+        component: UserPreferencesSettings
       }
     ]
 

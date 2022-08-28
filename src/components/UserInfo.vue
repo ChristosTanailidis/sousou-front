@@ -59,7 +59,7 @@
                 color="grey-5"
                 icon="settings"
                 size="sm"
-                @click="() => undefined"
+                @click="openSettings"
               />
 
               <!-- todo: prompt before logout -->
@@ -127,6 +127,7 @@ import MyFriendRequests from 'src/components/dialogs/MyFriendRequests.vue'
 
 // stores
 import useUserStore from 'src/stores/auth-user'
+import UserSettings from './dialogs/UserSettings.vue'
 
 // utils
 
@@ -164,11 +165,18 @@ export default defineComponent({
       }
     ]
 
+    const openSettings = () => {
+      $q.dialog({
+        component: UserSettings
+      })
+    }
+
     return {
       user,
       notifications,
       notificationsMenu: ref(false),
-      userInfoCard: ref()
+      userInfoCard: ref(),
+      openSettings
     }
   }
 })

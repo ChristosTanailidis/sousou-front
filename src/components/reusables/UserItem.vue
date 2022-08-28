@@ -19,7 +19,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>aaa{{ user.displayName }}</q-item-label>
+      <q-item-label>{{ user.displayName }}</q-item-label>
       <q-item-label
         v-if="code"
         caption
@@ -46,9 +46,13 @@
           :key="group.id"
           size="20px"
           class="absolute"
-          :style="`left: ${i * 17}px`"
+          :style="`right: ${i * 17}px`"
         >
-          <img :src="group.icon">
+          <q-img
+            :src="group.icon"
+            class="w-full h-full"
+            fit="cover"
+          />
         </q-avatar>
       </q-item-section>
     </q-item-section>

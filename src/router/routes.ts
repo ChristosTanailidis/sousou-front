@@ -1,24 +1,26 @@
+import { isLogged, isNotLogged } from 'src/middlewares/auth'
 import { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    beforeEnter: [isLogged],
     children: [
-      { path: '', component: () => import('pages/Login.vue') },
-      { path: 'group/:groupId', component: () => import('pages/GroupPage.vue'), props: true }
+      { path: '', beforeEnter: [isLogged], component: () => import('pages/IndexPage.vue') },
+      { path: 'group/:groupId', beforeEnter: [isLogged], component: () => import('pages/GroupPage.vue'), props: true }
     ]
   },
   {
     path: '/auth/',
     component: () => import('layouts/AuthLayout.vue'),
     children: [
-      { path: '', redirect: '/auth/login' },
-      { path: 'login', component: () => import('pages/Login.vue') },
+      { path: '', beforeEnter: [isNotLogged], redirect: '/auth/login' },
+      { path: 'login', beforeEnter: [isNotLogged], component: () => import('pages/Login.vue') },
       { path: 'logout', component: () => import('pages/Logout.vue') },
-      { path: 'register', component: () => import('pages/Register.vue') },
-      { path: 'confirm-email/:emailToken', component: () => import('pages/ConfirmEmail.vue'), props: true },
-      { path: 'resend-email-confirmation/:email', component: () => import('pages/ResendEmailConfirmation.vue'), props: true }
+      { path: 'register', beforeEnter: [isNotLogged], component: () => import('pages/Register.vue') },
+      { path: 'confirm-email/:emailToken', beforeEnter: [isNotLogged], component: () => import('pages/ConfirmEmail.vue'), props: true },
+      { path: 'resend-email-confirmation/:email', beforeEnter: [isNotLogged], component: () => import('pages/ResendEmailConfirmation.vue'), props: true }
     ]
   },
 

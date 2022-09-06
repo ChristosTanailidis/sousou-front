@@ -8,15 +8,18 @@
         @submit="sendFriendRequest"
         @reset="cancel"
       >
-        <q-card-section>
+        <q-card-section v-if="!to.pending">
           <q-input
             v-model="friendRequestData.message"
             type="textarea"
             label="Message"
             :rules="[
-              val => !!val || 'A message is required',
+              (val: any) => !!val || 'A message is required',
             ]"
           />
+        </q-card-section>
+        <q-card-section v-else>
+          Are you sure you want to delete this request?
         </q-card-section>
 
         <!-- buttons example -->
@@ -45,10 +48,11 @@ import { useDialogPluginComponent } from 'quasar'
 
 // models
 import { FriendRequestInputData } from 'src/models/InputData'
-import { User } from 'src/models/User'
+import { UserToAdd } from 'src/models/User'
 
 // stores
 import useUsersStore from 'src/stores/users'
+import useUserStore from 'src/stores/auth-user'
 
 // utils
 
@@ -56,7 +60,7 @@ export default defineComponent({
   components: {},
   props: {
     to: {
-      type: Object as PropType<User>,
+      type: Object as PropType<UserToAdd>,
       required: true
     }
   },
@@ -72,7 +76,33 @@ export default defineComponent({
     })
 
     const sendFriendRequest = async () => {
+      if (props.to.pending) {
+        cancelFriendRequest()
+        return
+      }
+
       const response = await usersStore.createFriendRequest(friendRequestData.value)
+
+      if (!response) {
+        return
+      }
+
+      onDialogOK()
+    }
+
+    const cancelFriendRequest = async () => {
+      const { user } = useUserStore()
+      if (!user) {
+        return
+      }
+
+      const friendRequestId = user.myFriendRequests.find(fr => fr.toUser.id === props.to.id)
+
+      if (!friendRequestId) {
+        return
+      }
+
+      const response = await usersStore.cancelFriendRequest(friendRequestId.id)
 
       if (!response) {
         return

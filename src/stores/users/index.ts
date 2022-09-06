@@ -8,7 +8,7 @@ import { User } from 'src/models/User'
 
 // gql
 import { qGetUsers } from 'src/graphql/users/queries'
-import { mAnswerFriendRequest, mCreateFriendRequest } from 'src/graphql/users/mutations'
+import { mAnswerFriendRequest, mCancelFriendRequest, mCreateFriendRequest } from 'src/graphql/users/mutations'
 
 export default defineStore('users-store', {
   state: () => ({
@@ -33,6 +33,13 @@ export default defineStore('users-store', {
       this.loading = true
       return await Request(mCreateFriendRequest, { data })
         .then((response) => (response as { createFriendRequest: boolean }).createFriendRequest)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+    async cancelFriendRequest (cancelFriendRequestId: string) {
+      this.loading = true
+      return await Request(mCancelFriendRequest, { cancelFriendRequestId })
+        .then((response) => (response as { cancelFriendRequest: boolean }).cancelFriendRequest)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },

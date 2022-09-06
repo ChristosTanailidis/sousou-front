@@ -47,8 +47,8 @@ export const qGetUsers = gql`
 `
 
 export const qGetUsersToAdd = gql`
-  query GetAvailableUsersToAdd($pending: Boolean!) {
-    getAvailableUsersToAdd(pending: $pending) {
+  query GetAvailableUsersToAdd($paginatedData: PaginatedInputData!) {
+    getAvailableUsersToAdd(paginatedData: $paginatedData) {
       data {
         id
         username
@@ -66,16 +66,12 @@ export const qGetUsersToAdd = gql`
         }
         groups {
           id
-          icon
-          color
         }
         ownedGroups {
           id
-          icon
-          color
         }
         friendRequests {
-          id,
+          id
         }
         myFriendRequests {
           id
@@ -83,9 +79,16 @@ export const qGetUsersToAdd = gql`
         friendList {
           id
         }
+        groupInvites {
+          id
+        }
+        myGroupInvites {
+          id
+        }
         personalChats {
           id
         }
+        pending
       }
       total
     }

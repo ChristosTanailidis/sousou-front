@@ -25,10 +25,10 @@ import AddFriendPrompt from './prompts/AddFriendPrompt.vue'
 
 // models
 import { UserPaginationData } from 'src/models/PaginationData'
-import { User } from 'src/models/User'
+import { UserToAdd } from 'src/models/User'
 
 // stores
-import useUsersStore from 'src/stores/users'
+import useUsersToAddStore from 'src/stores/users/users-to-add'
 
 // utils
 
@@ -39,7 +39,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const usersStore = useUsersStore()
+    const usersStore = useUsersToAddStore()
     const { users, total, loading } = storeToRefs(usersStore)
 
     const pagination = ref<UserPaginationData>({
@@ -54,7 +54,7 @@ export default defineComponent({
 
     const $q = useQuasar()
 
-    const promptAddFriend = (user: User) => {
+    const promptAddFriend = (user: UserToAdd) => {
       $q.dialog({
         component: AddFriendPrompt,
         componentProps: {

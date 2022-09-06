@@ -1,6 +1,7 @@
 <template>
   <q-item
     clickable
+    :disable="user?.pending"
     class="my-2 rounded overflow-hidden"
   >
     <q-item-section
@@ -19,7 +20,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ user.displayName }}</q-item-label>
+      <q-item-label>{{ user.displayName }} {{ user.pending ? '(pending invite)' : '' }}</q-item-label>
       <q-item-label
         v-if="code"
         caption
@@ -65,7 +66,7 @@ import { defineComponent, PropType, computed } from 'vue'
 // components
 
 // models
-import { User } from 'src/models/User'
+import { User, UserToAdd } from 'src/models/User'
 import { Group } from 'src/models/Group'
 
 // stores
@@ -76,7 +77,7 @@ export default defineComponent({
   components: {},
   props: {
     user: {
-      type: Object as PropType<User>,
+      type: Object as PropType<User | UserToAdd>,
       required: true
     },
     code: {

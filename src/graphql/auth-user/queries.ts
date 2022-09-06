@@ -73,6 +73,23 @@ query GetLoggedUser {
     }
     myFriendRequests {
       id
+      message
+      toUser {
+        id
+        code
+        displayName
+        groups {
+          id
+          icon
+          color
+        }
+        ownedGroups {
+          id
+          icon
+          color
+        }
+
+      }
     }
     friendList {
       id

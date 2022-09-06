@@ -23,3 +23,7 @@ export interface User {
   friendList: [User]
   personalChats: [PersonalChat]
 }
+
+export interface UserToAdd extends User {
+  pending?: boolean
+}

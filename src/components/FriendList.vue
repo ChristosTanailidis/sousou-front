@@ -19,7 +19,7 @@
         rounded
         debounce="750"
         type="search"
-        placeholder="Search in your groups"
+        placeholder="Search in your friend list"
         class="w-full bg-dark-50 rounded px-2"
       >
         <template #append>

@@ -81,12 +81,13 @@ import { defineComponent, PropType, ref } from 'vue'
 
 // models
 import { Group } from 'src/models/Group'
+import { GroupInputData } from 'src/models/InputData'
 
 // stores
 import useGroupsStore from 'src/stores/groups'
-import { GroupInputData } from 'src/models/InputData'
-import notify from 'src/utils/notify'
+
 // utils
+import notify from 'src/utils/notify'
 
 export default defineComponent({
   components: {},
@@ -107,6 +108,7 @@ export default defineComponent({
     const originalGroupData = { ...groupData.value } as GroupInputData
 
     const groupsStore = useGroupsStore()
+
     const onSubmit = async () => {
       const resp = await groupsStore.updateGroup(props.group.id, groupData.value)
       if (!resp) {
@@ -114,6 +116,8 @@ export default defineComponent({
       }
 
       notify('success', 'Saved')
+
+      await groupsStore.fetchGroup(props.group.id)
     }
     return {
       groupData,

@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 import Request from '../graphql-request'
 
 // models
-import { LoginUser, RegisterUser } from 'src/models/InputData'
+import { LoginUser, RegisterUser, UpdateUserData } from 'src/models/InputData'
 import { User } from 'src/models/User'
 
 // gql
-import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, mResendEmailConfirmation } from 'src/graphql/auth-user/mutations'
-import { qGetLoggedUser } from 'src/graphql/auth-user/queries'
+import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, mResendEmailConfirmation, mUpdateUser } from 'src/graphql/auth-user/mutations'
+import { qCheckUsernameAvailability, qGetLoggedUser } from 'src/graphql/auth-user/queries'
 import { AxiosError } from 'axios'
 
 export default defineStore('auth-user', {
@@ -18,14 +18,15 @@ export default defineStore('auth-user', {
   actions: {
     async register (data: RegisterUser) {
       this.loading = true
-      return await Request(mRegisterUser, { data }, true)
+      return await Request(mRegisterUser, { data })
         .then((response) => (response as { registerUser: string }).registerUser)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async login (data: LoginUser) {
       this.loading = true
-      return await Request(mLoginUser, { data }, true)
+      return await Request(mLoginUser, { data })
         .then(async (response) => {
           const token = (response as { loginUser: string }).loginUser
 
@@ -47,6 +48,7 @@ export default defineStore('auth-user', {
         })
         .finally(() => { this.loading = false })
     },
+
     async logout () {
       this.loading = true
       return Request(mLogoutUser)
@@ -63,6 +65,7 @@ export default defineStore('auth-user', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async refreshToken () {
       this.loading = true
       return Request(mRefreshToken)
@@ -88,24 +91,27 @@ export default defineStore('auth-user', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async confirmEmail (token: string) {
       this.loading = true
-      return Request(mConfirmEmail, { confirmEmailToken: token }, true)
+      return Request(mConfirmEmail, { confirmEmailToken: token })
         .then((response) => {
           return (response as { confirmEmailToken: boolean }).confirmEmailToken
         })
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async resendConfirmation (email: string) {
       this.loading = true
-      return Request(mResendEmailConfirmation, { email }, true)
+      return Request(mResendEmailConfirmation, { email })
         .then((response) => {
           return (response as { resendEmailConfirmation: string }).resendEmailConfirmation
         })
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async fetchUser () {
       try {
         this.user = await fetchLoggedUser()
@@ -113,6 +119,22 @@ export default defineStore('auth-user', {
       } catch (err) {
         return undefined
       }
+    },
+
+    async updateUser (data: UpdateUserData) {
+      this.loading = true
+      return await Request(mUpdateUser, { data })
+        .then((response) => (response as { updateUser: boolean }).updateUser)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async checkUsernameAvailability (username: string) {
+      this.loading = true
+      return await Request(qCheckUsernameAvailability, { username })
+        .then((response) => (response as { usernameExists: boolean }).usernameExists)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
     }
   }
 })

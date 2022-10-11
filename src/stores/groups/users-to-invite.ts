@@ -6,7 +6,7 @@ import { UserPaginationData } from 'src/models/PaginationData'
 import { User } from 'src/models/User'
 
 // gql
-import { qGetUsers } from 'src/graphql/users/queries'
+import { qGetUsersToInvite } from 'src/graphql/users/queries'
 
 export default defineStore('users-store', {
   state: () => ({
@@ -15,12 +15,11 @@ export default defineStore('users-store', {
     loading: false
   }),
   actions: {
-    async fetch (paginatedData: UserPaginationData) {
+    async fetch (paginatedData: UserPaginationData, groupId: string) {
       this.loading = true
-      // todo: na allaksei to query sto GetAvailableUsersToInvite
-      return await Request(qGetUsers, { paginatedData })
+      return await Request(qGetUsersToInvite, { paginatedData, groupId })
         .then((response) => {
-          const res = (response as { getUsers: { data: User[], total: number} }).getUsers
+          const res = (response as { getAvailableUsersToInvite: { data: User[], total: number} }).getAvailableUsersToInvite
           this.users = res.data
           this.total = res.total
           return this.users

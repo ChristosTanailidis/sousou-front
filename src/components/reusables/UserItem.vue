@@ -66,7 +66,7 @@ import { defineComponent, PropType, computed } from 'vue'
 // components
 
 // models
-import { User, UserToAdd } from 'src/models/User'
+import { UserToAdd } from 'src/models/User'
 import { Group } from 'src/models/Group'
 
 // stores
@@ -77,7 +77,7 @@ export default defineComponent({
   components: {},
   props: {
     user: {
-      type: Object as PropType<User | UserToAdd>,
+      type: Object as PropType<UserToAdd>,
       required: true
     },
     code: {
@@ -99,7 +99,6 @@ export default defineComponent({
           return props.user.groups.filter((g, i) => i < 2)
         }
       })
-
     }
   }
 })

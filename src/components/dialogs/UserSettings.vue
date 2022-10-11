@@ -53,7 +53,10 @@
               :key="tab.name"
               :name="tab.name"
             >
-              <component :is="tab.component" />
+              <component
+                :is="tab.component"
+                v-bind="tab.componentProps"
+              />
             </q-tab-panel>
           </q-tab-panels>
         </div>
@@ -65,6 +68,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
+import { storeToRefs } from 'pinia'
 
 // components
 import UserGeneralSettings from '../settings/user/UserGeneralSettings.vue'
@@ -73,6 +77,7 @@ import UserPreferencesSettings from '../settings/user/UserPreferencesSettings.vu
 // models
 
 // stores
+import useUserStore from 'src/stores/auth-user'
 
 // utils
 
@@ -83,11 +88,15 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
+    const userStore = useUserStore()
+    const { user } = storeToRefs(userStore)
+
     const tabs = [
       {
         name: 'general',
         label: 'General',
-        component: UserGeneralSettings
+        component: UserGeneralSettings,
+        componentProps: { user: user.value }
       },
       {
         name: 'preferences',

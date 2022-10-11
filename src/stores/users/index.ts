@@ -29,6 +29,7 @@ export default defineStore('users-store', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async createFriendRequest (data: FriendRequestInputData) {
       this.loading = true
       return await Request(mCreateFriendRequest, { data })
@@ -36,6 +37,7 @@ export default defineStore('users-store', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async cancelFriendRequest (cancelFriendRequestId: string) {
       this.loading = true
       return await Request(mCancelFriendRequest, { cancelFriendRequestId })
@@ -43,6 +45,7 @@ export default defineStore('users-store', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
+
     async answerFriendRequest (answer: boolean, answerFriendRequestId: string) {
       this.loading = true
       return await Request(mAnswerFriendRequest, { answer, answerFriendRequestId })

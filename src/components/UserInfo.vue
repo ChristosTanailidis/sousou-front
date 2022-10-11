@@ -15,7 +15,7 @@
             square
           >
             <q-img
-              src="https://placeimg.com/500/300/nature"
+              :src="user?.icon"
               spinner-color="white"
               fit="cover"
               class="h-full w-full"

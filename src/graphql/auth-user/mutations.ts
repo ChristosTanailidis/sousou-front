@@ -44,3 +44,9 @@ mutation UpdateUserPreferences($data: UserPreferencesInputData!) {
   }
 }
 `
+
+export const mUpdateUser = gql`
+mutation UpdateUser($data: UpdateUserInputData!) {
+  updateUser(data: $data)
+}
+`

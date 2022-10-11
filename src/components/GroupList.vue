@@ -75,7 +75,7 @@ import { useQuasar } from 'quasar'
 import CreateGroup from './dialogs/CreateGroup.vue'
 
 // models
-import { Group } from 'src/models/Group'
+// import { Group } from 'src/models/Group'
 
 // stores
 import useUserStore from 'src/stores/auth-user'

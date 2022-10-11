@@ -10,6 +10,12 @@ export interface LoginUser {
   password: string
 }
 
+export interface UpdateUserData {
+  displayName: string
+  username: string
+  icon?: string
+}
+
 export interface GroupInputData {
   name: string
   icon: string

@@ -103,3 +103,9 @@ query GetLoggedUser {
   }
 }
 `
+
+export const qCheckUsernameAvailability = gql`
+query Query($username: String!) {
+  usernameExists(username: $username)
+}
+`

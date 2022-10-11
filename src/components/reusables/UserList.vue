@@ -72,7 +72,7 @@ export default defineComponent({
   props: {
     users: {
       type: Array as PropType<User[]>,
-      required: true
+      default: () => []
     },
     pagination: {
       type: Object as PropType<PaginationData>,

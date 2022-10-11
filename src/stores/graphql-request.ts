@@ -1,7 +1,7 @@
 import { DocumentNode, print } from 'graphql'
 import { api } from 'src/boot/axios'
 
-export default async (query: DocumentNode, variables?: unknown, authFree?: boolean) =>
+export default async (query: DocumentNode, variables?: unknown) =>
   new Promise<unknown>((resolve, reject) => {
     api({
       url: '',
@@ -9,9 +9,6 @@ export default async (query: DocumentNode, variables?: unknown, authFree?: boole
       data: {
         query: print(query),
         variables
-      },
-      params: {
-        authFree
       }
     })
       .then((res) => res.data?.errors?.length ? reject(res.data.errors) : resolve(res.data.data))

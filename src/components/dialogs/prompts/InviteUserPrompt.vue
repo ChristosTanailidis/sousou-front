@@ -10,7 +10,7 @@
       >
         <q-card-section>
           <q-input
-            v-model="friendRequestData.message"
+            v-model="userInviteData.message"
             type="textarea"
             label="Message"
             :rules="[
@@ -71,14 +71,14 @@ export default defineComponent({
 
     const groupsStore = useGroupsStore()
 
-    const friendRequestData = ref<GroupInviteData>({
+    const userInviteData = ref<GroupInviteData>({
       groupId: props.group.id,
       toUserId: props.user.id,
       message: `Hi ${props.user.displayName},\nI would like to invite you in ${props.group.name}`
     })
 
     const sentGroupInvite = async () => {
-      const response = await groupsStore.inviteUser(friendRequestData.value)
+      const response = await groupsStore.inviteUser(userInviteData.value)
 
       if (!response) {
         return
@@ -95,7 +95,7 @@ export default defineComponent({
       dialogRef,
       onDialogHide,
 
-      friendRequestData,
+      userInviteData,
       sentGroupInvite,
       cancel
     }

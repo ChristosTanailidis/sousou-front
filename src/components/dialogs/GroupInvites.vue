@@ -60,11 +60,11 @@ export default defineComponent({
 
     onMounted(async () => {
       // todo: this will need a groupId soon
-      await usersToInvite.fetch(pagination.value)
+      await usersToInvite.fetch(pagination.value, props.group.id)
     })
 
     watch(pagination, async () => {
-      await usersToInvite.fetch(pagination.value)
+      await usersToInvite.fetch(pagination.value, props.group.id)
     }, { deep: true })
 
     const $q = useQuasar()

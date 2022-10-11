@@ -96,6 +96,7 @@ query GetLoggedUser {
       code
       displayName
       username
+      icon
     }
     personalChats {
       id

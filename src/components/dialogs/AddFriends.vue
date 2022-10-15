@@ -9,7 +9,26 @@
         v-model:pagination="pagination"
         :users="users"
         @user-select="promptAddFriend"
-      />
+      >
+        <template #default="{ user }">
+          <q-btn
+            v-if="user.pending"
+            unelevated
+            icon="delete"
+            label="Cancel Friend Request"
+            class="absolute right-0 top-0 w-full h-full bg-red-700/0 hover:bg-red-700/70 opacity-0 hover:opacity-100 transition-all"
+            @click="promptCancelRequest(user.pending)"
+          />
+          <q-btn
+            v-else
+            unelevated
+            icon="add"
+            label="Add friend"
+            class="absolute right-0 top-0 w-full h-full bg-glass-primary opacity-0 hover:opacity-100 transition-all"
+            @click="promptAddFriend(user)"
+          />
+        </template>
+      </UserList>
     </q-card>
   </q-dialog>
 </template>
@@ -22,6 +41,7 @@ import { storeToRefs } from 'pinia'
 // components
 import UserList from '../reusables/UserList.vue'
 import AddFriendPrompt from './prompts/AddFriendPrompt.vue'
+import CancelFriendRequestPrompt from './prompts/CancelFriendRequestPrompt.vue'
 
 // models
 import { UserPaginationData } from 'src/models/PaginationData'
@@ -65,11 +85,23 @@ export default defineComponent({
       })
     }
 
+    const promptCancelRequest = (id: string) => {
+      $q.dialog({
+        component: CancelFriendRequestPrompt,
+        componentProps: {
+          id
+        }
+      }).onOk(() => {
+        onDialogOK()
+      })
+    }
+
     return {
       dialogRef,
       onDialogHide,
 
       promptAddFriend,
+      promptCancelRequest,
 
       onCancelClick: onDialogCancel,
 

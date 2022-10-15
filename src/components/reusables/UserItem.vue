@@ -1,7 +1,7 @@
 <template>
   <q-item
     clickable
-    :disable="user?.pending"
+    :disabled="user?.pending"
     class="my-2 rounded overflow-hidden"
   >
     <q-item-section

@@ -38,13 +38,7 @@
                 :user="props.row"
                 @click="$emit('userSelect', props.row)"
               />
-              <q-btn
-                unelevated
-                icon="delete"
-                label="Cancel Friend Request"
-                class="flex absolute right-0 top-0 w-full h-full bg-red-700/0 hover:bg-red-700/70 opacity-0 hover:opacity-100 transition-all"
-                @click="$emit('userSelect', props.row)"
-              />
+              <slot :user="props.row" />
             </div>
           </q-tr>
         </template>

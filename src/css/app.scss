@@ -19,6 +19,12 @@ input, select {
   // border: 1px solid rgba(#17141d, 0.3);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.418),
 }
+
+.bg-glass-primary {
+  background: rgba(3,196,161,0.2);
+  backdrop-filter: blur(0.6rem);
+  -webkit-backdrop-filter: blur(0.6rem);
+}
 // -==[ Glass Effect ]==-
 
 // -==[ Gradient Background ]==-

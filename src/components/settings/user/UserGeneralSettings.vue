@@ -45,7 +45,7 @@
           color="primary"
           class="flex-grow"
           type="submit"
-          :disable="loading"
+          :disabled="loading"
           :loading="loading"
         />
         <q-btn
@@ -54,7 +54,7 @@
           label="Reset"
           icon="restart_alt"
           type="reset"
-          :disable="loading"
+          :disabled="loading"
           :loading="loading"
         />
       </q-card-actions>

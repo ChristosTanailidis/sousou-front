@@ -7,8 +7,26 @@
       <UserList
         v-model:pagination="pagination"
         :users="users"
-        @user-select="manageInvitation"
-      />
+      >
+        <template #default="{ user }">
+          <q-btn
+            v-if="user.pending"
+            unelevated
+            icon="delete"
+            label="Cancel Invitation"
+            class="absolute right-0 top-0 w-full h-full bg-red-700/0 hover:bg-red-700/70 opacity-0 hover:opacity-100 transition-all"
+            @click="promptCancelInvite(user.pending)"
+          />
+          <q-btn
+            v-else
+            unelevated
+            icon="add"
+            label="Invite User"
+            class="absolute right-0 top-0 w-full h-full bg-glass-primary opacity-0 hover:opacity-100 transition-all"
+            @click="promptInviteUser(user)"
+          />
+        </template>
+      </UserList>
     </q-card>
   </q-dialog>
 </template>
@@ -26,11 +44,10 @@ import UserList from '../reusables/UserList.vue'
 // models
 import { UserPaginationData } from 'src/models/PaginationData'
 import { Group } from 'src/models/Group'
-import { User } from 'src/models/User'
+import { UserToInvite } from 'src/models/User'
 
 // stores
 import usUsersToInviteStore from 'src/stores/groups/users-to-invite'
-// import useGroupsStore from 'src/stores/groups'
 
 // utils
 
@@ -44,13 +61,11 @@ export default defineComponent({
   },
   emits: [...useDialogPluginComponent.emits],
   setup (props) {
-    const { dialogRef, onDialogHide } = useDialogPluginComponent()
+    const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 
     const usersToInvite = usUsersToInviteStore()
-    // const groupsStore = useGroupsStore()
 
     const { users } = storeToRefs(usersToInvite)
-    // const { groups } = storeToRefs(groupsStore)
 
     const pagination = ref<UserPaginationData>({
       limit: 6,
@@ -59,7 +74,6 @@ export default defineComponent({
     })
 
     onMounted(async () => {
-      // todo: this will need a groupId soon
       await usersToInvite.fetch(pagination.value, props.group.id)
     })
 
@@ -69,41 +83,38 @@ export default defineComponent({
 
     const $q = useQuasar()
 
-    // todo: to existing paizei na mhn xreiazetai an erxetai apo ton user
-    const manageInvitation = (user: User) => {
-      // todo: if user.available
-      if (user) {
-        // todo: efoson einai existing to invite, kane find sta invites pou den uparxoun twra
-        // kai des to id tou invite vasei tou xrhsth kai tou group,
-        // better solution: to existing ginetai [inviteId?: string]
-        // sto users kai apo kei perneis katheutheian to inviteId gia to cancel
+    const promptInviteUser = (user: UserToInvite) => {
+      $q.dialog({
+        component: InviteUserPrompt,
+        componentProps: {
+          user,
+          group: props.group
+        }
+      }).onOk(() => {
+        onDialogOK()
+      })
+    }
 
-        $q.dialog({
-          component: CancelInviteUserPrompt,
-          componentProps: {
-            inviteId: 'todo'
-          }
-        }).onOk(() => true)
-          .onCancel(() => false)
-      } else {
-        $q.dialog({
-          component: InviteUserPrompt,
-          componentProps: {
-            user,
-            group: props.group
-          }
-        }).onOk(() => true)
-          .onCancel(() => false)
-      }
+    const promptCancelInvite = (id: string) => {
+      $q.dialog({
+        component: CancelInviteUserPrompt,
+        componentProps: {
+          id
+        }
+      }).onOk(() => {
+        onDialogOK()
+      })
     }
 
     return {
       dialogRef,
       onDialogHide,
 
+      promptInviteUser,
+      promptCancelInvite,
+
       users,
-      pagination,
-      manageInvitation
+      pagination
     }
   }
 })

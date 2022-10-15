@@ -15,7 +15,7 @@
           :debounce="750"
           :rules="[
             val => !!val || 'Username is required',
-            val => val.length > 5 || 'A username must contain at least 5 characters',
+            val => val.length >= 5 || 'A username must contain at least 5 characters',
             async val => await checkUsernameAvailability(val) || 'Username is already taken'
           ]"
         />

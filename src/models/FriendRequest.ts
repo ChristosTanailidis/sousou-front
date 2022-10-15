@@ -2,7 +2,7 @@ import { User } from './User'
 
 export interface FriendRequest {
   id: string
-  message: string
+  message?: string
   createdAt: Date
   updatedAt?: Date
   answer?: boolean

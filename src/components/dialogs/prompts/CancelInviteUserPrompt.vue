@@ -46,7 +46,7 @@ import useGroupsStore from 'src/stores/groups'
 export default defineComponent({
   components: {},
   props: {
-    groupId: {
+    id: {
       type: String,
       required: true
     }
@@ -58,7 +58,7 @@ export default defineComponent({
     const groupsStore = useGroupsStore()
 
     const sentGroupInvite = async () => {
-      const response = await groupsStore.cancelInvite(props.groupId)
+      const response = await groupsStore.cancelInvite(props.id)
 
       if (!response) {
         return

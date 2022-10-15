@@ -27,3 +27,7 @@ export interface User {
 export interface UserToAdd extends User {
   pending?: boolean
 }
+
+export interface UserToInvite extends User {
+  pending?: boolean
+}

@@ -8,7 +8,6 @@
         v-if="users"
         v-model:pagination="pagination"
         :users="users"
-        @user-select="promptAddFriend"
       >
         <template #default="{ user }">
           <q-btn

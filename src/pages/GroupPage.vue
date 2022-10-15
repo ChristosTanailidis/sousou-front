@@ -278,7 +278,7 @@ import { useQuasar } from 'quasar'
 
 // components
 import GroupSettings from 'src/components/dialogs/GroupSettings.vue'
-import GroupInvites from 'src/components/dialogs/GroupInvites.vue'
+import InviteMembers from 'src/components/dialogs/InviteMembers.vue'
 
 // models
 
@@ -324,7 +324,7 @@ export default defineComponent({
     }
 
     const manageGroupSettingsDialog = () => manageDialogs(GroupSettings, { group: group.value })
-    const manageGroupInvitesDialog = () => manageDialogs(GroupInvites, { group: group.value })
+    const manageGroupInvitesDialog = () => manageDialogs(InviteMembers, { group: group.value })
 
     return {
       group,

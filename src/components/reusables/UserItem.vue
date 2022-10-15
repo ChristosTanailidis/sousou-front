@@ -15,6 +15,7 @@
         <q-img
           :src="user.icon"
           object="cover"
+          class="w-full h-full"
         />
       </q-avatar>
     </q-item-section>

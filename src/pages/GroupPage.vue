@@ -165,6 +165,16 @@
                 overflowY: 'auto'}"
               class="bg-dark-300"
             >
+              <!-- todo: this button -->
+              <q-btn
+                flat
+                no-caps
+                color="primary"
+                icon="add"
+                label="Create Text Channel"
+                class="w-full "
+                @click="manageCreateChannelDialog('text')"
+              />
               <q-item
                 v-ripple
                 clickable
@@ -187,6 +197,16 @@
             expand-icon="none"
             header-class="bg-dark-400"
           >
+            <!-- todo: this button -->
+            <q-btn
+              flat
+              no-caps
+              color="primary"
+              icon="add"
+              label="Create Voice Channel"
+              class="w-full"
+              @click="manageCreateChannelDialog('text')"
+            />
             <q-list
               :style="{
                 maxHeight: `calc(100vh - ( 250px + ${headerRef ? headerRef.clientHeight : '0px'} ))`,
@@ -326,12 +346,26 @@ export default defineComponent({
     const manageGroupSettingsDialog = () => manageDialogs(GroupSettings, { group: group.value })
     const manageGroupInvitesDialog = () => manageDialogs(InviteMembers, { group: group.value })
 
+    const manageCreateChannelDialog = (chanelType: 'voice' | 'text') => {
+      switch (chanelType) {
+        case 'voice': {
+          manageDialogs(GroupSettings, { group: group.value }) // todo
+          break
+        }
+        case 'text': {
+          manageDialogs(GroupSettings, { group: group.value }) // todo
+          break
+        }
+      }
+    }
+
     return {
       group,
       user,
 
       manageGroupSettingsDialog,
       manageGroupInvitesDialog,
+      manageCreateChannelDialog,
 
       settingsMenu: ref(false),
       headerRef: ref()

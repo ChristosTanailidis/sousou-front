@@ -205,7 +205,7 @@
               icon="add"
               label="Create Voice Channel"
               class="w-full"
-              @click="manageCreateChannelDialog('text')"
+              @click="manageCreateChannelDialog('voice')"
             />
             <q-list
               :style="{
@@ -305,6 +305,7 @@ import InviteMembers from 'src/components/dialogs/InviteMembers.vue'
 // stores
 import useGroupsStore from 'src/stores/groups'
 import useUserStore from 'src/stores/auth-user'
+import ChannelDialog from 'src/components/dialogs/channels/ChannelDialog.vue'
 
 // utils
 
@@ -346,14 +347,14 @@ export default defineComponent({
     const manageGroupSettingsDialog = () => manageDialogs(GroupSettings, { group: group.value })
     const manageGroupInvitesDialog = () => manageDialogs(InviteMembers, { group: group.value })
 
-    const manageCreateChannelDialog = (chanelType: 'voice' | 'text') => {
-      switch (chanelType) {
+    const manageCreateChannelDialog = (channelType: 'voice' | 'text') => {
+      switch (channelType) {
         case 'voice': {
-          manageDialogs(GroupSettings, { group: group.value }) // todo
+          manageDialogs(ChannelDialog, { channelType }) // todo
           break
         }
         case 'text': {
-          manageDialogs(GroupSettings, { group: group.value }) // todo
+          manageDialogs(ChannelDialog, { channelType }) // todo
           break
         }
       }

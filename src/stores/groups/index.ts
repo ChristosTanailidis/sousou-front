@@ -18,6 +18,7 @@ export default defineStore('group-store', {
     loading: false
   }),
   actions: {
+    // CRUD
     async fetch (paginationInputData: GroupPaginationData) {
       this.loading = true
       return await Request(qGetGroups, { paginationInputData })
@@ -59,6 +60,7 @@ export default defineStore('group-store', {
         .finally(() => { this.loading = false })
     },
 
+    // Group Invites
     async inviteUser (data: GroupInviteData) {
       this.loading = true
       return await Request(mCreateGroupInvite, { data })

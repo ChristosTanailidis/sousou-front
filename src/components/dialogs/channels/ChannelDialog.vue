@@ -54,22 +54,27 @@ export default defineComponent({
     channelType: {
       type: String as PropType<'text' | 'voice'>,
       default: 'text'
+    },
+    channel: {
+      // used for editing an existing channel
+      type: Object,
+      default: undefined
     }
   },
   emits: [...useDialogPluginComponent.emits],
-  setup () {
+  setup (props) {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
     const childComponent = {
       text: {
         component: TextChannel,
-        childProps: { textChannel: { fakeField: 'op! :D' } },
+        childProps: { textChannel: props.channel || { fakeField: 'op! :D' } },
         submit: () => { console.log('to text form egine submit') },
         reset: () => { console.log('to text form egine reset') }
       },
       voice: {
         component: VoiceChannel,
-        childProps: { voiceChannel: { fakeField: 'ep!' } },
+        childProps: { voiceChannel: props.channel || { fakeField: 'ep!' } },
         submit: () => { console.log('to voice form egine submit') },
         reset: () => { console.log('to voice form egine reset') }
       }

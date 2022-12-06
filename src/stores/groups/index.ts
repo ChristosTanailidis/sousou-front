@@ -3,11 +3,12 @@ import Request from '../graphql-request'
 
 // models
 import { GroupPaginationData } from 'src/models/PaginationData'
-import { GroupInputData, GroupInviteData } from 'src/models/InputData'
+import { GroupInputData, GroupInviteData, TextChannelInputData, VoiceChannelInputData } from 'src/models/InputData'
 import { Group } from 'src/models/Group'
 
 // gql
 import { mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
+import { mCreateTextChannel, mCreateVoiceChannel } from 'src/graphql/channels/mutations'
 import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
 
 export default defineStore('group-store', {
@@ -73,6 +74,23 @@ export default defineStore('group-store', {
       this.loading = true
       return await Request(mCancelGroupInvite, { cancelGroupInviteId })
         .then((response) => (response as { cancelGroupInvite: boolean }).cancelGroupInvite)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    // Channel Related
+    async createTextChannel (data: TextChannelInputData) {
+      this.loading = true
+      return await Request(mCreateTextChannel, { data })
+        .then((response) => (response as { createTextChannel: boolean }).createTextChannel)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async createVoiceChannel (data: VoiceChannelInputData) {
+      this.loading = true
+      return await Request(mCreateVoiceChannel, { data })
+        .then((response) => (response as { createTextChannel: boolean }).createTextChannel)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }

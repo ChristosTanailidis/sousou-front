@@ -48,6 +48,24 @@ query GetGroupById($getGroupByIdId: String!) {
       code
       icon
     }
+    textChannels {
+      id
+      name
+      users {
+        id
+      }
+    }
+    voiceChannels {
+      group {
+        id
+      }
+      id
+      maxUsers
+      name
+      users {
+        id
+      }
+    }
   }
 }`
 

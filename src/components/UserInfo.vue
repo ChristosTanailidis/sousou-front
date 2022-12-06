@@ -122,19 +122,16 @@ import { useQuasar } from 'quasar'
 
 // components
 import MyFriendRequests from 'src/components/dialogs/user/MyFriendRequests.vue'
+import UserSettings from './dialogs/user/UserSettings.vue'
 
 // models
 
 // stores
 import useUserStore from 'src/stores/auth-user'
-import UserSettings from './dialogs/user/UserSettings.vue'
 
 // utils
 
 export default defineComponent({
-  components: {},
-  props: { },
-  emits: [],
   setup () {
     const userStore = useUserStore()
     const { user } = storeToRefs(userStore)

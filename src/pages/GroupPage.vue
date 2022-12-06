@@ -10,10 +10,17 @@
         <GroupHeader :group="group" />
       </div>
 
-      <SideBar
-        :header-ref="headerRef"
-        :group="group"
-      />
+      <div
+        class="grid grid-cols-10 h-full"
+      >
+        <SideBar
+          :header-ref="headerRef"
+          :group="group"
+        />
+        <div class="col-span-8 bg-dark-200">
+          <router-view />
+        </div>
+      </div>
     </div>
     <div
       v-else
@@ -29,13 +36,13 @@ import { defineComponent, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
-import SideBar from 'src/components/group-page-components/SideBar.vue'
+import SideBar from 'src/components/group-page/SideBar.vue'
 
 // models
 
 // stores
 import useGroupsStore from 'src/stores/groups'
-import GroupHeader from 'src/components/group-page-components/GroupHeader.vue'
+import GroupHeader from 'src/components/group-page/GroupHeader.vue'
 
 // utils
 

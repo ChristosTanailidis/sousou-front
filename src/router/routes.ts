@@ -8,7 +8,16 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: [isLogged],
     children: [
       { path: '', beforeEnter: [isLogged], component: () => import('pages/IndexPage.vue') },
-      { path: 'group/:groupId', beforeEnter: [isLogged], component: () => import('pages/GroupPage.vue'), props: true }
+      {
+        path: 'group/:groupId',
+        beforeEnter: [isLogged],
+        component: () => import('pages/GroupPage.vue'),
+        props: true,
+        children: [
+          { path: 'text/:textChannelId', component: () => import('components/group-page/containers/TextChannelContainer.vue'), props: true },
+          { path: 'voice/:voiceChannelId', component: () => import('components/group-page/containers/VoiceChannelContainer.vue'), props: true }
+        ]
+      }
     ]
   },
   {
@@ -28,7 +37,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('src/pages/auth-pages/ErrorNotFound.vue')
+    component: () => import('src/pages/ErrorNotFound.vue')
   }
 ]
 

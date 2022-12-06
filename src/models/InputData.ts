@@ -32,3 +32,15 @@ export interface FriendRequestInputData {
   toUserId: string
   message: string
 }
+
+export interface TextChannelInputData {
+  groupId: string
+  name: string
+  slowMode: number
+}
+
+export interface VoiceChannelInputData {
+  groupId: string
+  name: string
+  maxUsers: number
+}

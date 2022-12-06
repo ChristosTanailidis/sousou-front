@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col flex-nowrap gap-2 h-full">
     <div class="flex-grow q-pa-md row justify-center">
+      {{ textChannelId }}
       <div style="width: 100%">
         <q-chat-message
           name="<span class='text-positive'>Untrusted Source</span>"
@@ -60,6 +61,12 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {},
+  props: {
+    textChannelId: {
+      type: String,
+      required: true
+    }
+  },
   emits: [],
   setup () {
     return {

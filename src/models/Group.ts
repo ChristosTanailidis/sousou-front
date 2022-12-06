@@ -1,3 +1,5 @@
+import { TextChannel } from './TextChannel'
+import { VoiceChannel } from './VoiceChannel'
 import { User } from './User'
 
 export interface Group {
@@ -10,4 +12,6 @@ export interface Group {
   preferences: JSON
   owner: User
   members: [User]
+  textChannels: [TextChannel]
+  voiceChannels: [VoiceChannel]
 }

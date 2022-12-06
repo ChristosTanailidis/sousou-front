@@ -1,7 +1,8 @@
 import { FriendRequest } from './FriendRequest'
 import { VoiceChannel } from './VoiceChannel'
-import { Group } from './Group'
 import { PersonalChat } from './PersonalChat'
+import { GroupInvite } from './GroupInvite'
+import { Group } from './Group'
 
 export interface User {
   id: string
@@ -20,6 +21,8 @@ export interface User {
   ownedGroups: [Group]
   friendRequests: [FriendRequest]
   myFriendRequests: [FriendRequest]
+  groupInvites: [GroupInvite]
+  myGroupInvites: [GroupInvite]
   friendList: [User]
   personalChats: [PersonalChat]
 }

@@ -16,11 +16,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/AuthLayout.vue'),
     children: [
       { path: '', beforeEnter: [isNotLogged], redirect: '/auth/login' },
-      { path: 'login', beforeEnter: [isNotLogged], component: () => import('pages/Login.vue') },
-      { path: 'logout', component: () => import('pages/Logout.vue') },
-      { path: 'register', beforeEnter: [isNotLogged], component: () => import('pages/Register.vue') },
-      { path: 'confirm-email/:emailToken', beforeEnter: [isNotLogged], component: () => import('pages/ConfirmEmail.vue'), props: true },
-      { path: 'resend-email-confirmation/:email', beforeEnter: [isNotLogged], component: () => import('pages/ResendEmailConfirmation.vue'), props: true }
+      { path: 'login', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/Login.vue') },
+      { path: 'logout', component: () => import('src/pages/auth-pages/Logout.vue') },
+      { path: 'register', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/Register.vue') },
+      { path: 'confirm-email/:emailToken', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ConfirmEmail.vue'), props: true },
+      { path: 'resend-email-confirmation/:email', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ResendEmailConfirmation.vue'), props: true }
     ]
   },
 
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: () => import('src/pages/auth-pages/ErrorNotFound.vue')
   }
 ]
 

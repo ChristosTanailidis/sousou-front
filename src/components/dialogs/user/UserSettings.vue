@@ -71,8 +71,8 @@ import { useDialogPluginComponent } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
-import UserGeneralSettings from '../settings/user/UserGeneralSettings.vue'
-import UserPreferencesSettings from '../settings/user/UserPreferencesSettings.vue'
+import UserGeneralSettings from '../../settings/user/UserGeneralSettings.vue'
+import UserPreferencesSettings from '../../settings/user/UserPreferencesSettings.vue'
 
 // models
 

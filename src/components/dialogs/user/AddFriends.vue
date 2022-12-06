@@ -38,9 +38,9 @@ import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
-import UserList from '../reusables/UserList.vue'
-import AddFriendPrompt from './prompts/AddFriendPrompt.vue'
-import CancelFriendRequestPrompt from './prompts/CancelFriendRequestPrompt.vue'
+import UserList from '../../reusables/UserList.vue'
+import AddFriendPrompt from '../prompts/AddFriendPrompt.vue'
+import CancelFriendRequestPrompt from '../prompts/CancelFriendRequestPrompt.vue'
 
 // models
 import { UserPaginationData } from 'src/models/PaginationData'

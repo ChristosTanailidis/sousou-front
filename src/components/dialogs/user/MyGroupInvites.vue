@@ -87,14 +87,19 @@ import { useDialogPluginComponent } from 'quasar'
 // models
 
 // stores
+import useUserStore from 'src/stores/auth-user'
+import { storeToRefs } from 'pinia'
 
 // utils
 
 export default defineComponent({
   components: {},
-  props: {},
   emits: [...useDialogPluginComponent.emits],
   setup () {
+    const userStore = useUserStore()
+
+    const { user } = storeToRefs(userStore)
+
     const { dialogRef, onDialogHide } = useDialogPluginComponent()
 
     const GroupInviteAction = (answer: boolean, id: string) => {
@@ -104,6 +109,8 @@ export default defineComponent({
     return {
       dialogRef,
       onDialogHide,
+
+      user,
 
       hoveredItem: ref(),
       GroupInviteAction

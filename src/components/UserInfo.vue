@@ -121,13 +121,13 @@ import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
-import MyFriendRequests from 'src/components/dialogs/MyFriendRequests.vue'
+import MyFriendRequests from 'src/components/dialogs/user/MyFriendRequests.vue'
 
 // models
 
 // stores
 import useUserStore from 'src/stores/auth-user'
-import UserSettings from './dialogs/UserSettings.vue'
+import UserSettings from './dialogs/user/UserSettings.vue'
 
 // utils
 

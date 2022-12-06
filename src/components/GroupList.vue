@@ -72,7 +72,7 @@ import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
-import CreateGroup from './dialogs/CreateGroup.vue'
+import CreateGroup from 'src/components/dialogs/group/CreateGroup.vue'
 
 // models
 // import { Group } from 'src/models/Group'

@@ -70,9 +70,9 @@ import { defineComponent, PropType, ref } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
 
 // components
-import GroupGeneralSettings from '../settings/group/GroupGeneralSettings.vue'
-import GroupPreferencesSettings from '../settings/group/GroupPreferencesSettings.vue'
-import GroupMembersSettings from '../settings/group/GroupMembersSettings.vue'
+import GroupGeneralSettings from 'src/components/settings/group/GroupGeneralSettings.vue'
+import GroupPreferencesSettings from 'src/components/settings/group/GroupPreferencesSettings.vue'
+import GroupMembersSettings from 'src/components/settings/group/GroupMembersSettings.vue'
 
 // models
 import { Group } from 'src/models/Group'

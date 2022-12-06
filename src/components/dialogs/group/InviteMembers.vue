@@ -37,9 +37,9 @@ import { useDialogPluginComponent, useQuasar } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
-import InviteUserPrompt from './prompts/InviteUserPrompt.vue'
-import CancelInviteUserPrompt from './prompts/CancelInviteUserPrompt.vue'
-import UserList from '../reusables/UserList.vue'
+import InviteUserPrompt from '../prompts/InviteUserPrompt.vue'
+import CancelInviteUserPrompt from '../prompts/CancelInviteUserPrompt.vue'
+import UserList from '../../reusables/UserList.vue'
 
 // models
 import { UserPaginationData } from 'src/models/PaginationData'

@@ -46,7 +46,7 @@ import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
-import AddFriends from './dialogs/AddFriends.vue'
+import AddFriends from './dialogs/user/AddFriends.vue'
 import UserItem from './reusables/UserItem.vue'
 
 // models

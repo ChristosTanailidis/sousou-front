@@ -8,7 +8,7 @@ import { User } from 'src/models/User'
 // gql
 import { qGetUsersToInvite } from 'src/graphql/users/queries'
 
-export default defineStore('users-store', {
+export const useInviteUsersStore = defineStore('users-store', {
   state: () => ({
     users: undefined as undefined | User[],
     total: 0,

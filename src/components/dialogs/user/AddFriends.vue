@@ -47,7 +47,7 @@ import { UserPaginationData } from 'src/models/PaginationData'
 import { UserToAdd } from 'src/models/User'
 
 // stores
-import useUsersToAddStore from 'src/stores/users/users-to-add'
+import { useAddUsersStore } from 'src/stores/users/users-to-add'
 
 // utils
 
@@ -58,7 +58,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const usersStore = useUsersToAddStore()
+    const usersStore = useAddUsersStore()
     const { users, total, loading } = storeToRefs(usersStore)
 
     const pagination = ref<UserPaginationData>({

@@ -22,7 +22,7 @@
           <q-input
             v-model.number="voiceChannelObj.maxUsers"
             type="number"
-            label="Slow Mode"
+            label="Max Users"
           />
         </q-card-section>
 
@@ -55,7 +55,7 @@ import { storeToRefs } from 'pinia'
 import { VoiceChannelInputData } from 'src/models/InputData'
 
 // stores
-import useGroupStore from 'src/stores/groups/index'
+import { useGroupsStore } from 'src/stores/groups/index'
 
 // utils
 
@@ -64,7 +64,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const groupStore = useGroupStore()
+    const groupStore = useGroupsStore()
     const { group } = storeToRefs(groupStore)
 
     const voiceChannelObj = ref<VoiceChannelInputData>({

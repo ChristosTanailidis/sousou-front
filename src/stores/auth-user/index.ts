@@ -10,7 +10,7 @@ import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, m
 import { qCheckUsernameAvailability, qGetLoggedUser } from 'src/graphql/auth-user/queries'
 import { AxiosError } from 'axios'
 
-export default defineStore('auth-user', {
+export const useAuthUser = defineStore('auth-user', {
   state: () => ({
     user: undefined as undefined | User,
     loading: false

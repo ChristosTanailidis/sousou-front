@@ -49,7 +49,7 @@ import { User } from 'src/models/User'
 import { Group } from 'src/models/Group'
 
 // stores
-import useGroupsStore from 'src/stores/groups'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 

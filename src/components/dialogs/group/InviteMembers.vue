@@ -47,7 +47,7 @@ import { Group } from 'src/models/Group'
 import { UserToInvite } from 'src/models/User'
 
 // stores
-import usUsersToInviteStore from 'src/stores/groups/users-to-invite'
+import { useInviteUsersStore } from 'src/stores/groups/users-to-invite'
 
 // utils
 
@@ -63,7 +63,7 @@ export default defineComponent({
   setup (props) {
     const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 
-    const usersToInvite = usUsersToInviteStore()
+    const usersToInvite = useInviteUsersStore()
 
     const { users } = storeToRefs(usersToInvite)
 

@@ -127,13 +127,13 @@ import UserSettings from './dialogs/user/UserSettings.vue'
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
 export default defineComponent({
   setup () {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)
 
     const $q = useQuasar()

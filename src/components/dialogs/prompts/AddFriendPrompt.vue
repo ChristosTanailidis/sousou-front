@@ -51,8 +51,8 @@ import { FriendRequestInputData } from 'src/models/InputData'
 import { UserToAdd } from 'src/models/User'
 
 // stores
-import useUsersStore from 'src/stores/users'
-import useUserStore from 'src/stores/auth-user'
+import { useUsersStore } from 'src/stores/users'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -91,7 +91,7 @@ export default defineComponent({
     }
 
     const cancelFriendRequest = async () => {
-      const { user } = useUserStore()
+      const { user } = useAuthUser()
       if (!user) {
         return
       }

@@ -10,7 +10,7 @@ import { User } from 'src/models/User'
 import { qGetUsers } from 'src/graphql/users/queries'
 import { mAnswerFriendRequest, mCancelFriendRequest, mCreateFriendRequest } from 'src/graphql/users/mutations'
 
-export default defineStore('users-store', {
+export const useUsersStore = defineStore('users-store', {
   state: () => ({
     users: undefined as undefined | User[],
     total: 0,

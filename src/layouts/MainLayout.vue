@@ -76,14 +76,14 @@ import GroupList from 'src/components/GroupList.vue'
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'MainLayout',
   components: { UserInfo },
   setup () {
     const leftDrawerOpen = ref(true)
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     onMounted(() => {
       refreshToken()
     })

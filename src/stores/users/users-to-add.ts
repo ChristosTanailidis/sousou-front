@@ -8,7 +8,7 @@ import { UserToAdd } from 'src/models/User'
 // gql
 import { qGetUsersToAdd } from 'src/graphql/users/queries'
 
-export default defineStore('users-to-add-store', {
+export const useAddUsersStore = defineStore('users-to-add-store', {
   state: () => ({
     users: undefined as undefined | UserToAdd[],
     total: 0,

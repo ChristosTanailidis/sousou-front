@@ -14,7 +14,7 @@ import { defineComponent } from 'vue'
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -23,7 +23,7 @@ export default defineComponent({
   props: { },
   emits: [],
   setup () {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
 
     const { user } = storeToRefs(userStore)
     return {

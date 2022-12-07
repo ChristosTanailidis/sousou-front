@@ -83,7 +83,7 @@ import { useRouter } from 'vue-router'
 import { RegisterUser } from 'src/models/InputData'
 
 // Stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -98,7 +98,7 @@ export default defineComponent({
 
     const passwordConfirm = ref('')
 
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
 
     const router = useRouter()
 

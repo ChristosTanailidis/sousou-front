@@ -72,7 +72,7 @@ import { UpdateUserData } from 'src/models/InputData'
 import { User } from 'src/models/User'
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 import notify from 'src/utils/notify'
@@ -96,7 +96,7 @@ export default defineComponent({
 
     const originalUserData = { ...userData.value } as UpdateUserData
 
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { loading } = storeToRefs(userStore)
 
     const onSubmit = async () => {

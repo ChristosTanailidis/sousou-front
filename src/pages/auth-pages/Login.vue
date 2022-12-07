@@ -53,7 +53,7 @@ import { useRouter } from 'vue-router'
 import { LoginUser } from 'src/models/InputData'
 
 // Stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -64,7 +64,7 @@ export default defineComponent({
       password: ''
     })
 
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
 
     const router = useRouter()
 

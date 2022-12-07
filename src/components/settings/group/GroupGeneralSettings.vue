@@ -84,7 +84,7 @@ import { Group } from 'src/models/Group'
 import { GroupInputData } from 'src/models/InputData'
 
 // stores
-import useGroupsStore from 'src/stores/groups'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 import notify from 'src/utils/notify'

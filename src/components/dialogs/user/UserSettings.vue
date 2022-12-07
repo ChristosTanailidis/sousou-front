@@ -77,7 +77,7 @@ import UserPreferencesSettings from '../../settings/user/UserPreferencesSettings
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -88,7 +88,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)
 
     const tabs = [

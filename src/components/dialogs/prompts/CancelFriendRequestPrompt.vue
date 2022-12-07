@@ -39,7 +39,7 @@ import { useDialogPluginComponent } from 'quasar'
 // models
 
 // stores
-import useUsersStore from 'src/stores/users'
+import { useUsersStore } from 'src/stores/users'
 
 // utils
 

@@ -82,7 +82,7 @@ import { useDialogPluginComponent } from 'quasar'
 import { GroupInputData } from 'src/models/InputData'
 
 // stores
-import useUserGroupStore from 'src/stores/groups'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 
@@ -93,7 +93,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-    const useGroupStore = useUserGroupStore()
+    const useGroupStore = useGroupsStore()
 
     const groupData = ref<GroupInputData>({
       color: '#000000',

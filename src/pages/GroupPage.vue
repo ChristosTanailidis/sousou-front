@@ -37,12 +37,12 @@ import { storeToRefs } from 'pinia'
 
 // components
 import SideBar from 'src/components/group-page/SideBar.vue'
+import GroupHeader from 'src/components/group-page/GroupHeader.vue'
 
 // models
 
 // stores
-import useGroupsStore from 'src/stores/groups'
-import GroupHeader from 'src/components/group-page/GroupHeader.vue'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 

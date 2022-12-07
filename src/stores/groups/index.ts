@@ -11,7 +11,7 @@ import { mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } fr
 import { mCreateTextChannel, mCreateVoiceChannel } from 'src/graphql/channels/mutations'
 import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
 
-export default defineStore('group-store', {
+export const useGroupsStore = defineStore('group-store', {
   state: () => ({
     groups: undefined as undefined | Group[],
     group: undefined as undefined | Group,

@@ -39,7 +39,7 @@ import { defineComponent, onMounted, ref } from 'vue'
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -48,7 +48,7 @@ export default defineComponent({
   props: { },
   emits: [],
   setup () {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const loggedOut = ref(false)
     onMounted(() => {
       setTimeout(async () => {

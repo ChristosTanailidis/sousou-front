@@ -53,7 +53,7 @@ import UserItem from './reusables/UserItem.vue'
 import { User } from 'src/models/User'
 
 // stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -62,7 +62,7 @@ export default defineComponent({
   props: { },
   emits: [],
   setup () {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)
 
     const search = ref('')

@@ -81,14 +81,14 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
+import { storeToRefs } from 'pinia'
 
 // components
 
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
-import { storeToRefs } from 'pinia'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -96,7 +96,7 @@ export default defineComponent({
   components: {},
   emits: [...useDialogPluginComponent.emits],
   setup () {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
 
     const { user } = storeToRefs(userStore)
 

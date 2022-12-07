@@ -86,8 +86,8 @@ import { storeToRefs } from 'pinia'
 // models
 
 // stores
-import useUserStore from 'src/stores/auth-user'
-import useUsersStore from 'src/stores/users'
+import { useAuthUser } from 'src/stores/auth-user'
+import { useUsersStore } from 'src/stores/users'
 
 // utils
 
@@ -98,7 +98,7 @@ export default defineComponent({
   setup () {
     const { dialogRef, onDialogHide } = useDialogPluginComponent()
 
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)
 
     const usersStore = useUsersStore()

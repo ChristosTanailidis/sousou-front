@@ -61,6 +61,7 @@
 
 <script lang="ts">
 import { Component, defineComponent, PropType } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
 // components
@@ -71,8 +72,7 @@ import InviteMembers from 'src/components/dialogs/group/InviteMembers.vue'
 import { Group } from 'src/models/Group'
 
 // stores
-import useUserStore from 'src/stores/auth-user'
-import { storeToRefs } from 'pinia'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
@@ -86,7 +86,7 @@ export default defineComponent({
   },
   emits: [],
   setup (props) {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)
 
     const $q = useQuasar()

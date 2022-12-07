@@ -19,7 +19,7 @@ import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Stores
-import useUserStore from 'src/stores/auth-user'
+import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'IndexPage',
@@ -30,7 +30,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const userStore = useUserStore()
+    const userStore = useAuthUser()
 
     const router = useRouter()
 

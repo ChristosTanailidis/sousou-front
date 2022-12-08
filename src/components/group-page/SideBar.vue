@@ -10,44 +10,53 @@
       caption="4 Online"
       group="group"
     >
-      <q-item
+      <div
         v-for="member in group.members"
         :key="member.id"
-        v-ripple
-        clickable
+        class="p-2"
       >
-        <q-item-section avatar>
-          <q-avatar :style="{backgroundColor: group.color}">
-            <q-img
-              :src="member.icon"
-              spinner-color="primary"
-              fit="cover"
-              class="h-full w-full"
-            >
-              <template #error>
-                <q-img
-                  src="https://placeimg.com/500/300/nature"
-                  spinner-color="primary"
-                  fit="cover"
-                  class="h-full w-full"
-                />
-              </template>
-            </q-img>
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <div>
-            <span>
-              {{ member.displayName }}
-            </span>
-            <span class="font-thin text-gray-300">
-              #{{ member.code }}
-            </span>
-          </div>
-        </q-item-section>
+        <q-item
+          v-ripple
+          clickable
+          dense
+          class="rounded"
+        >
+          <q-item-section
+            avatar
+          >
+            <q-avatar :style="{backgroundColor: group.color}">
+              <q-img
+                :src="member.icon"
+                spinner-color="primary"
+                fit="cover"
+                class="w-full h-full"
+              >
+                <template #error>
+                  <q-img
+                    src="https://placeimg.com/500/300/nature"
+                    spinner-color="primary"
+                    fit="cover"
+                    class="w-full h-full"
+                  />
+                </template>
+              </q-img>
+            </q-avatar>
+          </q-item-section>
 
-        <MemberProperties />
-      </q-item>
+          <q-item-section>
+            <div>
+              <span>
+                {{ member.displayName }}
+              </span>
+              <span class="font-thin text-gray-300">
+                #{{ member.code }}
+              </span>
+            </div>
+          </q-item-section>
+
+          <MemberProperties />
+        </q-item>
+      </div>
     </ExpansionItem>
 
     <ExpansionItem

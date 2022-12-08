@@ -41,6 +41,7 @@
 
     <div class="flex no-wrap gap-1 my-1 mr-5">
       <q-btn
+        v-if="(group.owner.id === user?.id || group.invitationPermissionUsers.find(p => p.id === user?.id))"
         flat
         round
         unelevated

@@ -31,6 +31,7 @@ export const useUsersStore = defineStore('users-store', {
     },
 
     async createFriendRequest (data: FriendRequestInputData) {
+      console.log('egw uparxw')
       this.loading = true
       return await Request(mCreateFriendRequest, { data })
         .then((response) => (response as { createFriendRequest: boolean }).createFriendRequest)

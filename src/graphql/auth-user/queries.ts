@@ -101,6 +101,45 @@ query GetLoggedUser {
     personalChats {
       id
     }
+    myGroupInvites {
+      answer
+      canceled
+      createdAt
+      fromUser {
+        id
+      }
+      group {
+        id
+      }
+      id
+      message
+      toUser {
+        id
+      }
+      updatedAt
+    }
+    groupInvites {
+      answer
+      canceled
+      createdAt
+      fromUser {
+        id
+        displayName
+      }
+      group {
+        id
+        icon
+        createdAt
+        color
+        name
+        members {
+          id
+        }
+      }
+      id
+      message
+      updatedAt
+    }
   }
 }
 `

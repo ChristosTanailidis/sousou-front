@@ -47,7 +47,7 @@
               flat
               round
               icon="notifications"
-              :color="user?.friendRequests.length ? 'primary' : 'grey-5'"
+              :color="user?.friendRequests.length || user?.groupInvites.length ? 'primary' : 'grey-5'"
               size="sm"
               @click="notificationsMenu = !notificationsMenu"
             />
@@ -122,6 +122,7 @@ import { useQuasar } from 'quasar'
 
 // components
 import MyFriendRequests from 'src/components/dialogs/user/MyFriendRequests.vue'
+import MyGroupInvites from './dialogs/user/MyGroupInvites.vue'
 import UserSettings from './dialogs/user/UserSettings.vue'
 
 // models
@@ -157,8 +158,15 @@ export default defineComponent({
         type: 'group_invite',
         label: 'Group Invites',
         icon: 'o_workspaces',
-        badge: user.value?.groups.length,
-        action: () => undefined
+        badge: user.value?.groupInvites.length,
+        action: () => {
+          $q.dialog({
+            component: MyGroupInvites
+          }).onOk(async () => {
+            // todo: if changes where made!
+            await userStore.fetchUser()
+          })
+        }
       }
     ]
 

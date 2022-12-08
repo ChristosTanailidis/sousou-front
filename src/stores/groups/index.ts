@@ -7,7 +7,7 @@ import { GroupInputData, GroupInviteData, TextChannelInputData, VoiceChannelInpu
 import { Group } from 'src/models/Group'
 
 // gql
-import { mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
+import { mAnswerGroupInvite, mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
 import { mCreateTextChannel, mCreateVoiceChannel } from 'src/graphql/channels/mutations'
 import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
 
@@ -73,6 +73,14 @@ export const useGroupsStore = defineStore('group-store', {
     async cancelInvite (cancelGroupInviteId: string) {
       this.loading = true
       return await Request(mCancelGroupInvite, { cancelGroupInviteId })
+        .then((response) => (response as { cancelGroupInvite: boolean }).cancelGroupInvite)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async answerInvite (answer: boolean, answerGroupInviteId: string) {
+      this.loading = true
+      return await Request(mAnswerGroupInvite, { answer, answerGroupInviteId })
         .then((response) => (response as { cancelGroupInvite: boolean }).cancelGroupInvite)
         .catch(() => undefined)
         .finally(() => { this.loading = false })

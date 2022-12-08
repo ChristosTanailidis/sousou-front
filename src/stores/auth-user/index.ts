@@ -42,10 +42,7 @@ export const useAuthUser = defineStore('auth-user', {
 
           return token
         })
-        .catch((ex) => {
-          const error = ex as AxiosError[]
-          return error ? error.map(err => err.message) : undefined
-        })
+        .catch(() => undefined)
         .finally(() => { this.loading = false })
     },
 

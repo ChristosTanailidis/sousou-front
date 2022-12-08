@@ -5,15 +5,13 @@
   >
     <q-card class="q-dialog-plugin h-[400px]">
       <q-card-section>
-        <!-- todo: User.groupInvites population ??? -->
-        <!-- todo: allios kanoume fetch kai ta group inv, kai ta friend request!! -->
         <div
-          v-for="fr in user?.groupInvites"
-          :key="fr.id"
+          v-for="gi in user?.groupInvites"
+          :key="gi.id"
           class="my-2 rounded overflow-hidden bg-dark-100"
         >
           <q-item
-            @mouseover="hoveredItem = fr.id"
+            @mouseover="hoveredItem = gi.id"
             @mouseleave="hoveredItem = undefined"
           >
             <q-item-section
@@ -25,19 +23,19 @@
                 size="40px"
               >
                 <q-img
-                  :src="fr.fromUser.icon"
+                  :src="gi.group.icon"
                   object="cover"
                 />
               </q-avatar>
             </q-item-section>
 
             <q-item-section>
-              <q-item-label>{{ fr.fromUser.displayName }}</q-item-label>
+              <q-item-label>{{ gi.group.name }}</q-item-label>
               <q-item-label
-                caption
                 lines="2"
+                caption
               >
-                #{{ fr.fromUser.code }}
+                {{ gi.group.members.length }} members
               </q-item-label>
             </q-item-section>
 
@@ -50,7 +48,7 @@
                   color="primary"
                   label="Decline"
                   class="w-18"
-                  @click="GroupInviteAction(false, fr.id)"
+                  @click="groupInviteAction(false, gi.id)"
                 />
                 <q-btn
                   dense
@@ -59,16 +57,23 @@
                   color="primary"
                   label="Accept"
                   class="w-18"
-                  @click="GroupInviteAction(true, fr.id)"
+                  @click="groupInviteAction(true, gi.id)"
                 />
               </div>
             </q-item-section>
           </q-item>
 
           <q-slide-transition>
-            <div v-show="hoveredItem === fr.id">
+            <div v-show="hoveredItem === gi.id">
               <q-item>
-                {{ fr.message }}
+                <q-item-section>
+                  <q-item-label>
+                    User <span class="font-semibold">#{{ gi.fromUser.displayName }}</span> invites you:
+                  </q-item-label>
+                  <q-item-label>
+                    {{ gi.message }}
+                  </q-item-label>
+                </q-item-section>
               </q-item>
             </div>
           </q-slide-transition>
@@ -89,6 +94,7 @@ import { storeToRefs } from 'pinia'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 
@@ -97,13 +103,15 @@ export default defineComponent({
   emits: [...useDialogPluginComponent.emits],
   setup () {
     const userStore = useAuthUser()
+    const groupsStore = useGroupsStore()
 
     const { user } = storeToRefs(userStore)
 
     const { dialogRef, onDialogHide } = useDialogPluginComponent()
 
-    const GroupInviteAction = (answer: boolean, id: string) => {
-      console.log(answer, id)
+    const groupInviteAction = async (answer: boolean, id: string) => {
+      await groupsStore.answerInvite(answer, id)
+      await userStore.fetchUser()
     }
 
     return {
@@ -113,7 +121,7 @@ export default defineComponent({
       user,
 
       hoveredItem: ref(),
-      GroupInviteAction
+      groupInviteAction
     }
   }
 })

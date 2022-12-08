@@ -32,11 +32,15 @@
     </q-item>
 
     <!-- Friend -->
-    <UserItem
+    <router-link
       v-for="friend in friends"
       :key="friend.id"
-      :user="friend"
-    />
+      :to="'/friend/' + friend.id"
+    >
+      <UserItem
+        :user="friend"
+      />
+    </router-link>
   </q-list>
 </template>
 

@@ -68,7 +68,7 @@
               <q-item>
                 <q-item-section>
                   <q-item-label>
-                    User <span class="font-semibold">#{{ gi.fromUser.displayName }}</span> invites you:
+                    User <span class="font-semibold">{{ gi.fromUser.displayName }}</span> invites you:
                   </q-item-label>
                   <q-item-label>
                     {{ gi.message }}

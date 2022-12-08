@@ -30,6 +30,18 @@ export const useUsersStore = defineStore('users-store', {
         .finally(() => { this.loading = false })
     },
 
+    // async fetchUser (getGroupByIdId: string) {
+    //   this.loading = true
+    //   return await Request(qGetGroupById, { getGroupByIdId })
+    //     .then((response) => {
+    //       const res = (response as { getGroupById: Group }).getGroupById
+    //       this.group = res
+    //       return this.group
+    //     })
+    //     .catch(() => undefined)
+    //     .finally(() => { this.loading = false })
+    // },
+
     async createFriendRequest (data: FriendRequestInputData) {
       console.log('egw uparxw')
       this.loading = true

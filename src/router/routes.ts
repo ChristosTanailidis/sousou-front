@@ -17,6 +17,12 @@ const routes: RouteRecordRaw[] = [
           { path: 'text/:textChannelId', component: () => import('components/group-page/containers/TextChannelContainer.vue'), props: true },
           { path: 'voice/:voiceChannelId', component: () => import('components/group-page/containers/VoiceChannelContainer.vue'), props: true }
         ]
+      },
+      {
+        path: 'friend/:userId',
+        beforeEnter: [isLogged],
+        component: () => import('pages/FriendPage.vue'),
+        props: true
       }
     ]
   },

@@ -57,18 +57,18 @@
       :caption="`${group.textChannels.length} available`"
       group="group"
     >
-      <q-btn
-        flat
-        no-caps
-        color="primary"
-        icon="add"
-        label="Create Text Channel"
-        class="w-full "
-        @click="manageCreateChannelDialog('text')"
-      />
-      <q-separator
-        dark
-      />
+      <div class="px-2 pt-2">
+        <q-btn
+          flat
+          no-caps
+          dense
+          color="primary"
+          icon="add"
+          label="Create Text Channel"
+          class="w-full "
+          @click="manageCreateChannelDialog('text')"
+        />
+      </div>
       <q-item
         v-for="textChannel in group.textChannels"
         :key="textChannel.id"
@@ -91,18 +91,17 @@
       :caption="`${group.voiceChannels?.length} available`"
       group="group"
     >
-      <q-btn
-        flat
-        no-caps
-        color="primary"
-        icon="add"
-        label="Create Voice Channel"
-        class="w-full"
-        @click="manageCreateChannelDialog('voice')"
-      />
-      <q-separator
-        dark
-      />
+      <div class="px-2 pt-2">
+        <q-btn
+          flat
+          no-caps
+          color="primary"
+          icon="add"
+          label="Create Voice Channel"
+          class="w-full"
+          @click="manageCreateChannelDialog('voice')"
+        />
+      </div>
       <q-item
         v-for="voiceChannel in group.voiceChannels"
         :key="voiceChannel.id"

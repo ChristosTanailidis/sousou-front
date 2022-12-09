@@ -4,12 +4,17 @@ import Request from '../graphql-request'
 // models
 import { GroupPaginationData } from 'src/models/PaginationData'
 import { GroupInputData, GroupInviteData, TextChannelInputData, VoiceChannelInputData } from 'src/models/InputData'
+import { VoiceChannel } from 'src/models/VoiceChannel'
+import { TextChannel } from 'src/models/TextChannel'
 import { Group } from 'src/models/Group'
 
 // gql
-import { mAnswerGroupInvite, mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
-import { mCreateTextChannel, mCreateVoiceChannel } from 'src/graphql/channels/mutations'
 import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
+import { qFetchTextChannel } from 'src/graphql/channels/text-channels/queries'
+import { mAnswerGroupInvite, mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
+import { mCreateTextChannel } from 'src/graphql/channels/text-channels/mutations'
+import { mCreateVoiceChannel } from 'src/graphql/channels/voice-channels/mutations'
+import { qFetchVoiceChannel } from 'src/graphql/channels/voice-channels/queries'
 
 export const useGroupsStore = defineStore('group-store', {
   state: () => ({
@@ -87,6 +92,22 @@ export const useGroupsStore = defineStore('group-store', {
     },
 
     // Channel Related
+    async fetchTextChannel (getTextChannelByIdId: string) {
+      this.loading = true
+      return await Request(qFetchTextChannel, { getTextChannelByIdId })
+        .then((response) => (response as { getTextChannelById: TextChannel }).getTextChannelById)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async fetchVoiceChannel (getVoiceChannelByIdId: string) {
+      this.loading = true
+      return await Request(qFetchVoiceChannel, { getVoiceChannelByIdId })
+        .then((response) => (response as { getVoiceChannelById: VoiceChannel }).getVoiceChannelById)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
     async createTextChannel (data: TextChannelInputData) {
       this.loading = true
       return await Request(mCreateTextChannel, { data })

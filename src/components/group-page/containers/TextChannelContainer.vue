@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col flex-nowrap gap-2 h-full">
     <div class="flex-grow q-pa-md row justify-center">
-      {{ textChannelId }}
       <div style="width: 100%">
         <q-chat-message
           name="<span class='text-positive'>Untrusted Source</span>"
@@ -49,13 +48,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 // components
 
 // models
 
 // stores
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 
@@ -68,9 +68,17 @@ export default defineComponent({
     }
   },
   emits: [],
-  setup () {
-    return {
+  setup (props) {
+    const groupStore = useGroupsStore()
 
+    const textChannelObj = ref()
+
+    onMounted(async () => {
+      textChannelObj.value = await groupStore.fetchTextChannel(props.textChannelId)
+    })
+
+    return {
+      textChannelObj
     }
   }
 })

@@ -33,12 +33,12 @@
 
     <!-- Friend -->
     <router-link
-      v-for="friend in friends"
-      :key="friend.id"
-      :to="'/friend/' + friend.id + '/text'"
+      v-for="personalChat in personalChats"
+      :key="personalChat.id"
+      :to="'/friend/' + personalChat.id"
     >
       <UserItem
-        :user="friend"
+        :user="personalChat.friend"
       />
     </router-link>
   </q-list>
@@ -54,7 +54,6 @@ import AddFriends from './dialogs/user/AddFriends.vue'
 import UserItem from './reusables/UserItem.vue'
 
 // models
-import { User } from 'src/models/User'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
@@ -71,15 +70,28 @@ export default defineComponent({
 
     const search = ref('')
 
-    const friends = computed(() => {
-      const friends = user.value?.friendList ? user.value.friendList : [] as User[]
-      return friends.filter(
-        (user) =>
-          user.code.includes(search.value) ||
-          user.displayName.includes(search.value) ||
-          user.email.includes(search.value) ||
-          user.username.includes(search.value)
-      )
+    const personalChats = computed(() => {
+      console.log('aaa', user.value?.personalChats)
+      const personalChats = user.value?.personalChats.map(pc => {
+        return {
+          id: pc.personalChat.id,
+          friend: pc.users[0]
+        }
+      })
+
+      if (!personalChats) {
+        return []
+      }
+
+      return personalChats
+
+      // return personalChats.filter(
+      //   (pc) =>
+      //     pc.friend.code.includes(search.value) ||
+      //     pc.friend.displayName.includes(search.value) ||
+      //     pc.friend.email.includes(search.value) ||
+      //     pc.friend.username.includes(search.value)
+      // )
     })
 
     const $q = useQuasar()
@@ -94,7 +106,7 @@ export default defineComponent({
 
     return {
       user,
-      friends,
+      personalChats,
       search,
       openAddFriend
     }

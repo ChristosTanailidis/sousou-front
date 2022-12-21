@@ -99,7 +99,20 @@ query GetLoggedUser {
       icon
     }
     personalChats {
+      users {
+        id
+        code
+        displayName
+        username
+        icon
+      }
       id
+      personalChat {
+        id
+        messages {
+          text
+        }
+      }
     }
     myGroupInvites {
       answer

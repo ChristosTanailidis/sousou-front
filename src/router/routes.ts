@@ -19,12 +19,11 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
-        path: 'friend/:userId',
+        path: 'friend/:personalChatId',
         beforeEnter: [isLogged],
         component: () => import('pages/FriendPage.vue'),
         props: true,
         children: [
-          { path: 'text', component: () => import('components/friend-page/containers/TextContainer.vue'), props: true },
           { path: 'voice', component: () => import('components/friend-page/containers/VoiceContainer.vue'), props: true }
         ]
       }

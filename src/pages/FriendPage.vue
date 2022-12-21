@@ -14,7 +14,10 @@
         class="grid grid-cols-10 h-full"
       >
         <div class="col-span-10 bg-dark-200">
-          <router-view />
+          <TextContainer
+            :personal-chat-id="personalChatId"
+            :friend="friend"
+          />
         </div>
       </div>
     </div>
@@ -32,41 +35,38 @@ import { defineComponent, ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
-import FriendHeader from 'src/components/friend-page/FriendHeader.vue'
+import TextContainer from 'src/components/friend-page/containers/TextContainer.vue'
 
 // models
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
+import FriendHeader from 'src/components/friend-page/FriendHeader.vue'
 
 // utils
 
 export default defineComponent({
-  components: { FriendHeader },
+  components: { TextContainer, FriendHeader },
   props: {
-    userId: {
+    personalChatId: {
       type: String,
       required: true
     }
   },
-  emits: [],
   setup (props) {
     const userStore = useAuthUser()
-
     const { user } = storeToRefs(userStore)
 
     const friend = computed(() => {
-      return user.value?.friendList.find(u => u.id === props.userId)
+      const pc = user.value?.personalChats
+
+      return pc?.find(p => p.personalChat.id === props.personalChatId)?.users[0]
     })
-
-    // watch(() => props.type, async () => {
-    //   await groupsStore.fetchGroup(props.type)
-    // }, { immediate: true })
-
     return {
-      friend,
       settingsMenu: ref(false),
-      headerRef: ref()
+      headerRef: ref(),
+
+      friend
     }
   }
 })

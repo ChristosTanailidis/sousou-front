@@ -35,7 +35,7 @@
     <router-link
       v-for="friend in friends"
       :key="friend.id"
-      :to="'/friend/' + friend.id"
+      :to="'/friend/' + friend.id + '/text'"
     >
       <UserItem
         :user="friend"

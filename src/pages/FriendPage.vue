@@ -2,23 +2,18 @@
   <div
     class="rounded overflow-hidden h-full bg-dark-500"
   >
-    {{ userId }}
     <div
-      v-if="group"
+      v-if="friend"
       class="flex flex-col flex-nowrap h-full"
     >
       <div ref="headerRef">
-        <GroupHeader :group="group" />
+        <FriendHeader :friend="friend" />
       </div>
 
       <div
         class="grid grid-cols-10 h-full"
       >
-        <SideBar
-          :header-ref="headerRef"
-          :group="group"
-        />
-        <div class="col-span-8 bg-dark-200">
+        <div class="col-span-10 bg-dark-200">
           <router-view />
         </div>
       </div>
@@ -27,28 +22,27 @@
       v-else
       class="h-full w-full flex items-center justify-center"
     >
-      No Group Sorry!
+      No such friend. Sorry!
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
-import SideBar from 'src/components/group-page/SideBar.vue'
-import GroupHeader from 'src/components/group-page/GroupHeader.vue'
+import FriendHeader from 'src/components/friend-page/FriendHeader.vue'
 
 // models
 
 // stores
-import { useGroupsStore } from 'src/stores/groups'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 
 export default defineComponent({
-  components: { SideBar, GroupHeader },
+  components: { FriendHeader },
   props: {
     userId: {
       type: String,
@@ -57,17 +51,20 @@ export default defineComponent({
   },
   emits: [],
   setup (props) {
-    const groupsStore = useGroupsStore()
+    const userStore = useAuthUser()
 
-    const { group } = storeToRefs(groupsStore)
+    const { user } = storeToRefs(userStore)
+
+    const friend = computed(() => {
+      return user.value?.friendList.find(u => u.id === props.userId)
+    })
 
     // watch(() => props.type, async () => {
     //   await groupsStore.fetchGroup(props.type)
     // }, { immediate: true })
 
     return {
-      group,
-
+      friend,
       settingsMenu: ref(false),
       headerRef: ref()
     }

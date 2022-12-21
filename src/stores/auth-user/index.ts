@@ -8,7 +8,6 @@ import { User } from 'src/models/User'
 // gql
 import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, mResendEmailConfirmation, mUpdateUser } from 'src/graphql/auth-user/mutations'
 import { qCheckUsernameAvailability, qGetLoggedUser } from 'src/graphql/auth-user/queries'
-import { AxiosError } from 'axios'
 
 export const useAuthUser = defineStore('auth-user', {
   state: () => ({

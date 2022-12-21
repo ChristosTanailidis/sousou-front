@@ -78,14 +78,22 @@ import GroupList from 'src/components/GroupList.vue'
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
 
+// socketio
+import { socket } from 'boot/socket_io'
+
 export default defineComponent({
   name: 'MainLayout',
   components: { UserInfo },
   setup () {
     const leftDrawerOpen = ref(true)
     const userStore = useAuthUser()
+
     onMounted(() => {
       refreshToken()
+      console.log('edw')
+      socket.io.on('authorization', (data: string) => {
+        console.log('aaaaaaa', data)
+      })
     })
 
     const tabs = [

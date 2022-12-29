@@ -71,7 +71,6 @@ export default defineComponent({
     const search = ref('')
 
     const personalChats = computed(() => {
-      console.log('aaa', user.value?.personalChats)
       const personalChats = user.value?.personalChats.map(pc => {
         return {
           id: pc.personalChat.id,

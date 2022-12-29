@@ -3,12 +3,15 @@ import Request from '../graphql-request'
 
 // models
 import { FriendRequestInputData } from 'src/models/InputData'
-import { UserPaginationData } from 'src/models/PaginationData'
+import { PaginationData, UserPaginationData } from 'src/models/PaginationData'
 import { User } from 'src/models/User'
 
 // gql
 import { qGetUsers } from 'src/graphql/users/queries'
 import { mAnswerFriendRequest, mCancelFriendRequest, mCreateFriendRequest } from 'src/graphql/users/mutations'
+import { qGetPersonalMessages } from 'src/graphql/messages/queries'
+import { PersonalMessage } from 'src/models/PersonalMessage'
+import { PaginatedData } from 'src/models/PaginatedData'
 
 export const useUsersStore = defineStore('users-store', {
   state: () => ({
@@ -30,6 +33,14 @@ export const useUsersStore = defineStore('users-store', {
         .finally(() => { this.loading = false })
     },
 
+    async fetchPersonalMessages (paginationInputData: PaginationData, personalChatId: string) {
+      this.loading = true
+      return await Request(qGetPersonalMessages, { paginationInputData, personalChatId })
+        .then((response) => (response as { getPersonalMessages: PaginatedData<PersonalMessage> }).getPersonalMessages)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
     // async fetchUser (getGroupByIdId: string) {
     //   this.loading = true
     //   return await Request(qGetGroupById, { getGroupByIdId })
@@ -43,7 +54,6 @@ export const useUsersStore = defineStore('users-store', {
     // },
 
     async createFriendRequest (data: FriendRequestInputData) {
-      console.log('egw uparxw')
       this.loading = true
       return await Request(mCreateFriendRequest, { data })
         .then((response) => (response as { createFriendRequest: boolean }).createFriendRequest)
@@ -66,5 +76,6 @@ export const useUsersStore = defineStore('users-store', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }
+
   }
 })

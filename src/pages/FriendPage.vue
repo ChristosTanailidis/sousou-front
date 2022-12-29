@@ -17,6 +17,7 @@
           <TextContainer
             :personal-chat-id="personalChatId"
             :friend="friend"
+            :style="{ height: 'calc(100vh - 100px)' }"
           />
         </div>
       </div>
@@ -67,6 +68,7 @@ export default defineComponent({
       headerRef: ref(),
 
       friend
+
     }
   }
 })

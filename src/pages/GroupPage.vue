@@ -18,7 +18,7 @@
           :group="group"
         />
         <div class="col-span-8 bg-dark-200">
-          <router-view />
+          <router-view :style="{ height: 'calc(100vh - 100px)' }" />
         </div>
       </div>
     </div>

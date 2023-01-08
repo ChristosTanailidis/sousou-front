@@ -126,6 +126,8 @@ export default defineComponent({
       }
 
       emit('sendMessage', newText.value)
+
+      newText.value = ''
     }
 
     const fetchDebounce = ref()

@@ -4,8 +4,10 @@
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
     :latest-messages="latestMessages"
+    :last-read-message="lastReadMessage"
     @fetch-more-paginated-messages="fetchMorePaginatedMessages"
     @send-message="sendMessage"
+    @read-message="readMessage"
   />
 </template>
 
@@ -53,6 +55,8 @@ export default defineComponent({
     })
     const latestMessages = ref<PersonalMessage[][]>([])
 
+    const lastReadMessage = ref<string>()
+
     const usersStore = useUsersStore()
     const { loading } = storeToRefs(usersStore)
 
@@ -61,6 +65,14 @@ export default defineComponent({
         identifier: props.personalChatId,
         personal: true,
         text: message
+      })
+    }
+
+    const readMessage = (messageId: string) => {
+      socket.emit('message-read', {
+        personalChatId: props.personalChatId,
+        personal: true,
+        messageId
       })
     }
 
@@ -114,16 +126,24 @@ export default defineComponent({
           latestMessages.value.push([message])
         }
       })
+
+      socket.on('message-read', (personalChat: any) => {
+        console.log('hello', personalChat)
+
+        lastReadMessage.value = personalChat.lastReadMessage.id
+      })
     })
 
     return {
       latestMessages,
       oldMessagesPagination,
       oldMessages,
+      lastReadMessage,
       loading,
 
       fetchMorePaginatedMessages,
-      sendMessage
+      sendMessage,
+      readMessage
     }
   }
 })

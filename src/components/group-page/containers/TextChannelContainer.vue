@@ -6,6 +6,7 @@
     :latest-messages="latestMessages"
     @fetch-more-paginated-messages="fetchMorePaginatedMessages"
     @send-message="sendMessage"
+    @read-message="readMessage"
   />
 </template>
 
@@ -15,6 +16,7 @@ import { storeToRefs } from 'pinia'
 import { socket } from 'src/boot/socket_io'
 
 // components
+import TextChat from 'src/components/TextChat.vue'
 
 // models
 import { PersonalMessage } from 'src/models/PersonalMessage'
@@ -26,7 +28,6 @@ import { useUsersStore } from 'src/stores/users'
 // utils
 import { formatDistanceToNow } from 'date-fns'
 import { PaginationData } from 'src/models/PaginationData'
-import TextChat from 'src/components/TextChat.vue'
 
 export default defineComponent({
   components: { TextChat },
@@ -56,8 +57,16 @@ export default defineComponent({
     const sendMessage = (message: string) => {
       socket.emit('message-send', {
         identifier: props.textChannelId,
-        personal: true,
+        personal: false,
         text: message
+      })
+    }
+
+    const readMessage = (messageId: string) => {
+      socket.emit('message-read', {
+        personalChatId: props.textChannelId,
+        personal: false,
+        messageId
       })
     }
 
@@ -87,17 +96,17 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const omResult = await fetchPaginatedMessages()
+      // const omResult = await fetchPaginatedMessages()
 
       scrollToBottom()
 
-      if (!omResult) {
-        return
-      }
+      // if (!omResult) {
+      //   return
+      // }
 
-      oldMessages.value = omResult
+      // oldMessages.value = omResult
 
-      socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
+      // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
         const lastMessageGroup = latestMessages.value[latestMessages.value.length - 1]
         const lastMessage = lastMessageGroup ? lastMessageGroup[lastMessageGroup.length - 1] : undefined
@@ -122,6 +131,7 @@ export default defineComponent({
 
       fetchMorePaginatedMessages,
       sendMessage,
+      readMessage,
 
       formatDistanceToNow
     }

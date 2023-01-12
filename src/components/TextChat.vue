@@ -17,20 +17,35 @@
       <div style="width: 100%">
         <div class="flex flex-col-reverse">
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
-          <q-chat-message
+          <div
             v-for="(message) in oldMessages.data"
             :key="message.id"
-            :text="[message.text]"
-            :sent="message.from.id === user?.id"
-            :text-color="message.from.id !== user?.id ? 'black' : 'white'"
-            :bg-color="message.from.id !== user?.id ? 'amber-7' : 'primary'"
+            class="flex flex-row flex-nowrap gap-1 items-end"
+            :class="[
+              message.from.id === user?.id ? 'justify-end' : 'justify-start'
+            ]"
           >
-            <template #stamp>
-              <div :key="clock">
-                {{ formatDistanceToNow(new Date(message.createdAt)) }} ago
-              </div>
-            </template>
-          </q-chat-message>
+            <!-- todo: fix this -->
+            <div
+              v-if="lastReadMessage === message.id"
+              :key="lastReadMessage"
+            >
+              hello
+            </div>
+
+            <q-chat-message
+              :text="[message.text]"
+              :sent="message.from.id === user?.id"
+              :text-color="message.from.id !== user?.id ? 'black' : 'white'"
+              :bg-color="message.from.id !== user?.id ? 'amber-7' : 'primary'"
+            >
+              <template #stamp>
+                <div :key="clock">
+                  {{ formatDistanceToNow(new Date(message.createdAt)) }} ago
+                </div>
+              </template>
+            </q-chat-message>
+          </div>
         </div>
 
         <!-- :name="message[0].from.id === user?.id ? user?.displayName + '#' + latestMessages[index - 1][0].from.id !== user?.id ? user?.code : 'you' : undefined" -->
@@ -53,12 +68,14 @@
 
     <div class="sticky bottom-0 left-0 w-full bg-dark-200">
       <q-input
+        :key="user?.id"
         v-model="newText"
         :autofocus="true"
         type="text"
         label="Message"
         class="p-2"
         @keydown.enter="sendMessage()"
+        @focus="readMessage()"
       />
     </div>
   </div>
@@ -108,9 +125,13 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: false
+    },
+    lastReadMessage: {
+      type: String,
+      default: undefined
     }
   },
-  emits: ['sendMessage', 'fetchMorePaginatedMessages', 'update:loading'],
+  emits: ['sendMessage', 'readMessage', 'fetchMorePaginatedMessages', 'update:loading'],
   setup (props, { emit }) {
     const chatContainer = ref<Element>()
     const clock = ref('')
@@ -130,6 +151,32 @@ export default defineComponent({
       newText.value = ''
 
       scrollToBottom()
+
+      readMessage()
+    }
+
+    const readMessage = () => {
+      setTimeout(() => {
+        const { latestMessages, oldMessages } = props
+        const i1 = (latestMessages?.length || 0) - 1
+        const i2 = (latestMessages[i1]?.length || 0) - 1
+
+        let latestMessage
+
+        if (i1 >= 0 && i2 >= 0) {
+          latestMessage = latestMessages[i1][i2]
+        }
+
+        if (!latestMessage) {
+          latestMessage = oldMessages.data[0]
+        }
+
+        if (!latestMessage) {
+          return
+        }
+
+        emit('readMessage', latestMessage.id)
+      }, 500)
     }
 
     const fetchDebounce = ref()
@@ -180,6 +227,7 @@ export default defineComponent({
       chatContainer,
 
       sendMessage,
+      readMessage,
       fetchMorePaginatedMessages,
 
       formatDistanceToNow,

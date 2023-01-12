@@ -26,7 +26,6 @@ import { User } from 'src/models/User'
 import { useUsersStore } from 'src/stores/users'
 
 // utils
-import { formatDistanceToNow } from 'date-fns'
 import { PaginationData } from 'src/models/PaginationData'
 
 export default defineComponent({
@@ -124,9 +123,7 @@ export default defineComponent({
       loading,
 
       fetchMorePaginatedMessages,
-      sendMessage,
-
-      formatDistanceToNow
+      sendMessage
     }
   }
 })

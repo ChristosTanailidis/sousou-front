@@ -38,12 +38,12 @@ import { storeToRefs } from 'pinia'
 
 // components
 import TextContainer from 'src/components/friend-page/containers/TextContainer.vue'
+import FriendHeader from 'src/components/friend-page/FriendHeader.vue'
 
 // models
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
-import FriendHeader from 'src/components/friend-page/FriendHeader.vue'
 
 // utils
 

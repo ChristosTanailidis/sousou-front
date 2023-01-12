@@ -128,6 +128,8 @@ export default defineComponent({
       emit('sendMessage', newText.value)
 
       newText.value = ''
+
+      scrollToBottom()
     }
 
     const fetchDebounce = ref()

@@ -15,6 +15,7 @@
       >
         <div class="col-span-10 bg-dark-200">
           <TextContainer
+            :key="personalChatId"
             :personal-chat-id="personalChatId"
             :friend="friend"
             :style="{ height: 'calc(100vh - 100px)' }"

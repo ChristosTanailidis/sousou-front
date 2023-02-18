@@ -108,6 +108,10 @@ export default defineComponent({
 
       // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
+        if (message.textChannel?.id !== props.textChannelId) {
+          return
+        }
+
         const lastMessageGroup = latestMessages.value[latestMessages.value.length - 1]
         const lastMessage = lastMessageGroup ? lastMessageGroup[lastMessageGroup.length - 1] : undefined
 
@@ -120,6 +124,8 @@ export default defineComponent({
         } else {
           latestMessages.value.push([message])
         }
+
+        scrollToBottom()
       })
     })
 

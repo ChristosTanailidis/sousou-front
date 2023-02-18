@@ -1,4 +1,4 @@
-import { PersonalChat } from './PersonalChat'
+import { PersonalChat, TextChannelChat } from './PersonalChat'
 import { User } from './User'
 
 export type MessageStateType = 'SENDED' | 'DELETED_FOR_ME' | 'DELETED_FOR_ALL'
@@ -14,4 +14,5 @@ export interface PersonalMessage {
   readBy: [User]
   deletedFromUsers: [User]
   personalChat: PersonalChat
+  textChannel: TextChannelChat
 }

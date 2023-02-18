@@ -14,7 +14,10 @@
         size="3rem"
         :thickness="5"
       />
-      <div style="width: 100%">
+      <div
+        style="width: 100%"
+        class="h-full"
+      >
         <div class="flex flex-col-reverse">
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
           <div

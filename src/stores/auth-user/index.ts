@@ -6,7 +6,7 @@ import { LoginUser, RegisterUser, UpdateUserData } from 'src/models/InputData'
 import { User } from 'src/models/User'
 
 // gql
-import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, mResendEmailConfirmation, mUpdateUser } from 'src/graphql/auth-user/mutations'
+import { mRegisterUser, mLoginUser, mLogoutUser, mRefreshToken, mConfirmEmail, mResendEmailConfirmation, mUpdateUser, mResetPassword, mSetNewPassword } from 'src/graphql/auth-user/mutations'
 import { qCheckUsernameAvailability, qGetLoggedUser } from 'src/graphql/auth-user/queries'
 
 export const useAuthUser = defineStore('auth-user', {
@@ -129,6 +129,22 @@ export const useAuthUser = defineStore('auth-user', {
       this.loading = true
       return await Request(qCheckUsernameAvailability, { username })
         .then((response) => (response as { usernameExists: boolean }).usernameExists)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async resetPassword (email: string) {
+      this.loading = true
+      return await Request(mResetPassword, { email })
+        .then((response) => (response as { forgotPassword: boolean }).forgotPassword)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async setNewPassword (newPassword: string, resetPasswordToken: string) {
+      this.loading = true
+      return await Request(mSetNewPassword, { newPassword, resetPasswordToken })
+        .then((response) => (response as { resetPassword: boolean }).resetPassword)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }

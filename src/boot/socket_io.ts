@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:3399', {
+const socket = io(process.env.API_URL || '', {
   transports: [
     'websocket'
   ],

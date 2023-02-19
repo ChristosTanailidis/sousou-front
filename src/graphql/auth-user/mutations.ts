@@ -50,3 +50,15 @@ mutation UpdateUser($data: UpdateUserInputData!) {
   updateUser(data: $data)
 }
 `
+
+export const mResetPassword = gql`
+mutation ForgotPassword($email: String!) {
+  forgotPassword(email: $email)
+}
+`
+
+export const mSetNewPassword = gql`
+mutation ResetPassword($newPassword: String!, $resetPasswordToken: String!) {
+  resetPassword(newPassword: $newPassword, resetPasswordToken: $resetPasswordToken)
+}
+`

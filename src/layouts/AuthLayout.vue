@@ -28,14 +28,14 @@ export default defineComponent({
 </script>
 
 <style lang="css">
-.v-enter-active,
-.v-leave-active {
+.v-enter-active, .v-leave-active,
+.forgot-password-enter-active, .forgot-password-leave-active {
   transform: translateY(0px);
   transition: all 0.5s ease;
 }
 
-.v-enter-from,
-.v-leave-to {
+.v-enter-from, .v-leave-to,
+.forgot-password-enter-from, .forgot-password-leave-to {
   position: absolute;
   opacity: 0;
 }
@@ -44,12 +44,13 @@ export default defineComponent({
   transition-delay: 0.25s;
 }
 
-.v-leave-to {
-  transform: translateY(5px);
+.forgot-password-enter-active {
+  transition-delay: 1.5s;
 }
 
-.v-enter-from {
-  transform: translateY(-5px);
+.v-leave-to, .v-enter-from,
+.forgot-password-leave-to, .forgot-password-enter-from {
+  transform: translateY(5px);
 }
 
 .container {

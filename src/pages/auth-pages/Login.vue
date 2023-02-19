@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-md flex justify-center items-center w-full h-screen">
-    <transition>
+  <div class="q-pa-md flex flex-col gap-5 justify-center items-center w-full h-screen pt-[4rem]">
+    <transition appear>
       <div
         v-if="!loading"
         class="p-10 bg-glass min-w-96"
@@ -58,6 +58,42 @@
           size="3rem"
           :thickness="5"
         />
+      </div>
+    </transition>
+
+    <transition
+      name="forgot-password"
+      appear
+    >
+      <div
+        v-if="!loading"
+        class="bg-glass p-2 min-w-96"
+      >
+        <div class="flex flex-col gap-1 items-center ">
+          <div class="text-[1.4rem] p-1 text-gray-300">
+            Having trouble signing in?
+          </div>
+
+          <div class="flex flex-row gap-2 items-center ">
+            <router-link
+              to="/auth/resend-email-confirmation"
+              class="p-1 hover:text-primary transition"
+            >
+              Activate Account
+            </router-link>
+
+            <div class="text-gray-300">
+              OR
+            </div>
+
+            <router-link
+              to="/auth/forgot-password"
+              class="p-1 hover:text-primary transition"
+            >
+              Reset Password
+            </router-link>
+          </div>
+        </div>
       </div>
     </transition>
   </div>

@@ -37,8 +37,12 @@ const routes: RouteRecordRaw[] = [
       { path: 'login', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/Login.vue') },
       { path: 'logout', component: () => import('src/pages/auth-pages/Logout.vue') },
       { path: 'register', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/Register.vue') },
-      { path: 'confirm-email/:emailToken', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ConfirmEmail.vue'), props: true },
-      { path: 'resend-email-confirmation/:email', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ResendEmailConfirmation.vue'), props: true }
+
+      { path: 'forgot-password', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ForgotPassword.vue') },
+      { path: 'reset-password/:resetToken', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ResetPassword.vue'), props: true },
+
+      { path: 'resend-email-confirmation', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ResendEmailConfirmation.vue') },
+      { path: 'confirm-email/:emailToken', beforeEnter: [isNotLogged], component: () => import('src/pages/auth-pages/ConfirmEmail.vue'), props: true }
     ]
   },
 

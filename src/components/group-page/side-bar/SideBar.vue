@@ -136,7 +136,7 @@ import { useQuasar } from 'quasar'
 import TextChannel from 'src/components/dialogs/channels/TextChannel.vue'
 import VoiceChannel from 'src/components/dialogs/channels/VoiceChannel.vue'
 import ExpansionItem from './ExpansionItem.vue'
-import MemberProperties from '../reusables/MemberProperties.vue'
+import MemberProperties from '../../reusables/MemberProperties.vue'
 
 // models
 import { Group } from 'src/models/Group'

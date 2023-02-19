@@ -36,7 +36,7 @@ import { defineComponent, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
-import SideBar from 'src/components/group-page/SideBar.vue'
+import SideBar from 'src/components/group-page/side-bar/SideBar.vue'
 import GroupHeader from 'src/components/group-page/GroupHeader.vue'
 
 // models

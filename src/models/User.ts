@@ -1,6 +1,6 @@
 import { FriendRequest } from './FriendRequest'
 import { VoiceChannel } from './VoiceChannel'
-import { PersonalChatUsersPivot } from './PersonalChat'
+import { PersonalChat } from './PersonalChat'
 import { GroupInvite } from './GroupInvite'
 import { Group } from './Group'
 
@@ -24,7 +24,7 @@ export interface User {
   groupInvites: [GroupInvite]
   myGroupInvites: [GroupInvite]
   friendList: [User]
-  personalChats: [PersonalChatUsersPivot]
+  personalChats: [PersonalChat]
 }
 
 export interface UserToAdd extends User {

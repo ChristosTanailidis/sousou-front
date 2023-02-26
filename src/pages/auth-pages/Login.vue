@@ -11,7 +11,7 @@
         >
           <q-input
             v-model="loginData.email"
-            label="Email"
+            label="Email or Username"
             lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please enter your email' ]"
           />

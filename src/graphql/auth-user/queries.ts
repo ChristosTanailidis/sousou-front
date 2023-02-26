@@ -99,19 +99,29 @@ query GetLoggedUser {
       icon
     }
     personalChats {
+      id
+      messages {
+        createdAt
+        deleteForAll
+        deletedFromUsers {
+          id
+        }
+        file
+        from {
+          id
+        }
+        id
+        readBy {
+          user {
+            id
+          }
+        }
+        state
+        text
+      }
+      mute
       users {
         id
-        code
-        displayName
-        username
-        icon
-      }
-      id
-      personalChat {
-        id
-        messages {
-          text
-        }
       }
     }
     myGroupInvites {

@@ -14,6 +14,14 @@ export const useAuthUser = defineStore('auth-user', {
     user: undefined as undefined | User,
     loading: false
   }),
+  getters: {
+    friends: (state) => {
+      return state.user?.friendList || []
+    },
+    personalChats: (state) => {
+      return state.user?.personalChats || []
+    }
+  },
   actions: {
     async register (data: RegisterUser) {
       this.loading = true

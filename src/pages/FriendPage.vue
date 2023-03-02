@@ -62,7 +62,7 @@ export default defineComponent({
     const friend = computed(() => {
       const pc = user.value?.personalChats
 
-      return pc?.find(p => p.personalChat.id === props.personalChatId)?.users[0]
+      return pc?.find(pc => pc.id === props.personalChatId)?.users[0]
     })
     return {
       settingsMenu: ref(false),

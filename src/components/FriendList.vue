@@ -1,8 +1,8 @@
 <template>
   <q-list
-    class="rounded p-2"
+    class="rounded relative "
   >
-    <q-item class="flex flex-col gap-2 p-0">
+    <q-item class="flex flex-col gap-2 p-2 sticky top-0 left-0 bg-dark-500 z-50">
       <q-btn
         flat
         no-caps
@@ -38,14 +38,15 @@
       :to="'/friend/' + personalChat.id"
     >
       <UserItem
-        :user="personalChat.friend"
+        :user="personalChat.users[0]"
+        class="mx-2"
       />
     </router-link>
   </q-list>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
@@ -66,32 +67,32 @@ export default defineComponent({
   emits: [],
   setup () {
     const userStore = useAuthUser()
-    const { user } = storeToRefs(userStore)
+    const { user, personalChats } = storeToRefs(userStore)
 
     const search = ref('')
 
-    const personalChats = computed(() => {
-      const personalChats = user.value?.personalChats.map(pc => {
-        return {
-          id: pc.personalChat.id,
-          friend: pc.users[0]
-        }
-      })
+    // const personalChats = computed(() => {
+    //   const personalChats = user.value?.personalChats.map(pc => {
+    //     return {
+    //       id: pc.id,
+    //       friend: pc.users[0]
+    //     }
+    //   })
 
-      if (!personalChats) {
-        return []
-      }
+    //   if (!personalChats) {
+    //     return []
+    //   }
 
-      return personalChats
+    //   return personalChats
 
-      // return personalChats.filter(
-      //   (pc) =>
-      //     pc.friend.code.includes(search.value) ||
-      //     pc.friend.displayName.includes(search.value) ||
-      //     pc.friend.email.includes(search.value) ||
-      //     pc.friend.username.includes(search.value)
-      // )
-    })
+    //   // return personalChats.filter(
+    //   //   (pc) =>
+    //   //     pc.friend.code.includes(search.value) ||
+    //   //     pc.friend.displayName.includes(search.value) ||
+    //   //     pc.friend.email.includes(search.value) ||
+    //   //     pc.friend.username.includes(search.value)
+    //   // )
+    // })
 
     const $q = useQuasar()
 

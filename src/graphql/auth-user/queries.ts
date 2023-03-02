@@ -111,17 +111,21 @@ query GetLoggedUser {
           id
         }
         id
-        readBy {
-          user {
-            id
-          }
-        }
+        # readBy {
+        #   user {
+        #     id
+        #   }
+        # }
         state
         text
       }
       mute
       users {
         id
+        code
+        displayName
+        username
+        icon
       }
     }
     myGroupInvites {

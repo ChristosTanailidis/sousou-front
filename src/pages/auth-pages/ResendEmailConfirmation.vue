@@ -1,54 +1,93 @@
 <template>
   <div class="q-pa-md flex justify-center items-center w-full h-screen">
-    <q-form
-      class="q-gutter-md"
-      @submit="resendConfirmation"
-    >
-      <q-btn
-        label="Resend Email Confirmation"
-        type="submit"
-        color="primary"
-        class="w-full"
-      />
-    </q-form>
+    <transition>
+      <div
+        class="p-10 bg-glass min-w-96 overflow-hidden"
+      >
+        <transition-group>
+          <q-form
+            v-if="!confirmationResponse"
+            class="q-gutter-md"
+            @submit="resendConfirmation"
+          >
+            <!-- todo: email validation -->
+            <q-input
+              v-model="email"
+              label="Email"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 || 'Please enter your email' ]"
+            />
+
+            <div class="flex flex-col gap-3">
+              <q-btn
+                unelevated
+                label="Resend Confirmation Email"
+                type="submit"
+                color="primary"
+                class="w-full"
+                :loading="loading"
+              />
+
+              <q-btn
+                to="/auth/login"
+                unelevated
+                label="Back"
+                color="secondary"
+                class="w-full"
+                :disable="loading"
+              />
+            </div>
+          </q-form>
+          <div
+            v-else
+            align="center"
+            class="text-[1.2rem] text-gray-300 flex flex-row flex-nowrap gap-1"
+          >
+            An email has been sent to you.
+
+            <transition
+              appear
+            >
+              <div style="transition-delay: 700ms !important;">
+                <q-icon name="check" />
+              </div>
+            </transition>
+          </div>
+        </transition-group>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref } from 'vue'
 
 // Stores
 import { useAuthUser } from 'src/stores/auth-user'
+import { storeToRefs } from 'pinia'
 
 export default defineComponent({
   name: 'IndexPage',
-  props: {
-    email: {
-      type: String,
-      default: undefined
-    }
-  },
-  setup (props) {
-    const userStore = useAuthUser()
+  setup () {
+    const email = ref('')
+    const confirmationResponse = ref(false)
 
-    const router = useRouter()
+    const userStore = useAuthUser()
+    const { loading } = storeToRefs(userStore)
 
     const resendConfirmation = async () => {
-      if (!props.email) {
+      if (!email.value.length) {
         return
       }
 
-      const confirmed = await userStore.resendConfirmation(props.email)
-
-      if (confirmed) {
-        console.log('Confirm Your Email Here ➡', `http://localhost:9000/auth/confirm-email/${confirmed}`)
-        router.push('/')
-      }
+      confirmationResponse.value = !!(await userStore.resendConfirmation(email.value))
     }
 
     return {
-      resendConfirmation
+      resendConfirmation,
+      email,
+      loading,
+      confirmationResponse
     }
   }
 })

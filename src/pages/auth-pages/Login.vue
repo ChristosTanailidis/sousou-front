@@ -1,8 +1,7 @@
 <template>
-  <div class="q-pa-md flex flex-col gap-5 justify-center items-center w-full h-screen pt-[4rem]">
+  <div class="q-pa-md flex flex-col gap-5 justify-center items-center w-full h-screen pt-[4rem] relative">
     <transition appear>
       <div
-        v-if="!loading"
         class="p-10 bg-glass min-w-96"
       >
         <q-form
@@ -31,6 +30,7 @@
               type="submit"
               color="primary"
               class="w-full"
+              :loading="loading"
             />
 
             <router-link
@@ -46,19 +46,6 @@
           </div>
         </q-form>
       </div>
-      <div
-        v-else
-        class="flex flex-col items-center gap-2"
-      >
-        <div>
-          You are being logged in
-        </div>
-        <q-spinner-gears
-          color="primary"
-          size="3rem"
-          :thickness="5"
-        />
-      </div>
     </transition>
 
     <transition
@@ -66,7 +53,6 @@
       appear
     >
       <div
-        v-if="!loading"
         class="bg-glass p-2 min-w-96"
       >
         <div class="flex flex-col gap-1 items-center ">

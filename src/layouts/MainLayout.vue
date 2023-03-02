@@ -8,7 +8,7 @@
       class="bg-dark-900"
     >
       <div
-        class="flex flex-col gap-2 h-full p-2"
+        class="flex flex-col flex-nowrap gap-2 h-full p-2 relative"
       >
         <UserInfo />
 

@@ -1,14 +1,28 @@
 <template>
-  <div class="container overflow-hidden ">
-    <div class="relative ">
-      <div class="absolute z-20 left-0 right-0 top-0 bottom-0 m-auto">
-        <router-view v-slot="{ Component }">
-          <transition>
-            <component :is="Component" />
-          </transition>
-        </router-view>
+  <div class="container ">
+    <div class="flex flex-row flex-nowrap h-full overflow-hidden">
+      <div class="w-[50%] flex items-center justify-center">
+        <div class="z-50">
+          <q-img
+            src="/assets/sousou_logo_RGB.svg"
+            spinner-color="primary"
+            object="contain"
+            class="w-[20rem]"
+          />
+        </div>
+      </div>
+
+      <div class="w-[50%] flex items-center justify-center">
+        <div class="z-50 relative">
+          <router-view v-slot="{ Component }">
+            <transition>
+              <component :is="Component" />
+            </transition>
+          </router-view>
+        </div>
       </div>
     </div>
+
     <div class="slider-thumb-1 z-0" />
     <div class="slider-thumb-2 z-0" />
   </div>
@@ -50,12 +64,12 @@ export default defineComponent({
 
 .v-leave-to, .v-enter-from,
 .forgot-password-leave-to, .forgot-password-enter-from {
-  transform: translateY(5px);
+  transform: translateY(1rem);
 }
 
 .container {
-  min-width: 100vw;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   z-index: -5;
 }
 
@@ -66,7 +80,7 @@ export default defineComponent({
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto auto auto 20vw;
+  margin: auto 10rem auto auto;
   width: 40vw;
   min-width: 400px;
   height: 40vw;
@@ -86,7 +100,7 @@ export default defineComponent({
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 10vh 35vw auto auto;
+  margin: 5rem 5rem auto auto;
   width: 15vw;
   min-width: 150px;
   height: 15vw;

@@ -1,8 +1,8 @@
 <template>
   <q-list
-    class="rounded"
+    class="rounded relative"
   >
-    <q-item class="flex flex-col gap-2 p-2">
+    <q-item class="flex flex-col gap-2 p-2 sticky top-0 left-0 bg-dark-500 z-50">
       <q-btn
         flat
         no-caps

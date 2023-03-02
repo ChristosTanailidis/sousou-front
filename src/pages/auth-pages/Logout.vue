@@ -21,7 +21,7 @@
         <div>
           You are being logged out
         </div>
-        <q-spinner-gears
+        <q-spinner
           color="primary"
           size="3rem"
           :thickness="5"

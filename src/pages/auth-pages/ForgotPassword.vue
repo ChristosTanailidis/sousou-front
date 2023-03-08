@@ -40,15 +40,34 @@
           <div
             v-else
             align="center"
-            class="text-[1.2rem] text-gray-300 flex flex-row flex-nowrap gap-1"
+            class="flex flex-col items-center justify-center gap-4"
           >
-            An email has been sent to you.
+            <div
+              class="text-[1.2rem] text-gray-300 flex flex-row flex-nowrap gap-1"
+            >
+              An email has been sent to you.
+
+              <transition
+                appear
+              >
+                <div style="transition-delay: 700ms !important;">
+                  <q-icon name="check" />
+                </div>
+              </transition>
+            </div>
 
             <transition
               appear
             >
-              <div style="transition-delay: 700ms !important;">
-                <q-icon name="check" />
+              <div
+                class="animate__animated animate__fadeIn animate__delay-1s w-full"
+              >
+                <q-btn
+                  color="secondary"
+                  label="Back"
+                  to="/auth/login"
+                  class="w-full"
+                />
               </div>
             </transition>
           </div>

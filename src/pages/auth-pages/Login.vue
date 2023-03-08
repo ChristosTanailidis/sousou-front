@@ -30,7 +30,7 @@
               type="submit"
               color="primary"
               class="w-full"
-              :loading="loading"
+              :loading="loading || loginResponse"
             />
 
             <router-link
@@ -63,7 +63,7 @@
           <div class="flex flex-row gap-2 items-center ">
             <router-link
               to="/auth/resend-email-confirmation"
-              class="p-1 hover:text-primary transition"
+              class="p-1 hover:text-secondary transition"
             >
               Activate Account
             </router-link>
@@ -74,7 +74,7 @@
 
             <router-link
               to="/auth/forgot-password"
-              class="p-1 hover:text-primary transition"
+              class="p-1 hover:text-secondary transition"
             >
               Reset Password
             </router-link>
@@ -111,8 +111,13 @@ export default defineComponent({
 
     const { loading } = storeToRefs(userStore)
 
+    const loginResponse = ref<boolean>()
+
     const login = async () => {
       const response = await userStore.login(loginData.value)
+
+      loginResponse.value = !!(response)
+
       if (!response) return
 
       if (typeof (response) === 'string') {
@@ -127,7 +132,8 @@ export default defineComponent({
     return {
       login,
       loginData,
-      loading
+      loading,
+      loginResponse
     }
   }
 })

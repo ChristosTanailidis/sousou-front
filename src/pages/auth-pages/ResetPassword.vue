@@ -54,7 +54,7 @@
           <div
             v-else
             align="center"
-            class="flex flex-col flex-nowrap gap-2"
+            class="flex flex-col flex-nowrap gap-4"
           >
             <div
               class="text-[1.2rem] text-gray-300 flex flex-row flex-nowrap gap-1"

@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="auth-container">
     <div class="flex flex-row flex-nowrap h-full overflow-hidden">
       <div class="w-[50%] flex items-center justify-center">
         <div class="z-50">
@@ -7,7 +7,7 @@
             src="/assets/sousou_logo_RGB.svg"
             spinner-color="primary"
             object="contain"
-            class="w-[20rem]"
+            class="w-[20rem] animate__animated animate__jackInTheBox "
           />
         </div>
       </div>
@@ -21,15 +21,16 @@
           </router-view>
         </div>
       </div>
-    </div>
 
-    <div class="slider-thumb-1 z-0" />
-    <div class="slider-thumb-2 z-0" />
+      <div class="slider-thumb-1 z-0" />
+      <div class="slider-thumb-2 z-0" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import 'animate.css'
 
 export default defineComponent({
   name: 'AuthLayout',
@@ -67,10 +68,10 @@ export default defineComponent({
   transform: translateY(1rem);
 }
 
-.container {
+.auth-container {
   width: 100vw;
   height: 100vh;
-  z-index: -5;
+  z-index: 1000;
 }
 
 .slider-thumb-1::before {

@@ -1,33 +1,39 @@
 <template>
   <div class="q-pa-md flex justify-center items-center w-full h-screen">
-    <transition>
-      <div
-        v-if="loggedOut"
-        class="flex flex-col items-center gap-2"
-      >
-        <div>
-          You have been logged out
+    <div
+      class="p-10 bg-glass min-w-96 overflow-hidden text-[1.2rem] text-gray-300"
+    >
+      <transition-group>
+        <div
+          v-if="loggedOut"
+          class="flex flex-col items-center gap-4"
+        >
+          <div>
+            You have been logged out
+          </div>
+
+          <q-btn
+            color="primary"
+            label="Login"
+            to="/auth/login"
+            class="w-full"
+          />
         </div>
-        <q-btn
-          color="primary"
-          label="Login"
-          to="/auth/login"
-        />
-      </div>
-      <div
-        v-else
-        class="flex flex-col items-center gap-2"
-      >
-        <div>
-          You are being logged out
+        <div
+          v-else
+          class="flex flex-col items-center gap-4"
+        >
+          <div>
+            You are being logged out
+          </div>
+          <q-spinner
+            color="primary"
+            size="3rem"
+            :thickness="5"
+          />
         </div>
-        <q-spinner
-          color="primary"
-          size="3rem"
-          :thickness="5"
-        />
-      </div>
-    </transition>
+      </transition-group>
+    </div>
   </div>
 </template>
 
@@ -40,6 +46,7 @@ import { defineComponent, onMounted, ref } from 'vue'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
+import { useRouter } from 'vue-router'
 
 // utils
 
@@ -50,9 +57,16 @@ export default defineComponent({
   setup () {
     const userStore = useAuthUser()
     const loggedOut = ref(false)
+
+    const router = useRouter()
+
     onMounted(() => {
       setTimeout(async () => {
-        loggedOut.value = !!await userStore.logout()
+        loggedOut.value = !!(await userStore.logout())
+
+        if (!loggedOut.value) {
+          router.push('/auth/login')
+        }
       }, 2000)
     })
 

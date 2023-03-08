@@ -113,7 +113,7 @@ export default defineComponent({
 
       // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
-        if (message.personalChat.id !== props.personalChatId) {
+        if (message.personalChat?.id !== props.personalChatId) {
           return
         }
 

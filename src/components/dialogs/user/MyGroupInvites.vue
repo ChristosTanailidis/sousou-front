@@ -22,9 +22,9 @@
                 color="primary"
                 size="40px"
               >
-                <q-img
-                  :src="gi.group.icon"
-                  object="cover"
+                <GroupImage
+                  :group="gi.group"
+                  text-size="4rem"
                 />
               </q-avatar>
             </q-item-section>
@@ -89,6 +89,7 @@ import { useDialogPluginComponent } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
+import GroupImage from 'src/components/reusables/GroupImage.vue'
 
 // models
 
@@ -99,7 +100,7 @@ import { useGroupsStore } from 'src/stores/groups'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { GroupImage },
   emits: [...useDialogPluginComponent.emits],
   setup () {
     const userStore = useAuthUser()

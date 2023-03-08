@@ -48,11 +48,7 @@
             size="40px"
             :color="group.color"
           >
-            <q-img
-              :src="group.icon"
-              class="w-full h-full"
-              fit="cover"
-            />
+            <GroupImage :group="group" />
           </q-avatar>
         </q-item-section>
 
@@ -73,6 +69,7 @@ import { useQuasar } from 'quasar'
 
 // components
 import CreateGroup from 'src/components/dialogs/group/CreateGroup.vue'
+import GroupImage from 'src/components/reusables/GroupImage.vue'
 
 // models
 // import { Group } from 'src/models/Group'
@@ -83,7 +80,7 @@ import { useAuthUser } from 'src/stores/auth-user'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { GroupImage },
   props: { },
   emits: [],
   setup () {

@@ -8,10 +8,9 @@
         class="h-[78px] w-[78px]"
         square
       >
-        <q-img
-          :src="group.icon"
-          fit="cover"
-          class="h-full w-full"
+        <GroupImage
+          :group="group"
+          text-size="4rem"
         />
       </q-avatar>
     </div>
@@ -68,6 +67,7 @@ import { useQuasar } from 'quasar'
 // components
 import GroupSettings from 'src/components/dialogs/group/GroupSettings.vue'
 import InviteMembers from 'src/components/dialogs/group/InviteMembers.vue'
+import GroupImage from 'src/components/reusables/GroupImage.vue'
 
 // models
 import { Group } from 'src/models/Group'
@@ -78,7 +78,7 @@ import { useAuthUser } from 'src/stores/auth-user'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { GroupImage },
   props: {
     group: {
       type: Object as PropType<Group>,

@@ -8,6 +8,7 @@
       :src="group.icon"
       fit="cover"
       class="h-full w-full "
+      :spinner-size="textSize"
     >
       <template #error>
         <div

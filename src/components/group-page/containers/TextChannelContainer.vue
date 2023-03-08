@@ -1,5 +1,6 @@
 <template>
   <TextChat
+    ref="chatContainer"
     v-model:loading="loading"
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
@@ -87,18 +88,8 @@ export default defineComponent({
       oldMessages.value.total = result.total
     }
 
-    const scrollToBottom = () => {
-      setTimeout(() => {
-        if (chatContainer.value) {
-          chatContainer.value.scrollTop = chatContainer.value.scrollHeight
-        }
-      }, 100)
-    }
-
     onMounted(async () => {
       // const omResult = await fetchPaginatedMessages()
-
-      scrollToBottom()
 
       // if (!omResult) {
       //   return
@@ -125,8 +116,6 @@ export default defineComponent({
         } else {
           latestMessages.value.push([message])
         }
-
-        scrollToBottom()
       })
     })
 
@@ -140,7 +129,9 @@ export default defineComponent({
       sendMessage,
       readMessage,
 
-      formatDistanceToNow
+      formatDistanceToNow,
+
+      chatContainer
     }
   }
 })

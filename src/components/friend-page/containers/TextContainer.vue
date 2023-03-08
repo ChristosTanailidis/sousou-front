@@ -92,18 +92,8 @@ export default defineComponent({
       oldMessages.value.total = result.total
     }
 
-    const scrollToBottom = () => {
-      setTimeout(() => {
-        if (chatContainer.value) {
-          chatContainer.value.scrollTop = chatContainer.value.scrollHeight
-        }
-      }, 100)
-    }
-
     onMounted(async () => {
       const omResult = await fetchPaginatedMessages()
-
-      scrollToBottom()
 
       if (!omResult) {
         return
@@ -132,8 +122,6 @@ export default defineComponent({
       })
 
       socket.on('message-read', (personalChat: any) => {
-        console.log('hello', personalChat)
-
         lastReadMessage.value = personalChat.lastReadMessage.id
       })
     })

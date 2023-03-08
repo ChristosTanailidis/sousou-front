@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, onMounted } from 'vue'
+import { defineComponent, ref, PropType, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
@@ -221,6 +221,13 @@ export default defineComponent({
         /* This interval updates the minutes passed since the last message was sent */
         clock.value = (new Date()).toString()
       }, 1000 * 30)
+    })
+
+    watch([
+      () => props.latestMessages[props.latestMessages.length - 1]?.length,
+      () => props.latestMessages?.length
+    ], () => {
+      scrollToBottom()
     })
 
     return {

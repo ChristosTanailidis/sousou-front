@@ -64,6 +64,7 @@ export default defineComponent({
 
       return pc?.find(pc => pc.id === props.personalChatId)?.users[0]
     })
+
     return {
       settingsMenu: ref(false),
       headerRef: ref(),

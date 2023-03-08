@@ -108,6 +108,7 @@ export default defineComponent({
 
       // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
+        console.log(message)
         if (message.textChannel?.id !== props.textChannelId) {
           return
         }

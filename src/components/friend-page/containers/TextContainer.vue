@@ -111,9 +111,9 @@ export default defineComponent({
 
       oldMessages.value = omResult
 
-      socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
+      // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
-        if (message.textChannel.id !== props.personalChatId) {
+        if (message.personalChat.id !== props.personalChatId) {
           return
         }
 

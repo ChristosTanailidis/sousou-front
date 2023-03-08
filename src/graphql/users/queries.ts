@@ -95,55 +95,6 @@ export const qGetUsersToAdd = gql`
   }
 `
 
-export const qGetUsersToInvite = gql`
-  query GetAvailableUsersToInvite($paginatedData: PaginatedInputData!, $groupId: String!) {
-    getAvailableUsersToInvite(paginatedData: $paginatedData, groupId: $groupId) {
-      data {
-        id
-        username
-        displayName
-        email
-        code
-        icon
-        createdAt
-        confirmEmailToken
-        emailConfirm
-        jwtToken
-        preferences
-        connectedVoiceChannel {
-          id
-        }
-        groups {
-          id
-        }
-        ownedGroups {
-          id
-        }
-        friendRequests {
-          id
-        }
-        myFriendRequests {
-          id
-        }
-        friendList {
-          id
-        }
-        groupInvites {
-          id
-        }
-        myGroupInvites {
-          id
-        }
-        personalChats {
-          id
-        }
-        pending(groupId: $groupId)
-      }
-      total
-    }
-  }
-`
-
 export const qGetFriendRequests = gql`
 query GetFriendRequests($forMe: Boolean!, $paginatedData: PaginatedInputData!) {
   getFriendRequests(forMe: $forMe, paginatedData: $paginatedData) {

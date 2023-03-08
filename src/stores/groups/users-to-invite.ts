@@ -6,7 +6,7 @@ import { UserPaginationData } from 'src/models/PaginationData'
 import { User } from 'src/models/User'
 
 // gql
-import { qGetUsersToInvite } from 'src/graphql/users/queries'
+import { qGetUsersToInvite } from 'src/graphql/groups/queries'
 
 export const useInviteUsersStore = defineStore('users-store', {
   state: () => ({

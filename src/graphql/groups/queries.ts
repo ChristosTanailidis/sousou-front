@@ -93,3 +93,51 @@ query GetGroupInvites($forMe: Boolean!, $paginationInputData: PaginatedInputData
   }
 }
 `
+
+export const qGetUsersToInvite = gql`
+  query GetAvailableUsersToInvite($groupId: String!, $paginatedData: PaginatedInputData!) {
+    getAvailableUsersToInvite(groupId: $groupId, paginatedData: $paginatedData) {
+      data {
+        id
+        username
+        displayName
+        email
+        code
+        icon
+        createdAt
+        confirmEmailToken
+        emailConfirm
+        jwtToken
+        preferences
+        connectedVoiceChannel {
+          id
+        }
+        groups {
+          id
+        }
+        ownedGroups {
+          id
+        }
+        friendRequests {
+          id
+        }
+        myFriendRequests {
+          id
+        }
+        friendList {
+          id
+        }
+        groupInvites {
+          id
+        }
+        myGroupInvites {
+          id
+        }
+        personalChats {
+          id
+        }
+      }
+      total
+    }
+  }
+`

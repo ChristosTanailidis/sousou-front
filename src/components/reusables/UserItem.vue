@@ -12,10 +12,8 @@
         color="primary"
         size="40px"
       >
-        <q-img
-          :src="user.icon"
-          object="cover"
-          class="w-full h-full"
+        <UserImage
+          :user="user"
         />
       </q-avatar>
     </q-item-section>
@@ -65,6 +63,7 @@
 import { defineComponent, PropType, computed } from 'vue'
 
 // components
+import UserImage from 'src/components/reusables/UserImage.vue'
 
 // models
 import { UserToAdd } from 'src/models/User'
@@ -75,7 +74,7 @@ import { Group } from 'src/models/Group'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { UserImage },
   props: {
     user: {
       type: Object as PropType<UserToAdd>,

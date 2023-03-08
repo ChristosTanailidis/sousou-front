@@ -14,21 +14,11 @@
             color="primary"
             square
           >
-            <q-img
-              :src="user?.icon"
-              spinner-color="white"
-              fit="cover"
-              class="h-full w-full"
-            >
-              <template #error>
-                <q-img
-                  src="https://cdn.quasar.dev/img/avatar.png"
-                  spinner-color="white"
-                  fit="cover"
-                  class="h-full w-full"
-                />
-              </template>
-            </q-img>
+            <UserImage
+              v-if="user"
+              :user="user"
+              text-size="2.5rem"
+            />
           </q-avatar>
         </q-card-section>
 
@@ -124,6 +114,7 @@ import { useQuasar } from 'quasar'
 import MyFriendRequests from 'src/components/dialogs/user/MyFriendRequests.vue'
 import MyGroupInvites from './dialogs/user/MyGroupInvites.vue'
 import UserSettings from './dialogs/user/UserSettings.vue'
+import UserImage from 'src/components/reusables/UserImage.vue'
 
 // models
 
@@ -133,6 +124,9 @@ import { useAuthUser } from 'src/stores/auth-user'
 // utils
 
 export default defineComponent({
+  components: {
+    UserImage
+  },
   setup () {
     const userStore = useAuthUser()
     const { user } = storeToRefs(userStore)

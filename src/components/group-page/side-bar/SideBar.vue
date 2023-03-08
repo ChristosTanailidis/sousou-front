@@ -25,21 +25,9 @@
             avatar
           >
             <q-avatar :style="{backgroundColor: group.color}">
-              <q-img
-                :src="member.icon"
-                spinner-color="primary"
-                fit="cover"
-                class="w-full h-full"
-              >
-                <template #error>
-                  <q-img
-                    src="https://placeimg.com/500/300/nature"
-                    spinner-color="primary"
-                    fit="cover"
-                    class="w-full h-full"
-                  />
-                </template>
-              </q-img>
+              <UserImage
+                :user="member"
+              />
             </q-avatar>
           </q-item-section>
 
@@ -137,6 +125,7 @@ import TextChannel from 'src/components/dialogs/channels/TextChannel.vue'
 import VoiceChannel from 'src/components/dialogs/channels/VoiceChannel.vue'
 import ExpansionItem from './ExpansionItem.vue'
 import MemberProperties from '../../reusables/MemberProperties.vue'
+import UserImage from '../../reusables/UserImage.vue'
 
 // models
 import { Group } from 'src/models/Group'
@@ -146,7 +135,7 @@ import { Group } from 'src/models/Group'
 // utils
 
 export default defineComponent({
-  components: { ExpansionItem, MemberProperties },
+  components: { ExpansionItem, MemberProperties, UserImage },
   props: {
     headerRef: {
       type: Object as PropType<Element>,

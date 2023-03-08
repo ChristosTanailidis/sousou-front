@@ -22,9 +22,12 @@
                 color="primary"
                 size="40px"
               >
-                <q-img
+                <!-- <q-img
                   :src="fr.fromUser.icon"
                   object="cover"
+                /> -->
+                <UserImage
+                  :user="fr.fromUser"
                 />
               </q-avatar>
             </q-item-section>
@@ -82,6 +85,7 @@ import { useDialogPluginComponent } from 'quasar'
 import { storeToRefs } from 'pinia'
 
 // components
+import UserImage from 'src/components/reusables/UserImage.vue'
 
 // models
 
@@ -92,7 +96,7 @@ import { useUsersStore } from 'src/stores/users'
 // utils
 
 export default defineComponent({
-  components: {},
+  components: { UserImage },
   props: {},
   emits: [...useDialogPluginComponent.emits],
   setup () {

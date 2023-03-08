@@ -7,19 +7,10 @@
         class="h-[78px] w-[78px]"
         square
       >
-        <q-img
-          v-if="friend.icon"
-          :src="friend.icon"
-          fit="cover"
-          class="h-full w-full bg-primary"
+        <UserImage
+          :user="friend"
+          text-size="4rem"
         />
-
-        <div
-          v-else
-          class="bg-primary text-[2em] w-full h-full flex items-center justify-center"
-        >
-          {{ friend.displayName.charAt(0) }}
-        </div>
       </q-avatar>
     </div>
 
@@ -62,6 +53,7 @@ import { defineComponent, PropType } from 'vue'
 import { User } from 'src/models/User'
 
 // components
+import UserImage from '../reusables/UserImage.vue'
 
 // models
 
@@ -70,6 +62,7 @@ import { User } from 'src/models/User'
 // utils
 
 export default defineComponent({
+  components: { UserImage },
   props: {
     friend: {
       type: Object as PropType<User>,
@@ -77,9 +70,7 @@ export default defineComponent({
     }
   },
   setup () {
-    return {
-
-    }
+    return {}
   }
 })
 </script>

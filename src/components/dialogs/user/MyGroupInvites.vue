@@ -4,7 +4,7 @@
     @hide="onDialogHide"
   >
     <q-card class="q-dialog-plugin h-[400px]">
-      <q-card-section>
+      <q-card-section v-if="user?.groupInvites.length">
         <div
           v-for="gi in user?.groupInvites"
           :key="gi.id"
@@ -77,6 +77,14 @@
               </q-item>
             </div>
           </q-slide-transition>
+        </div>
+      </q-card-section>
+      <q-card-section
+        v-else
+        class="h-full"
+      >
+        <div class="h-full w-full flex items-center justify-center text-[1.5rem]">
+          No group invites... 🥲
         </div>
       </q-card-section>
     </q-card>

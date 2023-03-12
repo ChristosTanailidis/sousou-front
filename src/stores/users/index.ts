@@ -76,6 +76,5 @@ export const useUsersStore = defineStore('users-store', {
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }
-
   }
 })

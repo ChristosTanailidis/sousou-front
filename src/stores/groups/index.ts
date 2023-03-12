@@ -2,19 +2,22 @@ import { defineStore } from 'pinia'
 import Request from '../graphql-request'
 
 // models
-import { GroupPaginationData } from 'src/models/PaginationData'
 import { GroupInputData, GroupInviteData, TextChannelInputData, VoiceChannelInputData } from 'src/models/InputData'
+import { GroupPaginationData, PaginationData } from 'src/models/PaginationData'
+import { TextChannelMessage } from 'src/models/TextChannelMessage'
+import { PaginatedData } from 'src/models/PaginatedData'
 import { VoiceChannel } from 'src/models/VoiceChannel'
 import { TextChannel } from 'src/models/TextChannel'
 import { Group } from 'src/models/Group'
 
 // gql
-import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
-import { qFetchTextChannel } from 'src/graphql/channels/text-channels/queries'
 import { mAnswerGroupInvite, mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
-import { mCreateTextChannel } from 'src/graphql/channels/text-channels/mutations'
 import { mCreateVoiceChannel } from 'src/graphql/channels/voice-channels/mutations'
+import { mCreateTextChannel } from 'src/graphql/channels/text-channels/mutations'
 import { qFetchVoiceChannel } from 'src/graphql/channels/voice-channels/queries'
+import { qFetchTextChannel } from 'src/graphql/channels/text-channels/queries'
+import { qGetGroupChannelMessages } from 'src/graphql/messages/queries'
+import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
 
 export const useGroupsStore = defineStore('group-store', {
   state: () => ({
@@ -120,6 +123,14 @@ export const useGroupsStore = defineStore('group-store', {
       this.loading = true
       return await Request(mCreateVoiceChannel, { data })
         .then((response) => (response as { createTextChannel: boolean }).createTextChannel)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async fetchGroupChannelMessages (paginationInputData: PaginationData, getPaginatedTextChannelMessagesByTextChannelIdId: string) {
+      this.loading = true
+      return await Request(qGetGroupChannelMessages, { paginationInputData, getPaginatedTextChannelMessagesByTextChannelIdId })
+        .then((response) => (response as { getChannelMessages: PaginatedData<TextChannelMessage> }).getChannelMessages)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }

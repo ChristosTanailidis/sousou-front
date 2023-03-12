@@ -43,16 +43,16 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const chatContainer = ref<Element>()
-
     const oldMessagesPagination = ref<PaginationData>({
       limit: 20,
       page: 1
     })
+
     const oldMessages = ref<PaginatedData<PersonalMessage>>({
       data: [],
       total: 0
     })
+
     const latestMessages = ref<PersonalMessage[][]>([])
 
     const lastReadMessage = ref<string>()

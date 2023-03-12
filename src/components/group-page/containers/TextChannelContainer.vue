@@ -1,6 +1,5 @@
 <template>
   <TextChat
-    ref="chatContainer"
     v-model:loading="loading"
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
@@ -20,15 +19,15 @@ import { socket } from 'src/boot/socket_io'
 import TextChat from 'src/components/TextChat.vue'
 
 // models
-import { PersonalMessage } from 'src/models/PersonalMessage'
+import { TextChannelMessage } from 'src/models/TextChannelMessage'
+import { PaginationData } from 'src/models/PaginationData'
 import { PaginatedData } from 'src/models/PaginatedData'
 
 // stores
-import { useUsersStore } from 'src/stores/users'
+import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 import { formatDistanceToNow } from 'date-fns'
-import { PaginationData } from 'src/models/PaginationData'
 
 export default defineComponent({
   components: { TextChat },
@@ -40,20 +39,20 @@ export default defineComponent({
   },
   emits: [],
   setup (props) {
-    const chatContainer = ref<Element>()
-
     const oldMessagesPagination = ref<PaginationData>({
       limit: 20,
       page: 1
     })
-    const oldMessages = ref<PaginatedData<PersonalMessage>>({
+
+    const oldMessages = ref<PaginatedData<TextChannelMessage>>({
       data: [],
       total: 0
     })
-    const latestMessages = ref<PersonalMessage[][]>([])
 
-    const usersStore = useUsersStore()
-    const { loading } = storeToRefs(usersStore)
+    const latestMessages = ref<TextChannelMessage[][]>([])
+
+    const groupStore = useGroupsStore()
+    const { loading } = storeToRefs(groupStore)
 
     const sendMessage = (message: string) => {
       socket.emit('message-send', {
@@ -72,8 +71,7 @@ export default defineComponent({
     }
 
     const fetchPaginatedMessages = async () => {
-      // todo: return await groupStore.fetchTextChannelMessages(oldMessagesPagination.value, props.textChannelId)
-      return await usersStore.fetchPersonalMessages(oldMessagesPagination.value, props.textChannelId)
+      return await groupStore.fetchGroupChannelMessages(oldMessagesPagination.value, props.textChannelId)
     }
 
     const fetchMorePaginatedMessages = async () => {
@@ -89,16 +87,16 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      // const omResult = await fetchPaginatedMessages()
+      const omResult = await fetchPaginatedMessages()
 
-      // if (!omResult) {
-      //   return
-      // }
+      if (!omResult) {
+        return
+      }
 
-      // oldMessages.value = omResult
+      oldMessages.value = omResult
 
       // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
-      socket.on('message-receive', (message: PersonalMessage) => {
+      socket.on('message-receive', (message: TextChannelMessage) => {
         console.log(message)
         if (message.textChannel?.id !== props.textChannelId) {
           return
@@ -129,9 +127,8 @@ export default defineComponent({
       sendMessage,
       readMessage,
 
-      formatDistanceToNow,
+      formatDistanceToNow
 
-      chatContainer
     }
   }
 })

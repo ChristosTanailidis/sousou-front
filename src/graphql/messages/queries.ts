@@ -21,3 +21,25 @@ export const qGetPersonalMessages = gql`
     }
   }
 `
+
+export const qGetGroupChannelMessages = gql`
+  query GetPaginatedTextChannelMessagesByTextChannelId($getPaginatedTextChannelMessagesByTextChannelIdId: String!, $paginationInputData: PaginatedInputData!) {
+    getChannelMessages: getPaginatedTextChannelMessagesByTextChannelId(id: $getPaginatedTextChannelMessagesByTextChannelIdId, paginationInputData: $paginationInputData) {
+      data {
+        createdAt
+        deleteForAll
+        deletedFromUsers {
+          id
+        }
+        file
+        from {
+          id
+        }
+        id
+        state
+        text
+      }
+      total
+    }
+  }
+`

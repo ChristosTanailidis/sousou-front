@@ -91,6 +91,7 @@ import { storeToRefs } from 'pinia'
 // components
 
 // models
+import { TextChannelMessage } from 'src/models/TextChannelMessage'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { PaginationData } from 'src/models/PaginationData'
 import { PaginatedData } from 'src/models/PaginatedData'
@@ -104,7 +105,7 @@ import { formatDistanceToNow } from 'date-fns'
 export default defineComponent({
   props: {
     oldMessages: {
-      type: Object as PropType<PaginatedData<PersonalMessage>>,
+      type: Object as PropType<PaginatedData<PersonalMessage | TextChannelMessage>>,
       default: () => {
         return {
           data: [],
@@ -122,7 +123,7 @@ export default defineComponent({
       }
     },
     latestMessages: {
-      type: Array as PropType<Array<Array<PersonalMessage>>>,
+      type: Array as PropType<Array<Array<PersonalMessage | TextChannelMessage>>>,
       default: () => []
     },
     loading: {
@@ -211,7 +212,7 @@ export default defineComponent({
         if (chatContainer.value) {
           chatContainer.value.scrollTop = chatContainer.value.scrollHeight
         }
-      }, 100)
+      }, 300)
     }
 
     onMounted(async () => {

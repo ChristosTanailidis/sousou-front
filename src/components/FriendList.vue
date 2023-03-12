@@ -105,6 +105,11 @@ export default defineComponent({
     onMounted(() => {
       socket.on('message-receive', (message: Message) => {
         const pcIndex = personalChats.value.findIndex(pc => pc.users[0].id === message.from.id)
+
+        if (pcIndex < 0) {
+          return
+        }
+
         personalChats.value[pcIndex].latestMessage = message.text
 
         const nmn = personalChats.value[pcIndex].newMessagesNumber

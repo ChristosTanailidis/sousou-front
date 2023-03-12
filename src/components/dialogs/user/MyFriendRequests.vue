@@ -22,10 +22,6 @@
                 color="primary"
                 size="40px"
               >
-                <!-- <q-img
-                  :src="fr.fromUser.icon"
-                  object="cover"
-                /> -->
                 <UserImage
                   :user="fr.fromUser"
                 />

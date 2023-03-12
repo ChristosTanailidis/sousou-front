@@ -48,6 +48,7 @@ import { UserToAdd } from 'src/models/User'
 
 // stores
 import { useAddUsersStore } from 'src/stores/users/users-to-add'
+import { useAuthUser } from 'src/stores/auth-user/index'
 
 // utils
 
@@ -56,7 +57,7 @@ export default defineComponent({
   props: {},
   emits: [...useDialogPluginComponent.emits],
   setup () {
-    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
+    const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
     const usersStore = useAddUsersStore()
     const { users, total, loading } = storeToRefs(usersStore)
@@ -67,8 +68,8 @@ export default defineComponent({
       filter: ''
     })
 
-    watch(pagination, () => {
-      usersStore.fetch(pagination.value)
+    watch(pagination, async () => {
+      await usersStore.fetch(pagination.value)
     }, { deep: true, immediate: true })
 
     const $q = useQuasar()
@@ -79,8 +80,8 @@ export default defineComponent({
         componentProps: {
           to: user
         }
-      }).onOk(() => {
-        onDialogOK()
+      }).onOk(async () => {
+        await usersStore.fetch(pagination.value)
       })
     }
 
@@ -90,8 +91,8 @@ export default defineComponent({
         componentProps: {
           id
         }
-      }).onOk(() => {
-        onDialogOK()
+      }).onOk(async () => {
+        await usersStore.fetch(pagination.value)
       })
     }
 

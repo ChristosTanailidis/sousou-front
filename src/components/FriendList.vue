@@ -33,12 +33,14 @@
 
     <!-- Friend -->
     <router-link
-      v-for="personalChat in personalChats"
+      v-for="personalChat in personalChatsFiltered"
       :key="personalChat.id"
       :to="'/friend/' + personalChat.id"
     >
       <UserItem
         :user="personalChat.users[0]"
+        :sub-text="personalChat.latestMessage || personalChat.messages[0]?.text"
+        :notify="personalChat.newMessagesNumber"
         class="mx-2"
       />
     </router-link>
@@ -46,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
@@ -58,12 +60,14 @@ import UserItem from './reusables/UserItem.vue'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
+import { socket } from 'src/boot/socket_io'
+import { Message } from 'src/models/Message'
 
 // utils
 
 export default defineComponent({
   components: { UserItem },
-  props: { },
+  props: {},
   emits: [],
   setup () {
     const userStore = useAuthUser()
@@ -71,28 +75,22 @@ export default defineComponent({
 
     const search = ref('')
 
-    // const personalChats = computed(() => {
-    //   const personalChats = user.value?.personalChats.map(pc => {
-    //     return {
-    //       id: pc.id,
-    //       friend: pc.users[0]
-    //     }
-    //   })
+    const personalChatsFiltered = computed(() => {
+      if (!personalChats) {
+        return []
+      }
 
-    //   if (!personalChats) {
-    //     return []
-    //   }
+      if (!search.value.length || search.value.charAt(0) === ' ') {
+        return personalChats.value
+      }
 
-    //   return personalChats
-
-    //   // return personalChats.filter(
-    //   //   (pc) =>
-    //   //     pc.friend.code.includes(search.value) ||
-    //   //     pc.friend.displayName.includes(search.value) ||
-    //   //     pc.friend.email.includes(search.value) ||
-    //   //     pc.friend.username.includes(search.value)
-    //   // )
-    // })
+      return personalChats.value.filter(
+        (pc) =>
+          pc.users[0].code?.includes(search.value) || /* Search by code */
+          ('#' + pc.users[0].code)?.includes(search.value) || /* Search by {#}code */
+          pc.users[0].displayName?.includes(search.value) /* Search by displayed name */
+      )
+    })
 
     const $q = useQuasar()
 
@@ -104,9 +102,24 @@ export default defineComponent({
       })
     }
 
+    onMounted(() => {
+      socket.on('message-receive', (message: Message) => {
+        const pcIndex = personalChats.value.findIndex(pc => pc.users[0].id === message.from.id)
+        personalChats.value[pcIndex].latestMessage = message.text
+
+        const nmn = personalChats.value[pcIndex].newMessagesNumber
+        personalChats.value[pcIndex].newMessagesNumber = nmn ? nmn + 1 : 1
+      })
+
+      /* TODO: otan kaneis read na fevgei to newMessagesNumber bubble */
+      // socket.on('message-read', () => {
+
+      // })
+    })
+
     return {
       user,
-      personalChats,
+      personalChatsFiltered,
       search,
       openAddFriend
     }

@@ -7,7 +7,23 @@
     <q-item-section
       top
       avatar
+      class="relative"
     >
+      <div
+        v-if="notify"
+        class="h-4 w-4 rounded-full bg-primary absolute top-0 right-3 z-40 border border-dark-300 animate__animated animate__headShake"
+      >
+        <Transition>
+          <div
+            v-if="typeof (notify) === 'number'"
+            :key="notify"
+            class="text-[0.7rem] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          >
+            {{ notify }}
+          </div>
+        </Transition>
+      </div>
+
       <q-avatar
         color="primary"
         size="40px"
@@ -19,13 +35,25 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ user.displayName }} {{ user.pending ? '(pending invite)' : '' }}</q-item-label>
+      <q-item-label
+        lines="1"
+      >
+        {{ user.displayName }} {{ user.pending ? '(pending invite)' : '' }}
+      </q-item-label>
+
       <q-item-label
         v-if="code"
         caption
-        lines="2"
+        lines="1"
       >
         #{{ user.code }}
+      </q-item-label>
+      <q-item-label
+        v-else-if="subText"
+        caption
+        lines="1"
+      >
+        {{ subText }}
       </q-item-label>
     </q-item-section>
 
@@ -86,6 +114,14 @@ export default defineComponent({
     },
     groupsIndicator: {
       type: Boolean,
+      default: false
+    },
+    subText: {
+      type: String,
+      default: undefined
+    },
+    notify: {
+      type: [Boolean, Number],
       default: false
     }
   },

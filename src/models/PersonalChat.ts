@@ -6,4 +6,8 @@ export interface PersonalChat {
   users: [User]
   messages: [PersonalMessage]
   mute: boolean
+
+  // my things
+  latestMessage?: string,
+  newMessagesNumber?: number
 }

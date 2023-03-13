@@ -87,9 +87,9 @@ export default defineComponent({
 
       return personalChats.value.filter(
         (pc) =>
-          pc.users[0].code?.includes(search.value) || /* Search by code */
-          ('#' + pc.users[0].code)?.includes(search.value) || /* Search by {#}code */
-          pc.users[0].displayName?.includes(search.value) /* Search by displayed name */
+          pc.users[0].code.toLowerCase()?.includes(search.value.toLowerCase()) || /* Search by code */
+          ('#' + pc.users[0].code).toLowerCase()?.includes(search.value.toLowerCase()) || /* Search by {#}code */
+          pc.users[0].displayName.toLowerCase()?.includes(search.value.toLowerCase()) /* Search by displayed name */
       )
     })
 

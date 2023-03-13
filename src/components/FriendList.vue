@@ -61,7 +61,8 @@ import UserItem from './reusables/UserItem.vue'
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
 import { socket } from 'src/boot/socket_io'
-import { Message } from 'src/models/Message'
+import { PersonalMessage } from 'src/models/PersonalMessage'
+import { LastReadMessagePivot } from 'src/models/SocketData'
 
 // utils
 
@@ -103,8 +104,8 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      socket.on('message-receive', (message: Message) => {
-        const pcIndex = personalChats.value.findIndex(pc => pc.users[0].id === message.from.id)
+      socket.on('message-receive', (message: PersonalMessage) => {
+        const pcIndex = personalChats.value.findIndex(pc => pc.id === message.personalChat.id)
 
         if (pcIndex < 0) {
           return
@@ -116,10 +117,19 @@ export default defineComponent({
         personalChats.value[pcIndex].newMessagesNumber = nmn ? nmn + 1 : 1
       })
 
-      /* TODO: otan kaneis read na fevgei to newMessagesNumber bubble */
-      // socket.on('message-read', () => {
+      socket.on('message-read', (data: LastReadMessagePivot) => {
+        if (!data.personalChat || data.user.id !== user.value?.id) {
+          return
+        }
 
-      // })
+        const pcIndex = personalChats.value.findIndex(pc => pc.id === data.personalChat?.id)
+
+        if (pcIndex < 0) {
+          return
+        }
+
+        personalChats.value[pcIndex].newMessagesNumber = 0
+      })
     })
 
     return {

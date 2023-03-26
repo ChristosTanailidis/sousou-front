@@ -48,7 +48,6 @@ import { UserToAdd } from 'src/models/User'
 
 // stores
 import { useAddUsersStore } from 'src/stores/users/users-to-add'
-import { useAuthUser } from 'src/stores/auth-user/index'
 
 // utils
 

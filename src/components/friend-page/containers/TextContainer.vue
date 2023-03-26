@@ -29,6 +29,7 @@ import { useUsersStore } from 'src/stores/users'
 
 // utils
 import { PaginationData } from 'src/models/PaginationData'
+import { LastReadMessagePivot } from 'src/models/SocketData'
 
 export default defineComponent({
   components: { TextChat },
@@ -55,7 +56,7 @@ export default defineComponent({
 
     const latestMessages = ref<PersonalMessage[][]>([])
 
-    const lastReadMessage = ref<string>()
+    const lastReadMessage = ref<PersonalMessage>()
 
     const usersStore = useUsersStore()
     const { loading } = storeToRefs(usersStore)
@@ -121,16 +122,35 @@ export default defineComponent({
         }
       })
 
-      socket.on('message-read', (personalChat: any) => {
-        lastReadMessage.value = personalChat.lastReadMessage.id
+      socket.on('message-read', (data: LastReadMessagePivot) => {
+        if (!data.personalChat || data.user.id !== props.friend.id) {
+          return
+        }
+
+        const latestMessage1Index = latestMessages.value.findIndex(lm => lm.find(lm2 => lm2.id === data.lastReadMessage.id))
+        const latestMessage2Index = latestMessage1Index >= 0 && latestMessages.value[latestMessage1Index].findIndex(lm2 => lm2.id === data.lastReadMessage.id)
+
+        if (latestMessage2Index && latestMessage2Index > -1) {
+          lastReadMessage.value = latestMessages.value[latestMessage1Index][latestMessage2Index]
+
+          return
+        }
+
+        const oldMessagesIndex = oldMessages.value.data.findIndex(om => om.id === data.lastReadMessage.id)
+
+        if (oldMessagesIndex < 0) {
+          return
+        }
+
+        lastReadMessage.value = oldMessages.value.data[oldMessagesIndex]
       })
     })
 
     return {
       latestMessages,
       oldMessagesPagination,
-      oldMessages,
       lastReadMessage,
+      oldMessages,
       loading,
 
       fetchMorePaginatedMessages,

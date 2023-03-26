@@ -7,7 +7,7 @@ import { User } from './User'
 export interface LastReadMessagePivot {
   user: User
   personalChat?: PersonalChat
-  lastReadMessage: PersonalMessage[]
+  lastReadMessage: PersonalMessage
 }
 
 export interface TextChannelUserPivot {

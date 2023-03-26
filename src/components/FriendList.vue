@@ -105,7 +105,11 @@ export default defineComponent({
 
     onMounted(() => {
       socket.on('message-receive', (message: PersonalMessage) => {
-        const pcIndex = personalChats.value.findIndex(pc => pc.id === message.personalChat.id)
+        if (message.from.id === user.value?.id) {
+          return
+        }
+
+        const pcIndex = personalChats.value.findIndex(pc => pc.id === message.personalChat?.id)
 
         if (pcIndex < 0) {
           return
@@ -115,6 +119,11 @@ export default defineComponent({
 
         const nmn = personalChats.value[pcIndex].newMessagesNumber
         personalChats.value[pcIndex].newMessagesNumber = nmn ? nmn + 1 : 1
+
+        const latestPC = personalChats.value.splice(pcIndex, 1)[0]
+
+        // todo: auto enai apo getter opote den douleveiswsta na mpei se ref
+        personalChats.value.unshift(latestPC)
       })
 
       socket.on('message-read', (data: LastReadMessagePivot) => {

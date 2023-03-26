@@ -28,10 +28,9 @@
               message.from.id === user?.id ? 'justify-end' : 'justify-start'
             ]"
           >
-            <!-- todo: fix this -->
             <div
-              v-if="lastReadMessage === message.id"
-              :key="lastReadMessage"
+              v-if="lastReadMessage?.id === message.id"
+              :key="lastReadMessage.id"
             >
               hello
             </div>
@@ -63,6 +62,12 @@
           <template #stamp>
             <div :key="clock">
               {{ formatDistanceToNow(new Date(message[message.length - 1].createdAt)) }} ago
+            </div>
+            <div
+              v-if="message.find(m => m.id === lastReadMessage?.id)"
+              :key="lastReadMessage?.id"
+            >
+              hello
             </div>
           </template>
         </q-chat-message>
@@ -131,7 +136,7 @@ export default defineComponent({
       default: false
     },
     lastReadMessage: {
-      type: String,
+      type: Object as PropType<PersonalMessage | TextChannelMessage>,
       default: undefined
     }
   },

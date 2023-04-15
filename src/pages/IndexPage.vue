@@ -1,12 +1,16 @@
 <template>
   <div class="h-full w-full flex flex-col items-center justify-center">
-    <q-img
-      src="/assets/sousou_logo_primary.svg"
-      spinner-color="primary"
-      object="contain"
-      width="40rem"
-      class="animate__animated animate__fadeIn bounce"
-    />
+    <div>
+      <q-img
+        src="/assets/sousou_logo_white.svg"
+        spinner-color="primary"
+        object="contain"
+        width="40rem"
+        class="animate__animated animate__fadeIn bounce opacity-80"
+      />
+    </div>
+
+    <div class="animate__animated animate__fadeIn shadow bg-[rgba(255,255,255,0.2)] w-90 h-2 rounded-[100%]" />
   </div>
 </template>
 
@@ -41,6 +45,13 @@ export default defineComponent({
   animation-iteration-count: infinite;
 }
 
+.shadow {
+  animation-name: shadow;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(0);
@@ -50,6 +61,18 @@ export default defineComponent({
   }
   100% {
     transform: translateY(0);
+  }
+}
+
+@keyframes shadow {
+  0% {
+    transform: scale(127%);
+  }
+  50% {
+    transform: scale(130%);
+  }
+  100% {
+    transform: scale(127%);
   }
 }
 

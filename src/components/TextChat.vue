@@ -4,7 +4,7 @@
     v-scroll="fetchMorePaginatedMessages"
     class="flex flex-col flex-nowrap gap-2 overflow-auto relative"
   >
-    <div class="flex-grow q-pa-sm px-3 row justify-center relative">
+    <div class="flex-grow px-3 row justify-center relative h-full">
       <q-spinner
         :class="[
           loading ? 'opacity-100' : 'opacity-0'
@@ -14,25 +14,31 @@
         size="3rem"
         :thickness="5"
       />
+
       <div
         style="width: 100%"
-        class="h-full"
+        class="relative h-full"
       >
         <div class="flex flex-col-reverse">
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
           <div
             v-for="(message) in oldMessages.data"
             :key="message.id"
-            class="flex flex-row flex-nowrap gap-1 items-end"
+            class="flex flex-row flex-nowrap gap-1 items-center"
             :class="[
               message.from.id === user?.id ? 'justify-end' : 'justify-start'
             ]"
           >
+            <!-- todo: map https://github.com/Lemas97/Sousou-Api/issues/33 -->
             <div
-              v-if="lastReadMessage?.id === message.id"
-              :key="lastReadMessage.id"
+              v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)"
+              :key="readByUser.id + 'RBU'"
             >
-              hello
+              <UserImage
+                :user="readByUser"
+                text-size="0.8rem"
+                class="w-4 h-4 rounded-full overflow-hidden"
+              />
             </div>
 
             <q-chat-message
@@ -50,41 +56,65 @@
           </div>
         </div>
 
-        <!-- :name="message[0].from.id === user?.id ? user?.displayName + '#' + latestMessages[index - 1][0].from.id !== user?.id ? user?.code : 'you' : undefined" -->
-        <q-chat-message
-          v-for="(message) in latestMessages"
-          :key="message[0].id"
-          :text="message.map(m => m.text)"
-          :sent="message[0].from.id === user?.id"
-          :text-color="message[0].from.id !== user?.id ? 'black' : 'white'"
-          :bg-color="message[0].from.id !== user?.id ? 'amber-7' : 'primary'"
+        <div
+          v-if="latestMessages.length"
+          class="flex flex-col"
         >
-          <template #stamp>
-            <div :key="clock">
-              {{ formatDistanceToNow(new Date(message[message.length - 1].createdAt)) }} ago
-            </div>
+          <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
+          <div
+            v-for="(message) in latestMessages"
+            :key="message.id"
+            class="flex flex-row flex-nowrap gap-1 items-center"
+            :class="[
+              message.from.id === user?.id ? 'justify-end' : 'justify-start'
+            ]"
+          >
+            <!-- todo: fix to map me to back https://github.com/Lemas97/Sousou-Api/issues/33 -->
             <div
-              v-if="message.find(m => m.id === lastReadMessage?.id)"
-              :key="lastReadMessage?.id"
+              v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)"
+              :key="readByUser.id + 'RBU'"
             >
-              hello
+              <UserImage
+                :user="readByUser"
+                text-size="0.8rem"
+                class="w-4 h-4 rounded-full overflow-hidden"
+              />
             </div>
-          </template>
-        </q-chat-message>
-      </div>
-    </div>
 
-    <div class="sticky bottom-0 left-0 w-full bg-dark-200">
-      <q-input
-        :key="user?.id"
-        v-model="newText"
-        :autofocus="true"
-        type="text"
-        label="Message"
-        class="p-2"
-        @keydown.enter="sendMessage()"
-        @focus="readMessage()"
-      />
+            <!-- :name="message[0].from.id === user?.id ? user?.displayName + '#' + latestMessages[index - 1][0].from.id !== user?.id ? user?.code : 'you' : undefined" -->
+            <q-chat-message
+              :key="message.id"
+              :text="[message.text]"
+              :sent="message.from.id === user?.id"
+              :text-color="message.from.id !== user?.id ? 'black' : 'white'"
+              :bg-color="message.from.id !== user?.id ? 'amber-7' : 'primary'"
+            >
+              <template #stamp>
+                <div :key="clock">
+                  {{ formatDistanceToNow(new Date(message.createdAt)) }} ago
+                </div>
+              </template>
+
+              <div>
+                {{ message.text }}
+              </div>
+            </q-chat-message>
+          </div>
+        </div>
+
+        <div class="sticky bottom-0 left-0 w-full bg-dark-200">
+          <q-input
+            :key="user?.id"
+            v-model="newText"
+            :autofocus="true"
+            type="text"
+            label="Message"
+            class="p-2"
+            @keydown.enter="sendMessage()"
+            @focus="readMessage()"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +124,7 @@ import { defineComponent, ref, PropType, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // components
+import UserImage from 'src/components/reusables/UserImage.vue'
 
 // models
 import { TextChannelMessage } from 'src/models/TextChannelMessage'
@@ -106,8 +137,12 @@ import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 import { formatDistanceToNow } from 'date-fns'
+import { User } from 'src/models/User'
 
 export default defineComponent({
+  components: {
+    UserImage
+  },
   props: {
     oldMessages: {
       type: Object as PropType<PaginatedData<PersonalMessage | TextChannelMessage>>,
@@ -128,16 +163,12 @@ export default defineComponent({
       }
     },
     latestMessages: {
-      type: Array as PropType<Array<Array<PersonalMessage | TextChannelMessage>>>,
+      type: Array as PropType<Array<PersonalMessage | TextChannelMessage>>,
       default: () => []
     },
     loading: {
       type: Boolean,
       default: false
-    },
-    lastReadMessage: {
-      type: Object as PropType<PersonalMessage | TextChannelMessage>,
-      default: undefined
     }
   },
   emits: ['sendMessage', 'readMessage', 'fetchMorePaginatedMessages', 'update:loading'],
@@ -168,12 +199,11 @@ export default defineComponent({
       setTimeout(() => {
         const { latestMessages, oldMessages } = props
         const i1 = (latestMessages?.length || 0) - 1
-        const i2 = (latestMessages[i1]?.length || 0) - 1
 
         let latestMessage
 
-        if (i1 >= 0 && i2 >= 0) {
-          latestMessage = latestMessages[i1][i2]
+        if (i1 >= 0) {
+          latestMessage = latestMessages[i1]
         }
 
         if (!latestMessage) {
@@ -230,7 +260,6 @@ export default defineComponent({
     })
 
     watch([
-      () => props.latestMessages[props.latestMessages.length - 1]?.length,
       () => props.latestMessages?.length
     ], () => {
       scrollToBottom()
@@ -246,6 +275,9 @@ export default defineComponent({
       readMessage,
       fetchMorePaginatedMessages,
 
+      getValidReadByUsers: (users?: User[], fromUser?: User) => {
+        return users?.filter(u => u.id !== user?.value?.id && u.id !== fromUser?.id)
+      },
       formatDistanceToNow,
       clock
     }

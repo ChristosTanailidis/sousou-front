@@ -1,10 +1,10 @@
 <template>
+  <!-- :last-read-message="lastReadMessage" -->
   <TextChat
     v-model:loading="loading"
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
     :latest-messages="latestMessages"
-    :last-read-message="lastReadMessage"
     @fetch-more-paginated-messages="fetchMorePaginatedMessages"
     @send-message="sendMessage"
     @read-message="readMessage"
@@ -54,7 +54,7 @@ export default defineComponent({
       total: 0
     })
 
-    const latestMessages = ref<PersonalMessage[][]>([])
+    const latestMessages = ref<PersonalMessage[]>([])
 
     const lastReadMessage = ref<PersonalMessage>()
 
@@ -108,33 +108,25 @@ export default defineComponent({
           return
         }
 
-        const lastMessageGroup = latestMessages.value[latestMessages.value.length - 1]
-        const lastMessage = lastMessageGroup ? lastMessageGroup[lastMessageGroup.length - 1] : undefined
-
-        if (
-          lastMessage &&
-          (message.from.id === lastMessage.from.id) && // groups text together if its from the same user
-          ((new Date(message.createdAt)).valueOf() - (new Date(lastMessage?.createdAt)).valueOf() < 1000 * 15) // groups text on last 15 seconds
-        ) {
-          latestMessages.value[latestMessages.value.length - 1].push(message)
-        } else {
-          latestMessages.value.push([message])
-        }
+        latestMessages.value.push(message)
       })
 
       socket.on('message-read', (data: LastReadMessagePivot) => {
-        if (!data.personalChat || data.user.id !== props.friend.id) {
+        if (!data.personalChat || data.user.id === props.friend.id) {
           return
         }
 
-        const latestMessage1Index = latestMessages.value.findIndex(lm => lm.find(lm2 => lm2.id === data.lastReadMessage.id))
-        const latestMessage2Index = latestMessage1Index >= 0 && latestMessages.value[latestMessage1Index].findIndex(lm2 => lm2.id === data.lastReadMessage.id)
+        // New message read
 
-        if (latestMessage2Index && latestMessage2Index > -1) {
-          lastReadMessage.value = latestMessages.value[latestMessage1Index][latestMessage2Index]
+        const latestMessageIndex = latestMessages.value.findIndex(lm => lm.id === data.lastReadMessage.id)
+
+        if (latestMessageIndex > -1) {
+          latestMessages.value[latestMessageIndex] = data.lastReadMessage
 
           return
         }
+
+        // Old message read
 
         const oldMessagesIndex = oldMessages.value.data.findIndex(om => om.id === data.lastReadMessage.id)
 
@@ -142,7 +134,7 @@ export default defineComponent({
           return
         }
 
-        lastReadMessage.value = oldMessages.value.data[oldMessagesIndex]
+        oldMessages.value.data[oldMessagesIndex] = data.lastReadMessage
       })
     })
 

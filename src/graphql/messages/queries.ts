@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 
+// todo: https://github.com/Lemas97/Sousou-Api/issues/34
 export const qGetPersonalMessages = gql`
   query GetPersonalMessagesActionByPersonalChatId($paginationInputData: PaginatedInputData!, $personalChatId: String!) {
     getPersonalMessages: getPersonalMessagesActionByPersonalChatId(paginationInputData: $paginationInputData, personalChatId: $personalChatId) {
@@ -13,6 +14,15 @@ export const qGetPersonalMessages = gql`
         from {
           id
         }
+        # readBy {
+        #   user {
+        #     code
+        #     displayName
+        #     email
+        #     id
+        #     icon
+        #   }
+        # }
         id
         state
         text

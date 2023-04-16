@@ -1,5 +1,8 @@
 <template>
-  <div class="h-full w-full bg-primary">
+  <div
+    v-if="user"
+    class="h-full w-full bg-primary"
+  >
     <q-img
       v-if="user.icon"
       :src="user.icon"
@@ -12,7 +15,7 @@
           class="h-full w-full flex items-center justify-center uppercase "
           :style="{ fontSize: textSize }"
         >
-          {{ user.displayName.charAt(0) }}
+          {{ user.displayName?.charAt(0) }}
         </div>
       </template>
     </q-img>
@@ -22,7 +25,7 @@
       class="w-full h-full flex items-center justify-center uppercase"
       :style="{ fontSize: textSize }"
     >
-      {{ user.displayName.charAt(0) }}
+      {{ user.displayName?.charAt(0) }}
     </div>
   </div>
 </template>
@@ -43,7 +46,7 @@ export default defineComponent({
   props: {
     user: {
       type: Object as PropType<User>,
-      required: true
+      default: undefined
     },
     textSize: {
       type: String,

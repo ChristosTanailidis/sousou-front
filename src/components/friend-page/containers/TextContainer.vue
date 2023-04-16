@@ -2,9 +2,14 @@
   <!-- :last-read-message="lastReadMessage" -->
   <TextChat
     v-model:loading="loading"
+
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
+
     :latest-messages="latestMessages"
+
+    :last-read-message-indexes="lastReadMessageIndexes"
+
     @fetch-more-paginated-messages="fetchMorePaginatedMessages"
     @send-message="sendMessage"
     @read-message="readMessage"
@@ -12,12 +17,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, onMounted } from 'vue'
+import { defineComponent, ref, PropType, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { socket } from 'src/boot/socket_io'
 
 // components
-import TextChat from 'src/components/TextChat.vue'
+import TextChat, { MessageReadIndex } from 'src/components/TextChat.vue'
 
 // models
 import { PersonalMessage } from 'src/models/PersonalMessage'
@@ -138,6 +143,28 @@ export default defineComponent({
       })
     })
 
+    const lastReadMessageIndex = computed((): MessageReadIndex[] => {
+      const latestIndex = latestMessages.value.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id) && lm.from.id !== props.friend.id)
+
+      if (latestIndex > -1) {
+        return [{
+          user: props.friend,
+          indexNew: latestIndex
+        }]
+      }
+
+      const oldIndex = oldMessages.value.data.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id))
+
+      if (oldIndex > -1 && oldMessages.value.data[oldIndex].from.id !== props.friend.id) {
+        return [{
+          user: props.friend,
+          indexOld: oldIndex
+        }]
+      }
+
+      return []
+    })
+
     return {
       latestMessages,
       oldMessagesPagination,
@@ -147,7 +174,9 @@ export default defineComponent({
 
       fetchMorePaginatedMessages,
       sendMessage,
-      readMessage
+      readMessage,
+
+      lastReadMessageIndexes: lastReadMessageIndex
     }
   }
 })

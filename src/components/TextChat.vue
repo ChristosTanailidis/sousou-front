@@ -62,23 +62,29 @@
         >
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
           <div
-            v-for="(message) in latestMessages"
+            v-for="(message, index) in latestMessages"
             :key="message.id"
             class="flex flex-row flex-nowrap gap-1 items-center"
             :class="[
               message.from.id === user?.id ? 'justify-end' : 'justify-start'
             ]"
           >
-            <!-- todo: fix to map me to back https://github.com/Lemas97/Sousou-Api/issues/33 -->
             <div
-              v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)"
-              :key="readByUser.id + 'RBU'"
+
+              class="flex flex-row-reverse gap-2 items-center"
             >
-              <UserImage
-                :user="readByUser"
-                text-size="0.8rem"
-                class="w-4 h-4 rounded-full overflow-hidden"
-              />
+              <!-- todo: fix to map me to back https://github.com/Lemas97/Sousou-Api/issues/33 -->
+              <!-- v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)" -->
+              <div
+                v-if="lastReadMessageIndexes.find(messageRead => messageRead.indexNew === index)"
+                :key="index + 'RBU'"
+              >
+                <UserImage
+                  :user="lastReadMessageIndexes.find(messageRead => messageRead.indexNew === index)?.user"
+                  text-size="0.8rem"
+                  class="w-4 h-4 rounded-full overflow-hidden"
+                />
+              </div>
             </div>
 
             <!-- :name="message[0].from.id === user?.id ? user?.displayName + '#' + latestMessages[index - 1][0].from.id !== user?.id ? user?.code : 'you' : undefined" -->
@@ -139,6 +145,12 @@ import { useAuthUser } from 'src/stores/auth-user'
 import { formatDistanceToNow } from 'date-fns'
 import { User } from 'src/models/User'
 
+export interface MessageReadIndex {
+  user: User,
+  indexOld?: number
+  indexNew?: number
+}
+
 export default defineComponent({
   components: {
     UserImage
@@ -164,6 +176,10 @@ export default defineComponent({
     },
     latestMessages: {
       type: Array as PropType<Array<PersonalMessage | TextChannelMessage>>,
+      default: () => []
+    },
+    lastReadMessageIndexes: {
+      type: Array as PropType<Array<MessageReadIndex>>,
       default: () => []
     },
     loading: {

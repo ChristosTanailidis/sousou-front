@@ -37,6 +37,15 @@
         unelevated
         icon="phone_in_talk"
         color="primary"
+        @click="startCall"
+      />
+      <q-btn
+        flat
+        round
+        unelevated
+        icon="phone_in_talk"
+        color="red"
+        @click="endCall"
       />
       <q-btn
         flat
@@ -49,13 +58,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { User } from 'src/models/User'
+import { defineComponent, PropType, ref } from 'vue'
+import SimplePeer from 'simple-peer'
+import wrtc from 'wrtc'
 
 // components
 import UserImage from '../reusables/UserImage.vue'
 
 // models
+import { User } from 'src/models/User'
 
 // stores
 
@@ -70,7 +81,58 @@ export default defineComponent({
     }
   },
   setup () {
-    return {}
+    const peerRef = ref<SimplePeer.Instance | null>(null)
+
+    const startCall = () => {
+      const peer = new SimplePeer({
+        initiator: true,
+        wrtc
+      })
+
+      peer.on('signal', (data) => {
+        // Send the signal data to the other peer
+      })
+
+      peer.on('connect', () => {
+        // Connection established
+        // Call the other peer when the connection is established
+        if (peer && !peer.destroyed) {
+          const getUserMedia = navigator.mediaDevices.getUserMedia
+          getUserMedia(
+            { audio: true }
+          ).then((stream) => {
+            const call = peerRef.value.call(null, stream)
+            call.on('stream', (remoteStream) => {
+              // Remote audio stream received
+            })
+          }).catch((error) => {
+            console.error('getUserMedia error:', error)
+          })
+        }
+      })
+
+      peer.on('data', (data) => {
+        // Receive audio data from other peer
+      })
+
+      peer.on('close', () => {
+        // Connection closed
+      })
+
+      this.peer = peer
+    }
+
+    const endCall = () => {
+      if (peerRef.value) {
+        peerRef.value.destroy()
+        peerRef.value = null
+      }
+    }
+
+    return {
+      startCall,
+      endCall
+    }
   }
 })
 </script>

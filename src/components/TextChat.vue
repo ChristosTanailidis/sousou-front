@@ -29,7 +29,6 @@
               message.from.id === user?.id ? 'justify-end' : 'justify-start'
             ]"
           >
-            test
             <div
               class="flex flex-row-reverse gap-2 items-center"
             >

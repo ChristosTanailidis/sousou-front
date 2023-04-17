@@ -6,6 +6,12 @@ query GetTextChannelById($getTextChannelByIdId: String!) {
   getTextChannelById(id: $getTextChannelByIdId) {
     group {
       id
+      members {
+        id
+        icon
+        displayName
+        code
+      }
     }
     id
     messages {

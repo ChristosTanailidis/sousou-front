@@ -14,7 +14,7 @@ import { Group } from 'src/models/Group'
 import { mAnswerGroupInvite, mCancelGroupInvite, mCreateGroup, mCreateGroupInvite, mUpdateGroup } from 'src/graphql/groups/mutations'
 import { mCreateVoiceChannel } from 'src/graphql/channels/voice-channels/mutations'
 import { mCreateTextChannel } from 'src/graphql/channels/text-channels/mutations'
-import { qFetchVoiceChannel } from 'src/graphql/channels/voice-channels/queries'
+// import { qFetchVoiceChannel } from 'src/graphql/channels/voice-channels/queries'
 import { qFetchTextChannel } from 'src/graphql/channels/text-channels/queries'
 import { qGetGroupChannelMessages } from 'src/graphql/messages/queries'
 import { qGetGroupById, qGetGroups } from 'src/graphql/groups/queries'
@@ -103,13 +103,13 @@ export const useGroupsStore = defineStore('group-store', {
         .finally(() => { this.loading = false })
     },
 
-    async fetchVoiceChannel (getVoiceChannelByIdId: string) {
-      this.loading = true
-      return await Request(qFetchVoiceChannel, { getVoiceChannelByIdId })
-        .then((response) => (response as { getVoiceChannelById: VoiceChannel }).getVoiceChannelById)
-        .catch(() => undefined)
-        .finally(() => { this.loading = false })
-    },
+    // async fetchVoiceChannel (getVoiceChannelByIdId: string) {
+    //   this.loading = true
+    //   return await Request(qFetchVoiceChannel, { getVoiceChannelByIdId })
+    //     .then((response) => (response as { getVoiceChannelById: VoiceChannel }).getVoiceChannelById)
+    //     .catch(() => undefined)
+    //     .finally(() => { this.loading = false })
+    // },
 
     async createTextChannel (data: TextChannelInputData) {
       this.loading = true

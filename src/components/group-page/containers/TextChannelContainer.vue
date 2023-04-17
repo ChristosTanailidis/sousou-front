@@ -33,6 +33,9 @@ import { useGroupsStore } from 'src/stores/groups'
 
 // utils
 import { formatDistanceToNow } from 'date-fns'
+import { TextChannel } from 'src/models/TextChannel'
+import { L } from 'app/dist/spa/assets/index.f38a5875'
+import { TextChannelUserPivot } from 'src/models/SocketData'
 
 export default defineComponent({
   components: { TextChat },
@@ -44,6 +47,8 @@ export default defineComponent({
   },
   emits: [],
   setup (props) {
+    const textChannelObj = ref<TextChannel>()
+
     const oldMessagesPagination = ref<PaginationData>({
       limit: 20,
       page: 1
@@ -92,6 +97,8 @@ export default defineComponent({
     }
 
     onMounted(async () => {
+      textChannelObj.value = await groupStore.fetchTextChannel(props.textChannelId)
+
       const omResult = await fetchPaginatedMessages()
 
       if (!omResult) {
@@ -108,29 +115,44 @@ export default defineComponent({
 
         latestMessages.value.push(message)
       })
+
+      socket.on('message-read', (data: TextChannelUserPivot) => {
+        if (!data.textChannel /* || data.user.id === props.friend.id */) {
+          return
+        }
+
+        // New message read
+
+        const latestMessageIndex = latestMessages.value.findIndex(lm => lm.id === data.lastReadMessage?.id)
+
+        if (latestMessageIndex > -1 && data.lastReadMessage) {
+          latestMessages.value[latestMessageIndex] = data.lastReadMessage
+
+          return
+        }
+
+        // Old message read
+        // todo: fix ta old message reads me https://github.com/Lemas97/Sousou-Api/issues/34
+        const oldMessagesIndex = oldMessages.value.data.findIndex(om => om.id === data.lastReadMessage?.id)
+
+        if (oldMessagesIndex < 0 && data.lastReadMessage) {
+          oldMessages.value.data[oldMessagesIndex] = data.lastReadMessage
+        }
+      })
     })
 
-    // todo: mallon pir sto group to read
-    const lastReadMessageIndex = computed((): MessageReadIndex[] => {
-      const latestIndex = latestMessages.value.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id) && lm.from.id !== props.friend.id)
+    const lastReadMessageIndexes = computed((): MessageReadIndex[] => {
+      // todo: textChannelObjet.value?.users
+      // todo: check this again when https://github.com/Lemas97/Sousou-Api/issues/36 is fixed
+      const indexArray = textChannelObj.value?.group?.members?.map(user => {
+        return {
+          user,
+          indexNew: latestMessages.value.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === user.id) && lm.from.id !== user.id),
+          indexOld: oldMessages.value.data.findLastIndex(om => om.readBy?.map(rb => rb.user).find(rbu => rbu.id === user.id) && om.from.id !== user.id)
+        }
+      })
 
-      if (latestIndex > -1) {
-        return [{
-          user: props.friend,
-          indexNew: latestIndex
-        }]
-      }
-
-      const oldIndex = oldMessages.value.data.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id))
-
-      if (oldIndex > -1 && oldMessages.value.data[oldIndex].from.id !== props.friend.id) {
-        return [{
-          user: props.friend,
-          indexOld: oldIndex
-        }]
-      }
-
-      return []
+      return indexArray || []
     })
 
     return {
@@ -139,7 +161,7 @@ export default defineComponent({
       oldMessages,
       loading,
 
-      lastReadMessageIndex,
+      lastReadMessageIndexes,
 
       fetchMorePaginatedMessages,
       sendMessage,

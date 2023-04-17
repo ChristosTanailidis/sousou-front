@@ -22,23 +22,28 @@
         <div class="flex flex-col-reverse">
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
           <div
-            v-for="(message) in oldMessages.data"
+            v-for="(message, index) in oldMessages.data"
             :key="message.id"
             class="flex flex-row flex-nowrap gap-1 items-center"
             :class="[
               message.from.id === user?.id ? 'justify-end' : 'justify-start'
             ]"
           >
-            <!-- todo: map https://github.com/Lemas97/Sousou-Api/issues/33 -->
             <div
-              v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)"
-              :key="readByUser.id + 'RBU'"
+
+              class="flex flex-row-reverse gap-2 items-center"
             >
-              <UserImage
-                :user="readByUser"
-                text-size="0.8rem"
-                class="w-4 h-4 rounded-full overflow-hidden"
-              />
+              <!-- v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)" -->
+              <div
+                v-if="lastReadMessageIndexes.find(messageRead => messageRead.indexOld === index)"
+                :key="index + 'RBU'"
+              >
+                <UserImage
+                  :user="lastReadMessageIndexes.find(messageRead => messageRead.indexOld === index)?.user"
+                  text-size="0.8rem"
+                  class="w-4 h-4 rounded-full overflow-hidden"
+                />
+              </div>
             </div>
 
             <q-chat-message
@@ -73,7 +78,6 @@
 
               class="flex flex-row-reverse gap-2 items-center"
             >
-              <!-- todo: fix to map me to back https://github.com/Lemas97/Sousou-Api/issues/33 -->
               <!-- v-for="readByUser in getValidReadByUsers(message.readBy?.map(rb => rb.user), message.from)" -->
               <div
                 v-if="lastReadMessageIndexes.find(messageRead => messageRead.indexNew === index)"

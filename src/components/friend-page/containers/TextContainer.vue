@@ -143,6 +143,7 @@ export default defineComponent({
       })
     })
 
+    // fix ta maps me https://github.com/Lemas97/Sousou-Api/issues/33
     const lastReadMessageIndex = computed((): MessageReadIndex[] => {
       const latestIndex = latestMessages.value.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id) && lm.from.id !== props.friend.id)
 
@@ -153,6 +154,7 @@ export default defineComponent({
         }]
       }
 
+      // todo: fix ta old message reads me https://github.com/Lemas97/Sousou-Api/issues/34
       const oldIndex = oldMessages.value.data.findLastIndex(lm => lm.readBy?.map(rb => rb.user).find(rbu => rbu.id === props.friend.id))
 
       if (oldIndex > -1 && oldMessages.value.data[oldIndex].from.id !== props.friend.id) {

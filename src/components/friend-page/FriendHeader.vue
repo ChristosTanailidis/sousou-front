@@ -177,10 +177,12 @@ export default defineComponent({
         if (!e.candidate) { return }
         console.log('pc2 addicecandidate', e)
 
-        if (!flag) {
-          socket.emit('send-candidate', { toUserId: fromUser || props.friend.id, candidate: e.candidate })
-          flag = true
-        }
+        setTimeout(() => {
+          if (!flag) {
+            socket.emit('send-candidate', { toUserId: fromUser || props.friend.id, candidate: e.candidate })
+            flag = true
+          }
+        }, 3000)
       }
 
       socket.on('receive-candidate', async (data: {fromUserId: string, candidate: RTCIceCandidate }) => {

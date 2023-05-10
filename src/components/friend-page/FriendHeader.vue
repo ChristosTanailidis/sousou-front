@@ -73,6 +73,10 @@ import UserImage from '../reusables/UserImage.vue'
 
 // models
 import { User } from 'src/models/User'
+import { socket } from 'src/boot/socket_io'
+import { useAuthUser } from 'src/stores/auth-user'
+import { storeToRefs } from 'pinia'
+import { emit } from 'process'
 
 // stores
 
@@ -86,7 +90,10 @@ export default defineComponent({
       required: true
     }
   },
-  setup () {
+  setup (props) {
+    const userStore = useAuthUser()
+    const { user } = storeToRefs(userStore)
+
     const audio2 = ref<any>()
     // const peerRef = ref<SimplePeer.Instance | null>(null)
 
@@ -112,6 +119,7 @@ export default defineComponent({
       console.log('Created local peer connection object pc1')
       pc1.onicecandidate = async (e) => {
         if (!e.candidate) { return }
+        console.log('pc2 addicecandidate')
         await pc2.addIceCandidate(e.candidate)
       }
 
@@ -119,6 +127,7 @@ export default defineComponent({
       console.log('Created remote peer connection object pc2')
       pc2.onicecandidate = async (e) => {
         if (!e.candidate) { return }
+        console.log('pc1 addicecandidate')
         await pc1.addIceCandidate(e.candidate)
       }
 
@@ -128,24 +137,43 @@ export default defineComponent({
           console.log('Received remote stream')
         }
       }
+
       console.log('Requesting local stream')
 
       const audioTracks = audioMedia.getAudioTracks()
       if (audioTracks.length > 0) {
         console.log(`Using Audio device: ${audioTracks[0].label}`)
       }
+
       audioMedia.getTracks().forEach(track => pc1.addTrack(track, audioMedia))
 
       const pc1Desc = await pc1.createOffer(offerOptions)
 
+      socket.emit('1st-send-voice-one-to-one', { description: pc1Desc, toUserId: props.friend.id })
+
       console.log(`Offer from pc1\n${pc1Desc.sdp}`)
       await pc1.setLocalDescription(pc1Desc)
 
-      await pc2.setRemoteDescription(pc1Desc)
-      const pc2Desc = await pc2.createAnswer()
-      console.log(`Answer from pc2\n${pc2Desc.sdp}`)
-      await pc2.setLocalDescription(pc2Desc)
-      await pc1.setRemoteDescription(pc2Desc)
+      // eslint-disable-next-line no-undef
+      socket.on('answer-call-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string}) => {
+        if (user.value?.id === data.fromUserId) {
+          await pc2.setRemoteDescription(data.description)
+
+          const pc2Desc = await pc2.createAnswer()
+
+          socket.emit('answered-on-to-one', { description: pc2Desc, toUserId: props.friend.id })
+
+          console.log(`Answer from pc2\n${pc2Desc.sdp}`)
+          await pc2.setLocalDescription(pc2Desc)
+        }
+      })
+
+      // eslint-disable-next-line no-undef
+      socket.on('call-accepted-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string }) => {
+        if (user.value?.id === data.fromUserId) {
+          await pc1.setRemoteDescription(data.description)
+        }
+      })
     }
 
     const endCall = () => {

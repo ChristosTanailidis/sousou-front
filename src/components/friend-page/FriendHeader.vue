@@ -39,6 +39,12 @@
         color="primary"
         @click="startCall"
       />
+      <audio
+        id="audio2"
+        ref="audio2"
+        autoplay
+        controls
+      />
       <q-btn
         flat
         round
@@ -59,8 +65,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue'
-import SimplePeer from 'simple-peer'
-import wrtc from 'wrtc'
+// import SimplePeer from 'simple-peer'
+// import wrtc from 'wrtc'
 
 // components
 import UserImage from '../reusables/UserImage.vue'
@@ -81,55 +87,80 @@ export default defineComponent({
     }
   },
   setup () {
-    const peerRef = ref<SimplePeer.Instance | null>(null)
+    const audio2 = ref<any>()
+    // const peerRef = ref<SimplePeer.Instance | null>(null)
 
-    const startCall = () => {
-      const peer = new SimplePeer({
-        initiator: true,
-        wrtc
-      })
+    const offerOptions = {
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: false
+    }
 
-      peer.on('signal', (data) => {
-        // Send the signal data to the other peer
-      })
+    let pc1: RTCPeerConnection, pc2: RTCPeerConnection
 
-      peer.on('connect', () => {
-        // Connection established
-        // Call the other peer when the connection is established
-        if (peer && !peer.destroyed) {
-          const getUserMedia = navigator.mediaDevices.getUserMedia
-          getUserMedia(
-            { audio: true }
-          ).then((stream) => {
-            const call = peerRef.value.call(null, stream)
-            call.on('stream', (remoteStream) => {
-              // Remote audio stream received
-            })
-          }).catch((error) => {
-            console.error('getUserMedia error:', error)
-          })
+    const startCall = async () => {
+      console.log('startCall')
+
+      const audioMedia = await navigator.mediaDevices.getUserMedia(
+        { audio: true }
+      )
+
+      console.log('audioMedia', audioMedia)
+
+      const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
+
+      pc1 = new RTCPeerConnection(configuration)
+      console.log('Created local peer connection object pc1')
+      pc1.onicecandidate = async (e) => {
+        if (!e.candidate) { return }
+        await pc2.addIceCandidate(e.candidate)
+      }
+
+      pc2 = new RTCPeerConnection(configuration)
+      console.log('Created remote peer connection object pc2')
+      pc2.onicecandidate = async (e) => {
+        if (!e.candidate) { return }
+        await pc1.addIceCandidate(e.candidate)
+      }
+
+      pc2.ontrack = async (e) => {
+        if (audio2.value.srcObject !== e.streams[0]) {
+          audio2.value.srcObject = e.streams[0]
+          console.log('Received remote stream')
         }
-      })
+      }
+      console.log('Requesting local stream')
 
-      peer.on('data', (data) => {
-        // Receive audio data from other peer
-      })
+      const audioTracks = audioMedia.getAudioTracks()
+      if (audioTracks.length > 0) {
+        console.log(`Using Audio device: ${audioTracks[0].label}`)
+      }
+      audioMedia.getTracks().forEach(track => pc1.addTrack(track, audioMedia))
 
-      peer.on('close', () => {
-        // Connection closed
-      })
+      const pc1Desc = await pc1.createOffer(offerOptions)
 
-      this.peer = peer
+      console.log(`Offer from pc1\n${pc1Desc.sdp}`)
+      await pc1.setLocalDescription(pc1Desc)
+
+      await pc2.setRemoteDescription(pc1Desc)
+      const pc2Desc = await pc2.createAnswer()
+      console.log(`Answer from pc2\n${pc2Desc.sdp}`)
+      await pc2.setLocalDescription(pc2Desc)
+      await pc1.setRemoteDescription(pc2Desc)
     }
 
     const endCall = () => {
-      if (peerRef.value) {
-        peerRef.value.destroy()
-        peerRef.value = null
-      }
+    //   if (peerRef.value) {
+    //     peerRef.value.destroy()
+    //     peerRef.value = null
+    //   }
+      console.log('Ending call')
+
+      pc1.close()
+      pc2.close()
     }
 
     return {
+      audio2,
       startCall,
       endCall
     }

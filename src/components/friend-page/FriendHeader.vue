@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref, onMounted } from 'vue'
 // import SimplePeer from 'simple-peer'
 // import wrtc from 'wrtc'
 
@@ -76,7 +76,6 @@ import { User } from 'src/models/User'
 import { socket } from 'src/boot/socket_io'
 import { useAuthUser } from 'src/stores/auth-user'
 import { storeToRefs } from 'pinia'
-import { emit } from 'process'
 
 // stores
 
@@ -101,44 +100,41 @@ export default defineComponent({
       offerToReceiveAudio: true,
       offerToReceiveVideo: false
     }
+    const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
 
-    let pc1: RTCPeerConnection, pc2: RTCPeerConnection
+    const pc1: RTCPeerConnection = new RTCPeerConnection(configuration)
+
+    let audioMedia = null
+
+    let fromUser = null
 
     const startCall = async () => {
       console.log('startCall')
 
-      const audioMedia = await navigator.mediaDevices.getUserMedia(
-        { audio: true }
-      )
-
-      console.log('audioMedia', audioMedia)
-
-      const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
-
-      pc1 = new RTCPeerConnection(configuration)
-      console.log('Created local peer connection object pc1')
-      pc1.onicecandidate = async (e) => {
-        if (!e.candidate) { return }
-        console.log('pc2 addicecandidate')
-        await pc2.addIceCandidate(e.candidate)
-      }
-
-      pc2 = new RTCPeerConnection(configuration)
-      console.log('Created remote peer connection object pc2')
-      pc2.onicecandidate = async (e) => {
-        if (!e.candidate) { return }
-        console.log('pc1 addicecandidate')
-        await pc1.addIceCandidate(e.candidate)
-      }
-
-      pc2.ontrack = async (e) => {
-        if (audio2.value.srcObject !== e.streams[0]) {
-          audio2.value.srcObject = e.streams[0]
-          console.log('Received remote stream')
-        }
-      }
+      // pc2 = new RTCPeerConnection(configuration)
+      // console.log('Created remote peer connection object pc2')
+      // pc2.onicecandidate = async (e) => {
+      //   if (!e.candidate) { return }
+      //   console.log('pc1 addicecandidate')
+      //   await pc1.addIceCandidate(e.candidate)
+      // }
 
       console.log('Requesting local stream')
+
+      const pc1Desc = await pc1.createOffer(offerOptions)
+
+      console.log(`Offer from pc1\n${pc1Desc.sdp}`)
+      await pc1.setLocalDescription(pc1Desc)
+
+      socket.emit('1st-send-voice-one-to-one', { description: pc1Desc, toUserId: props.friend.id })
+    }
+
+    let flag = false
+
+    onMounted(async () => {
+      audioMedia = await navigator.mediaDevices.getUserMedia(
+        { audio: true }
+      )
 
       const audioTracks = audioMedia.getAudioTracks()
       if (audioTracks.length > 0) {
@@ -147,34 +143,50 @@ export default defineComponent({
 
       audioMedia.getTracks().forEach(track => pc1.addTrack(track, audioMedia))
 
-      const pc1Desc = await pc1.createOffer(offerOptions)
-
-      socket.emit('1st-send-voice-one-to-one', { description: pc1Desc, toUserId: props.friend.id })
-
-      console.log(`Offer from pc1\n${pc1Desc.sdp}`)
-      await pc1.setLocalDescription(pc1Desc)
-
       // eslint-disable-next-line no-undef
       socket.on('answer-call-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string}) => {
-        if (user.value?.id === data.fromUserId) {
-          await pc2.setRemoteDescription(data.description)
+        console.log('geia ')
+        fromUser = data.fromUserId
 
-          const pc2Desc = await pc2.createAnswer()
+        await pc1.setRemoteDescription(data.description)
 
-          socket.emit('answered-on-to-one', { description: pc2Desc, toUserId: props.friend.id })
+        const pc2Desc = await pc1.createAnswer()
 
-          console.log(`Answer from pc2\n${pc2Desc.sdp}`)
-          await pc2.setLocalDescription(pc2Desc)
-        }
+        console.log(`Answer from pc2\n${pc2Desc.sdp}`)
+        await pc1.setLocalDescription(pc2Desc)
+
+        socket.emit('answered-one-to-one', { description: pc2Desc, toUserId: data.fromUserId })
       })
 
       // eslint-disable-next-line no-undef
       socket.on('call-accepted-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string }) => {
-        if (user.value?.id === data.fromUserId) {
-          await pc1.setRemoteDescription(data.description)
-        }
+        await pc1.setRemoteDescription(data.description)
       })
-    }
+
+      pc1.ontrack = async (e) => {
+        if (audio2.value.srcObject !== e.streams[0]) {
+          audio2.value.srcObject = e.streams[0]
+          console.log('Received remote stream')
+        }
+      }
+
+      console.log('audioMedia', audioMedia)
+
+      console.log('Created local peer connection object pc1')
+      pc1.onicecandidate = async (e) => {
+        if (!e.candidate) { return }
+        console.log('pc2 addicecandidate', e)
+
+        if (!flag) {
+          socket.emit('send-candidate', { toUserId: fromUser || props.friend.id, candidate: e.candidate })
+          flag = true
+        }
+      }
+
+      socket.on('receive-candidate', async (data: {fromUserId: string, candidate: RTCIceCandidate }) => {
+        await pc1.addIceCandidate(data.candidate)
+      })
+    })
 
     const endCall = () => {
     //   if (peerRef.value) {
@@ -184,7 +196,7 @@ export default defineComponent({
       console.log('Ending call')
 
       pc1.close()
-      pc2.close()
+      pc1.close()
     }
 
     return {

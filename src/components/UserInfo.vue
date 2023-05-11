@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 
@@ -133,7 +133,7 @@ export default defineComponent({
 
     const $q = useQuasar()
 
-    const notifications = [
+    const notifications = computed(() => [
       {
         type: 'friend_request',
         label: 'Friend Requests',
@@ -162,7 +162,7 @@ export default defineComponent({
           })
         }
       }
-    ]
+    ])
 
     const openSettings = () => {
       $q.dialog({

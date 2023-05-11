@@ -35,7 +35,7 @@
                 lines="2"
                 caption
               >
-                {{ gi.group.members.length }} members
+                {{ gi.group.members?.length || 0 }} members
               </q-item-label>
             </q-item-section>
 

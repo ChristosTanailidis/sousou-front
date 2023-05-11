@@ -77,6 +77,13 @@ import GroupList from 'src/components/GroupList.vue'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
+import { socket } from 'src/boot/socket_io'
+import { FriendRequest } from 'src/models/FriendRequest'
+import { storeToRefs } from 'pinia'
+import { User } from 'src/models/User'
+import { PersonalChat } from 'src/models/PersonalChat'
+import { GroupInvite } from 'src/models/GroupInvite'
+import { Group } from 'src/models/Group'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -85,8 +92,78 @@ export default defineComponent({
     const leftDrawerOpen = ref(true)
     const userStore = useAuthUser()
 
+    const { user } = storeToRefs(userStore)
+
     onMounted(() => {
       refreshToken()
+      console.log(socket.id)
+
+      socket.on('invitation-receive', (data: {friendRequest?: FriendRequest, groupInvite?: GroupInvite, type: 'FRIEND_REQUEST' | 'GROUP_INVITE', }) => {
+        if (!user.value) {
+          return
+        }
+
+        switch (data.type) {
+          case 'FRIEND_REQUEST':
+            if (!data.friendRequest) return
+
+            user.value.friendRequests = user.value.friendRequests || []
+
+            user.value?.friendRequests.push(data.friendRequest)
+            break
+          case 'GROUP_INVITE':
+            if (!data.groupInvite) return
+
+            user.value.groupInvites = user.value?.groupInvites || []
+
+            user.value?.groupInvites.push(data.groupInvite)
+            break
+        }
+      })
+
+      socket.on('invitation-answer-receive', (data: {identifier: string, personalChat?: PersonalChat, group?: Group}) => {
+        if (!user.value) {
+          return
+        }
+
+        if (data.personalChat) {
+          // add personal chat on friend request
+          user.value.personalChats = user.value.personalChats || []
+
+          if (user.value.personalChats.length) {
+            user.value.personalChats.push(data.personalChat)
+          } else if (user.value) {
+            user.value.personalChats = [data.personalChat]
+          }
+
+          const index = user.value.friendRequests.findIndex(fr => fr.id === data.identifier) || -1
+
+          if (index < 0) {
+            return
+          }
+
+          // remove friend request from the accepting user
+          user.value.friendRequests.splice(index, 1)
+        } else if (data.group) {
+          // add group on groups list
+          user.value.groups = user.value.groups || []
+
+          if (user.value.groups.length) {
+            user.value.groups.push(data.group)
+          } else if (user.value) {
+            user.value.groups = [data.group]
+          }
+
+          const index = user.value?.groupInvites.findIndex(fr => fr.id === data.identifier) || -1
+
+          if (index < 0) {
+            return
+          }
+
+          // remove friend request from the accepting user
+          user.value?.groupInvites.splice(index, 1)
+        }
+      })
     })
 
     const tabs = [

@@ -1,10 +1,10 @@
 <template>
-  <div
-    ref="chatContainer"
-    v-scroll="fetchMorePaginatedMessages"
-    class="flex flex-col flex-nowrap gap-2 overflow-auto relative"
-  >
-    <div class="flex-grow px-3 row justify-center relative h-full">
+  <div class="flex flex-col flex-nowrap justify-center relative h-full ">
+    <div
+      ref="chatContainer"
+      v-scroll="fetchMorePaginatedMessages"
+      class="flex-grow px-3 row justify-center relative h-full overflow-auto"
+    >
       <q-spinner
         :class="[
           loading ? 'opacity-100' : 'opacity-0'
@@ -17,7 +17,7 @@
 
       <div
         style="width: 100%"
-        class="relative h-full"
+        class="relative "
       >
         <div class="flex flex-col-reverse">
           <!-- :name="message.from.id === user?.id ? user?.displayName + '#' + oldMessages.data[index].from.id !== user?.id ? user?.code : 'you' : undefined" -->
@@ -110,20 +110,20 @@
             </q-chat-message>
           </div>
         </div>
-
-        <div class="sticky bottom-0 left-0 w-full bg-dark-200">
-          <q-input
-            :key="user?.id"
-            v-model="newText"
-            :autofocus="true"
-            type="text"
-            label="Message"
-            class="p-2"
-            @keydown.enter="sendMessage()"
-            @focus="readMessage()"
-          />
-        </div>
       </div>
+    </div>
+
+    <div class="sticky bottom-0 left-0 w-full bg-dark-200">
+      <q-input
+        :key="user?.id"
+        v-model="newText"
+        :autofocus="true"
+        type="text"
+        label="Message"
+        class="p-2"
+        @keydown.enter="sendMessage()"
+        @focus="readMessage()"
+      />
     </div>
   </div>
 </template>

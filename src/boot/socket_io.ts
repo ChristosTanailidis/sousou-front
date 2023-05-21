@@ -19,7 +19,6 @@ export const setSocketToken = (token: string) => {
     ],
 
     auth: (cb) => {
-      console.log('egw trewxw?')
       // eslint-disable-next-line n/no-callback-literal
       cb({ token })
     }

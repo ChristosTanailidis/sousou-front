@@ -11,9 +11,9 @@
       </div>
 
       <div
-        class="grid grid-cols-10 h-full"
+        class="h-full"
       >
-        <div class="col-span-10 bg-dark-200">
+        <div class="bg-dark-200">
           <TextContainer
             :key="personalChatId"
             :personal-chat-id="personalChatId"

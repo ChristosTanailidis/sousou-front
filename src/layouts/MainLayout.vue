@@ -77,10 +77,9 @@ import GroupList from 'src/components/GroupList.vue'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
-import { socket } from 'src/boot/socket_io'
+import { socket, setSocketToken } from 'src/boot/socket_io'
 import { FriendRequest } from 'src/models/FriendRequest'
 import { storeToRefs } from 'pinia'
-import { User } from 'src/models/User'
 import { PersonalChat } from 'src/models/PersonalChat'
 import { GroupInvite } from 'src/models/GroupInvite'
 import { Group } from 'src/models/Group'
@@ -191,6 +190,10 @@ export default defineComponent({
           if (!userStore.user) {
             await userStore.fetchUser()
           }
+
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          setSocketToken(user.value!.jwtToken!)
+
           if (isOverThreshold) {
             const timeout = (diff - threshold) + (30 * 1000) // timeout half a minute after the threshold
             consoleOn && console.log(`AUTH: Setting up timeout at ${date.formatDate(Date.now() + timeout, 'hh:mm:ss')}`)

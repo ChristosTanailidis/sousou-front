@@ -34,7 +34,6 @@ import { useGroupsStore } from 'src/stores/groups'
 // utils
 import { formatDistanceToNow } from 'date-fns'
 import { TextChannel } from 'src/models/TextChannel'
-import { L } from 'app/dist/spa/assets/index.f38a5875'
 import { TextChannelUserPivot } from 'src/models/SocketData'
 
 export default defineComponent({

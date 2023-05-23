@@ -167,7 +167,7 @@ export default defineComponent({
         console.log(`Answer from pc2\n${pc2Desc.sdp}`)
         await pc1.setLocalDescription(pc2Desc)
 
-        socket.emit('answer-call-one-to-one', { description: pc2Desc, callMessage: data.callMessage, answer: true /* todo: to answer me ui */ })
+        socket.emit('answer-call-one-to-one', { description: pc2Desc, callMessageId: data.callMessage.id, answer: true /* todo: to answer me ui */ })
       })
 
       // eslint-disable-next-line no-undef

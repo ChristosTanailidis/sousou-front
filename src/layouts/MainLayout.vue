@@ -77,7 +77,7 @@ import GroupList from 'src/components/GroupList.vue'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
-import { socket /* setSocketToken */ } from 'src/boot/socket_io'
+import { socket, setSocketToken } from 'src/boot/socket_io'
 import { FriendRequest } from 'src/models/FriendRequest'
 import { storeToRefs } from 'pinia'
 import { PersonalChat } from 'src/models/PersonalChat'
@@ -192,7 +192,7 @@ export default defineComponent({
           }
 
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          // setSocketToken(user.value!.jwtToken!)
+          setSocketToken(user.value!.jwtToken!)
 
           if (isOverThreshold) {
             const timeout = (diff - threshold) + (30 * 1000) // timeout half a minute after the threshold

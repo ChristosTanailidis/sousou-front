@@ -220,7 +220,8 @@ export default defineComponent({
     const endCall = () => {
       console.log('Ending call')
 
-      socket.emit('end-call-one-to-one', { callMessageId: personalChat?.id })
+      socket.emit('end-call-one-to-one', { callMessageId: '' /* todo: personalMessageId edw */ })
+      pc1.close()
     }
 
     return {

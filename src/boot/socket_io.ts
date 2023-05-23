@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import { io } from 'socket.io-client'
 
-const socket = io(process.env.API_URL || '', {
+let socket = io(process.env.API_URL || '', {
   transports: [
     'websocket'
   ],
@@ -12,18 +12,18 @@ const socket = io(process.env.API_URL || '', {
   }
 })
 
-// export const setSocketToken = (token: string) => {
-//   socket = io(process.env.API_URL || '', {
-//     transports: [
-//       'websocket'
-//     ],
+export const setSocketToken = (token: string) => {
+  socket = io(process.env.API_URL || '', {
+    transports: [
+      'websocket'
+    ],
 
-//     auth: (cb) => {
-//       // eslint-disable-next-line n/no-callback-literal
-//       cb({ token })
-//     }
-//   })
-// }
+    auth: (cb) => {
+      // eslint-disable-next-line n/no-callback-literal
+      cb({ token })
+    }
+  })
+}
 
 // socket.on('authorization', (data: string) => console.log(data))
 

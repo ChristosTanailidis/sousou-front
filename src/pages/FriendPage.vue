@@ -7,7 +7,10 @@
       class="flex flex-col flex-nowrap h-full"
     >
       <div ref="headerRef">
-        <FriendHeader :friend="friend" />
+        <FriendHeader
+          :friend="friend"
+          :personal-chat-id="personalChatId"
+        />
       </div>
 
       <div

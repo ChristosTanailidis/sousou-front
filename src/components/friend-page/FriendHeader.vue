@@ -76,6 +76,8 @@ import { User } from 'src/models/User'
 import { socket } from 'src/boot/socket_io'
 import { useAuthUser } from 'src/stores/auth-user'
 import { storeToRefs } from 'pinia'
+import { PersonalMessage } from 'src/models/PersonalMessage'
+import { PersonalChat } from 'src/models/PersonalChat'
 
 // stores
 
@@ -86,6 +88,10 @@ export default defineComponent({
   props: {
     friend: {
       type: Object as PropType<User>,
+      required: true
+    },
+    personalChatId: {
+      type: String,
       required: true
     }
   },
@@ -106,7 +112,7 @@ export default defineComponent({
 
     let audioMedia = null
 
-    let fromUser = null
+    let personalChat: PersonalChat | null = null
 
     const startCall = async () => {
       console.log('startCall')
@@ -126,7 +132,7 @@ export default defineComponent({
       console.log(`Offer from pc1\n${pc1Desc.sdp}`)
       await pc1.setLocalDescription(pc1Desc)
 
-      socket.emit('1st-send-voice-one-to-one', { description: pc1Desc, toUserId: props.friend.id })
+      socket.emit('send-voice-one-to-one', { description: pc1Desc, personalChatId: props.personalChatId })
     }
 
     let flag = false
@@ -144,9 +150,15 @@ export default defineComponent({
       audioMedia.getTracks().forEach(track => pc1.addTrack(track, audioMedia))
 
       // eslint-disable-next-line no-undef
-      socket.on('answer-call-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string}) => {
+      socket.on('receive-call-one-to-one', async (data: { callMessage: PersonalMessage, description: RTCSessionDescriptionInit, err?: string }) => {
         console.log('geia ')
-        fromUser = data.fromUserId
+
+        if (data.err) {
+          console.log('ERROR --- ', data.err)
+          return
+        }
+
+        personalChat = data.callMessage.personalChat
 
         await pc1.setRemoteDescription(data.description)
 
@@ -155,11 +167,21 @@ export default defineComponent({
         console.log(`Answer from pc2\n${pc2Desc.sdp}`)
         await pc1.setLocalDescription(pc2Desc)
 
-        socket.emit('answered-one-to-one', { description: pc2Desc, toUserId: data.fromUserId })
+        socket.emit('answer-call-one-to-one', { description: pc2Desc, callMessage: data.callMessage, answer: true /* todo: to answer me ui */ })
       })
 
       // eslint-disable-next-line no-undef
-      socket.on('call-accepted-one-to-one', async (data: { description: RTCSessionDescriptionInit, fromUserId: string }) => {
+      socket.on('answer-call-one-to-one', async (data: { description?: RTCSessionDescriptionInit, callMessage?: PersonalMessage, answer?: boolean, err?: string }) => {
+        if (data.err) {
+          console.log('ERROR --- ', data.err)
+          return
+        }
+
+        if (!data.description) {
+          console.log('Call was cancelled')
+          return
+        }
+
         await pc1.setRemoteDescription(data.description)
       })
 
@@ -179,26 +201,26 @@ export default defineComponent({
 
         setTimeout(() => {
           if (!flag) {
-            socket.emit('send-candidate', { toUserId: fromUser || props.friend.id, candidate: e.candidate })
+            socket.emit('send-candidate', { personalChatId: personalChat?.id, candidate: e.candidate })
             flag = true
           }
         }, 3000)
       }
 
-      socket.on('receive-candidate', async (data: {fromUserId: string, candidate: RTCIceCandidate }) => {
+      socket.on('receive-candidate', async (data: {personalChat: PersonalChat, candidate: RTCIceCandidate }) => {
+        personalChat = data.personalChat
         await pc1.addIceCandidate(data.candidate)
+      })
+
+      socket.on('end-call-one-to-one', () => {
+        pc1.close()
       })
     })
 
     const endCall = () => {
-    //   if (peerRef.value) {
-    //     peerRef.value.destroy()
-    //     peerRef.value = null
-    //   }
       console.log('Ending call')
 
-      pc1.close()
-      pc1.close()
+      socket.emit('end-call-one-to-one', { callMessageId: personalChat?.id })
     }
 
     return {

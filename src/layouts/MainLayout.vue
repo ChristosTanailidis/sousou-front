@@ -63,8 +63,10 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
+import { socket, setSocketToken } from 'src/boot/socket_io'
 import { useRouter } from 'vue-router'
-import { date } from 'quasar'
+import { storeToRefs } from 'pinia'
+import { Dialog, date } from 'quasar'
 
 import { Auth } from 'src/boot/custom-auth'
 
@@ -72,17 +74,17 @@ import { Auth } from 'src/boot/custom-auth'
 import UserInfo from 'src/components/UserInfo.vue'
 import FriendList from 'src/components/FriendList.vue'
 import GroupList from 'src/components/GroupList.vue'
+import CallDialog from 'src/components/dialogs/CallDialog.vue'
 
 // models
-
-// stores
-import { useAuthUser } from 'src/stores/auth-user'
-import { socket, setSocketToken } from 'src/boot/socket_io'
+import { PersonalMessage } from 'src/models/PersonalMessage'
 import { FriendRequest } from 'src/models/FriendRequest'
-import { storeToRefs } from 'pinia'
 import { PersonalChat } from 'src/models/PersonalChat'
 import { GroupInvite } from 'src/models/GroupInvite'
 import { Group } from 'src/models/Group'
+
+// stores
+import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -162,6 +164,22 @@ export default defineComponent({
           // remove friend request from the accepting user
           user.value?.groupInvites.splice(index, 1)
         }
+      })
+
+      // eslint-disable-next-line no-undef
+      socket.on('receive-call-one-to-one', async (data: { callMessage: PersonalMessage, description: RTCSessionDescriptionInit, err?: string }) => {
+        if (data.err) {
+          console.log('ERROR --- ', data.err)
+          return
+        }
+
+        Dialog.create({
+          component: CallDialog,
+          componentProps: {
+            callingMessage: data.callMessage,
+            description: data.description
+          }
+        })
       })
     })
 

@@ -20,6 +20,22 @@ input, select {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.418),
 }
 
+.bg-glass-light {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(3rem);
+  -webkit-backdrop-filter: blur(3rem);
+  // border: 1px solid rgba(#17141d, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.418),
+}
+
+.bg-glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(200px);
+  -webkit-backdrop-filter: blur(200px);
+  // border: 1px solid rgba(#17141d, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.418),
+}
+
 .bg-glass-primary {
   background: rgba(3,196,161,0.2);
   backdrop-filter: blur(0.6rem);

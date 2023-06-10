@@ -95,9 +95,17 @@ export default defineComponent({
 
     const { user } = storeToRefs(userStore)
 
+    const onCall = ref(false)
+
     onMounted(() => {
       refreshToken()
-      console.log(socket.id)
+      socket.disconnect()
+      socket.connect()
+      socket.on('authorization', (status) => {
+        if (status === 'failed') {
+          socket.disconnect()
+        }
+      })
 
       socket.on('invitation-receive', (data: {friendRequest?: FriendRequest, groupInvite?: GroupInvite, type: 'FRIEND_REQUEST' | 'GROUP_INVITE', }) => {
         if (!user.value) {
@@ -168,10 +176,18 @@ export default defineComponent({
 
       // eslint-disable-next-line no-undef
       socket.on('receive-call-one-to-one', async (data: { callMessage: PersonalMessage, description: RTCSessionDescriptionInit, err?: string }) => {
+        console.log('[SOCKET<-] receive-call-one-to-one [[receiver]]')
+
+        if (onCall.value) {
+          return
+        }
+
         if (data.err) {
           console.log('ERROR --- ', data.err)
           return
         }
+
+        // onCall.value = true
 
         Dialog.create({
           component: CallDialog,
@@ -179,7 +195,7 @@ export default defineComponent({
             callingMessage: data.callMessage,
             description: data.description
           }
-        })
+        }).onDismiss(() => { onCall.value = false }).onCancel(() => { onCall.value = false })
       })
     })
 

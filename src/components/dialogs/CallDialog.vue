@@ -248,16 +248,16 @@ export default defineComponent({
 
       /* Connection Events */
 
-      const candidatesToSend: RTCPeerConnectionIceEvent['candidate'][] = []
+      // const candidatesToSend: RTCPeerConnectionIceEvent['candidate'][] = []
       connection.onicecandidate = async (e) => {
-        candidatesToSend.push(e.candidate)
-        if (e.candidate) {
+        // candidatesToSend.push(e.candidate)
+        if (!e?.candidate) {
           return
         }
 
-        candidatesToSend.forEach((candidate) => {
-          socket.emit('send-candidate', { personalChatId: props.type === 'caller' ? props.personalChatId : props.callingMessage?.personalChat.id, candidate })
-        })
+        socket.emit('send-candidate', { personalChatId: props.type === 'caller' ? props.personalChatId : props.callingMessage?.personalChat.id, candidate: e.candidate })
+        // candidatesToSend.forEach((candidate) => {
+        // })
       }
 
       connection.ontrack = async (e) => {

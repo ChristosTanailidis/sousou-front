@@ -197,6 +197,9 @@ export default defineComponent({
             callMessageId = data.callMessageId
           })
         }
+      } else if (props.description && props.type === 'receiver') {
+        connection.setRemoteDescription(props.description)
+        remoteDescriptionSet.value = true
       }
 
       /* Socket Events */
@@ -214,24 +217,31 @@ export default defineComponent({
         } catch (err) {
           console.log('error', err)
         }
+
+        console.log('receive-candidate', connection)
       })
 
       socket.on('answer-call-one-to-one', async (data: { description?: RTCSessionDescriptionInit, callMessage?: PersonalMessage, answer?: boolean, err?: string }) => {
+        console.log('1')
         if (data.err) {
           console.log('ERROR --- ', data.err)
           return
         }
 
+        console.log('2')
         if (!data.answer) {
           endCall()
         }
 
+        console.log('3')
         if (!data.description) {
           return
         }
 
+        console.log('4')
         await connection.setRemoteDescription(data.description)
         remoteDescriptionSet.value = true
+        console.log('answer-call-one-to-one', connection)
       })
 
       socket.on('end-call-one-to-one', async (/* data : { callMessage: PersonalMessage } */) => { await terminateDialog() })
@@ -262,6 +272,8 @@ export default defineComponent({
     })
 
     const answerCall = async (answer = true) => {
+      console.log('answer call', connection)
+
       if (!props.callingMessage || !props.description) {
         return
       }

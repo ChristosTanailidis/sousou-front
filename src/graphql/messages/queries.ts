@@ -26,6 +26,7 @@ export const qGetPersonalMessages = gql`
         id
         state
         text
+        callData
       }
       total
     }

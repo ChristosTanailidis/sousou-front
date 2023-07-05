@@ -46,6 +46,7 @@
             </div>
 
             <q-chat-message
+              v-if="!(message as PersonalMessage).callData"
               :text="[message.text]"
               :sent="message.from.id === user?.id"
               :text-color="message.from.id !== user?.id ? 'black' : 'white'"
@@ -57,6 +58,15 @@
                 </div>
               </template>
             </q-chat-message>
+            <div
+              v-else
+              class="flex h-[4rem] w-full items-center justify-center my-2"
+            >
+              <CallMessage
+                :message="message"
+                class="m-2"
+              />
+            </div>
           </div>
         </div>
 
@@ -92,6 +102,7 @@
 
             <!-- :name="message[0].from.id === user?.id ? user?.displayName + '#' + latestMessages[index - 1][0].from.id !== user?.id ? user?.code : 'you' : undefined" -->
             <q-chat-message
+              v-if="!(message as PersonalMessage).callData"
               :key="message.id"
               :text="[message.text]"
               :sent="message.from.id === user?.id"
@@ -108,6 +119,11 @@
                 {{ message.text }}
               </div>
             </q-chat-message>
+            <CallMessage
+              v-else
+              :message="message"
+              class="m-2"
+            />
           </div>
         </div>
       </div>
@@ -134,6 +150,7 @@ import { storeToRefs } from 'pinia'
 
 // components
 import UserImage from 'src/components/reusables/UserImage.vue'
+import CallMessage from './reusables/CallMessage.vue'
 
 // models
 import { TextChannelMessage } from 'src/models/TextChannelMessage'
@@ -145,7 +162,7 @@ import { PaginatedData } from 'src/models/PaginatedData'
 import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistance, formatDistanceToNow } from 'date-fns'
 import { User } from 'src/models/User'
 
 export interface MessageReadIndex {
@@ -156,7 +173,8 @@ export interface MessageReadIndex {
 
 export default defineComponent({
   components: {
-    UserImage
+    UserImage,
+    CallMessage
   },
   props: {
     oldMessages: {
@@ -298,6 +316,8 @@ export default defineComponent({
         return users?.filter(u => u.id !== user?.value?.id && u.id !== fromUser?.id)
       },
       formatDistanceToNow,
+      formatDistance,
+      format,
       clock
     }
   }

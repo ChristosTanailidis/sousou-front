@@ -13,7 +13,7 @@ mutation ConnectToVoiceChannel($connectToVoiceChannelId: String!) {
 `
 
 export const mKickFromVoiceChannel = gql`
-mutation KickFromVoiceChannel($voiceChannelId: String!, $kickFromVoiceChannelId: String!) {
-  kickFromVoiceChannel(voiceChannelId: $voiceChannelId, id: $kickFromVoiceChannelId)
+mutation KickFromVoiceChannel($userId: String!, $kickFromVoiceChannelId: String!) {
+  kickFromVoiceChannel(userId: $userId, id: $kickFromVoiceChannelId)
 }
 `

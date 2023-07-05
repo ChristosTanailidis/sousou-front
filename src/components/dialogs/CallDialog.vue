@@ -114,20 +114,19 @@
 </template>
 
 <!-- eslint-disable no-undef -->
-
 <script lang="ts">
 import { PropType, computed, defineComponent, onMounted, ref, watch } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
 import { socket } from 'src/boot/socket_io'
 
 // components
+import UserImage from '../reusables/UserImage.vue'
 
 // models
 import { PersonalChat } from 'src/models/PersonalChat'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { storeToRefs } from 'pinia'
 import { useAuthUser } from 'src/stores/auth-user'
-import UserImage from '../reusables/UserImage.vue'
 
 // stores
 
@@ -166,11 +165,11 @@ export default defineComponent({
     let audioMedia: MediaStream
     let callMessageId: string
 
-    const allCandidatesReceived = ref(false)
+    // const allCandidatesReceived = ref(false)
     const remoteDescriptionSet = ref(false)
 
     const callState = ref<CallStateType>()
-    const candidatesToBeAdded = ref<RTCIceCandidate[]>([])
+    // const candidatesToBeAdded = ref<RTCIceCandidate[]>([])
     const micMute = ref(false)
     const volumeState = ref(1)
 
@@ -203,12 +202,18 @@ export default defineComponent({
       /* Socket Events */
 
       socket.on('receive-candidate', async (data: {personalChat: PersonalChat, candidate: RTCIceCandidate }) => {
-        if (!data.candidate) {
-          allCandidatesReceived.value = true
-          return
-        }
+        // if (!data.candidate) {
+        //   allCandidatesReceived.value = true
+        //   return
+        // }
 
-        candidatesToBeAdded.value.push(data.candidate)
+        // candidatesToBeAdded.value.push(data.candidate)
+
+        try {
+          await connection.addIceCandidate(new RTCIceCandidate(data.candidate))
+        } catch (err) {
+          console.log('error', err)
+        }
       })
 
       socket.on('answer-call-one-to-one', async (data: { description?: RTCSessionDescriptionInit, callMessage?: PersonalMessage, answer?: boolean, err?: string }) => {
@@ -229,7 +234,7 @@ export default defineComponent({
         remoteDescriptionSet.value = true
       })
 
-      socket.on('end-call-one-to-one', async (data : { callMessage: PersonalMessage }) => { await terminateDialog() })
+      socket.on('end-call-one-to-one', async (/* data : { callMessage: PersonalMessage } */) => { await terminateDialog() })
 
       /* Connection Events */
 
@@ -290,21 +295,21 @@ export default defineComponent({
       onDialogCancel()
     }
 
-    const addCandidates = () => {
-      candidatesToBeAdded.value.forEach(async (candidate) => {
-        try {
-          await connection.addIceCandidate(new RTCIceCandidate(candidate))
-        } catch (err) {
-          console.log('error', err)
-        }
-      })
-    }
+    // const addCandidates = () => {
+    //   candidatesToBeAdded.value.forEach(async (candidate) => {
+    //     try {
+    //       await connection.addIceCandidate(new RTCIceCandidate(candidate))
+    //     } catch (err) {
+    //       console.log('error', err)
+    //     }
+    //   })
+    // }
 
-    watch([remoteDescriptionSet, allCandidatesReceived], () => {
-      if (remoteDescriptionSet.value && allCandidatesReceived.value) {
-        addCandidates()
-      }
-    })
+    // watch([remoteDescriptionSet, allCandidatesReceived], () => {
+    //   if (remoteDescriptionSet.value && allCandidatesReceived.value) {
+    //     addCandidates()
+    //   }
+    // })
 
     const changeMicState = () => {
       audioMedia.getAudioTracks()[0].enabled = micMute.value

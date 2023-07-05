@@ -269,8 +269,8 @@ export default defineComponent({
       if (props.type === 'receiver') {
         const data: {description?: RTCSessionDescriptionInit, callMessageId: string, answer: boolean} = { callMessageId: props.callingMessage.id, answer }
         if (answer) {
-          connection.setRemoteDescription(props.description)
-          remoteDescriptionSet.value = true
+          // connection.setRemoteDescription(props.description)
+          // remoteDescriptionSet.value = true
 
           const receiverDescription = await connection.createAnswer()
           await connection.setLocalDescription(receiverDescription)

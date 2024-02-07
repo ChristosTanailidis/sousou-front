@@ -45,13 +45,6 @@ export default defineComponent({
   animation-iteration-count: infinite;
 }
 
-.shadow {
-  animation-name: shadow;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
 @keyframes bounce {
   0% {
     transform: translateY(0);

@@ -60,11 +60,10 @@
             </q-chat-message>
             <div
               v-else
-              class="flex h-[4rem] w-full items-center justify-center my-2"
+              class="flex h-[4rem] w-full items-center justify-center my-4"
             >
               <CallMessage
                 :message="message"
-                class="m-2"
               />
             </div>
           </div>
@@ -119,11 +118,14 @@
                 {{ message.text }}
               </div>
             </q-chat-message>
-            <CallMessage
+            <div
               v-else
-              :message="message"
-              class="m-2"
-            />
+              class="flex h-[4rem] w-full items-center justify-center my-4"
+            >
+              <CallMessage
+                :message="message"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 bg-[rgba(0,0,0,0.2)] rounded-[0.4rem] shadow flex flex-col items-center justify-center max-w-[50%] min-w-[20%]">
+  <div class="p-4 bg-[rgba(0,0,0,0.2)] rounded-[0.4rem] shadow flex flex-col items-center justify-center max-w-[50%] min-w-[20%]">
     <div class="flex flex-row items-center justify-start w-full ">
       <div class="w-[4rem] flex justify-center">
         <q-icon

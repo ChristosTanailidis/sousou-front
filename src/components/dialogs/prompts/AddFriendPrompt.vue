@@ -28,11 +28,13 @@
             type="submit"
             color="primary"
             label="OK"
+            class="w-[5rem]"
           />
           <q-btn
             type="reset"
             color="primary"
             label="Cancel"
+            class="w-[5rem]"
           />
         </q-card-actions>
       </q-form>

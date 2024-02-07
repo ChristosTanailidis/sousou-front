@@ -99,8 +99,8 @@ export default defineComponent({
 
     onMounted(() => {
       refreshToken()
-      socket.disconnect()
-      socket.connect()
+      // socket.disconnect()
+      // socket.connect()
       socket.on('authorization', (status) => {
         if (status === 'failed') {
           socket.disconnect()

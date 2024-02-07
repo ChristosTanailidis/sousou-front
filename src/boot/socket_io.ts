@@ -9,7 +9,9 @@ const socket = io(process.env.API_URL || '', {
   auth: (cb) => {
     // eslint-disable-next-line n/no-callback-literal
     cb({ token: localStorage.getItem('sousou_token') })
-  }
+  },
+
+  autoConnect: false
 })
 
 export const setSocketToken = (token: string) => {

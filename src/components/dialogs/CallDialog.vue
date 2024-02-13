@@ -27,10 +27,10 @@
           />
 
           <div class="flex flex-row flex-nowrap gap-1 flex-grow">
-            <div v-if="type === 'caller' && callState === 'ringing'">
+            <div v-if="callType === 'caller' && callState === 'ringing'">
               {{ `Calling ${inCallWithUser?.displayName} for sousou` }}
             </div>
-            <div v-else-if="type === 'receiver' && callState === 'ringing'">
+            <div v-else-if="callType === 'receiver' && callState === 'ringing'">
               {{ `${inCallWithUser?.displayName} is looking for sousou` }}
             </div>
             <div v-else-if="callState === 'connected'">
@@ -84,20 +84,20 @@
           class="flex flex-row flex-nowrap gap-2"
         >
           <q-btn
-            v-if="type === 'receiver' && callState === 'ringing'"
+            v-if="incomingCall"
             unelevated
             color="primary"
             icon="call"
             class="w-full"
-            @click="answerCall(true)"
+            @click="acceptCall()"
           />
           <q-btn
-            v-if="type === 'receiver' && callState === 'ringing'"
+            v-if="incomingCall"
             unelevated
             color="negative"
             icon="call_end"
             class="w-full"
-            @click="answerCall(false)"
+            @click="rejectCall()"
           />
           <q-btn
             v-else
@@ -105,7 +105,7 @@
             color="negative"
             icon="close"
             class="w-full"
-            @click="endCall()"
+            @click="hangUp()"
           />
         </q-card-actions>
       </div>
@@ -127,6 +127,7 @@ import { PersonalChat } from 'src/models/PersonalChat'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { storeToRefs } from 'pinia'
 import { useAuthUser } from 'src/stores/auth-user'
+import { useCallStore } from 'src/stores/call-store'
 
 // stores
 
@@ -135,193 +136,37 @@ type CallStateType = 'ringing' | RTCPeerConnectionState
 
 export default defineComponent({
   components: { UserImage },
-  props: {
-    personalChatId: {
-      type: String,
-      default: undefined
-    },
-    callingMessage: {
-      type: Object as PropType<PersonalMessage>,
-      default: undefined
-    },
-    description: {
-      type: Object as PropType<RTCSessionDescriptionInit>,
-      default: undefined
-    },
-    type: {
-      type: String as PropType<'caller' | 'receiver'>,
-      default: 'receiver'
-    }
-  },
   emits: [...useDialogPluginComponent.emits],
-  setup (props) {
+  setup () {
     const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
+
+    const callStore = useCallStore()
+    const { initiateCall, personalChatId, callType } = storeToRefs(callStore)
+
+    watch(initiateCall, (val: boolean) => {
+      if (val) {
+        dialogRef.value?.show()
+
+        if (callType.value === 'caller') {
+          startCall()
+        }
+      }
+    })
 
     const audio = ref<HTMLMediaElement>()
 
     const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
-    let connection: RTCPeerConnection
+    const peerConnection = ref<RTCPeerConnection | null>()
+
+    const callingMessage = ref()
+    const description = ref()
 
     let audioMedia: MediaStream
     let callMessageId: string
 
-    // const allCandidatesReceived = ref(false)
-    const remoteDescriptionSet = ref(false)
-
     const callState = ref<CallStateType>()
-    // const candidatesToBeAdded = ref<RTCIceCandidate[]>([])
     const micMute = ref(false)
     const volumeState = ref(1)
-
-    onMounted(async () => {
-      callState.value = 'ringing'
-
-      connection = new RTCPeerConnection(configuration)
-
-      audioMedia = await navigator.mediaDevices.getUserMedia(
-        { audio: true }
-      )
-
-      audioMedia.getTracks().forEach(track => connection.addTrack(track, audioMedia))
-
-      if (props.type === 'caller') {
-        const callerDescription = await connection.createOffer({
-          offerToReceiveAudio: true,
-          offerToReceiveVideo: false
-        })
-
-        await connection.setLocalDescription(callerDescription)
-
-        if (props.personalChatId && props.type === 'caller') {
-          socket.emit('send-voice-one-to-one', { description: callerDescription, personalChatId: props.personalChatId }, (data: { callMessageId: string }) => {
-            callMessageId = data.callMessageId
-          })
-        }
-      } else if (props.description && props.type === 'receiver') {
-        connection.setRemoteDescription(props.description)
-        remoteDescriptionSet.value = true
-      }
-
-      /* Socket Events */
-
-      socket.on('receive-candidate', async (data: {personalChat: PersonalChat, candidate: RTCIceCandidate }) => {
-        // if (!data.candidate) {
-        //   allCandidatesReceived.value = true
-        //   return
-        // }
-
-        // candidatesToBeAdded.value.push(data.candidate)
-
-        try {
-          await connection.addIceCandidate(new RTCIceCandidate(data.candidate))
-        } catch (err) {
-          console.log('error', err)
-        }
-
-        console.log('receive-candidate', connection)
-      })
-
-      socket.on('answer-call-one-to-one', async (data: { description?: RTCSessionDescriptionInit, callMessage?: PersonalMessage, answer?: boolean, err?: string }) => {
-        console.log('1')
-        if (data.err) {
-          console.log('ERROR --- ', data.err)
-          return
-        }
-
-        console.log('2')
-        if (!data.answer) {
-          endCall()
-        }
-
-        console.log('3')
-        if (!data.description) {
-          return
-        }
-
-        console.log('4')
-        await connection.setRemoteDescription(data.description)
-        remoteDescriptionSet.value = true
-        console.log('answer-call-one-to-one', connection)
-      })
-
-      socket.on('end-call-one-to-one', async (/* data : { callMessage: PersonalMessage } */) => { await terminateDialog() })
-
-      /* Connection Events */
-
-      // const candidatesToSend: RTCPeerConnectionIceEvent['candidate'][] = []
-      connection.onicecandidate = async (e) => {
-        // candidatesToSend.push(e.candidate)
-        if (!e?.candidate) {
-          return
-        }
-
-        socket.emit('send-candidate', { personalChatId: props.type === 'caller' ? props.personalChatId : props.callingMessage?.personalChat.id, candidate: e.candidate })
-        // candidatesToSend.forEach((candidate) => {
-        // })
-      }
-
-      connection.ontrack = async (e) => {
-        if (audio.value && audio.value.srcObject !== e.streams[0]) {
-          audio.value.srcObject = e.streams[0]
-        }
-      }
-
-      connection.onconnectionstatechange = () => {
-        callState.value = connection.connectionState
-      }
-    })
-
-    const answerCall = async (answer = true) => {
-      console.log('answer call', connection)
-
-      if (!props.callingMessage || !props.description) {
-        return
-      }
-
-      if (props.type === 'receiver') {
-        const data: {description?: RTCSessionDescriptionInit, callMessageId: string, answer: boolean} = { callMessageId: props.callingMessage.id, answer }
-        if (answer) {
-          // connection.setRemoteDescription(props.description)
-          // remoteDescriptionSet.value = true
-
-          const receiverDescription = await connection.createAnswer()
-          await connection.setLocalDescription(receiverDescription)
-
-          data.description = receiverDescription
-        } else {
-          await terminateDialog()
-        }
-
-        socket.emit('answer-call-one-to-one', { ...data })
-      }
-    }
-
-    const endCall = async () => {
-      socket.emit('end-call-one-to-one', { callMessageId: props.callingMessage?.id || callMessageId })
-      await terminateDialog()
-    }
-
-    const terminateDialog = async () => {
-      audioMedia.getTracks().forEach(track => track.stop())
-      await connection.close()
-      onDialogCancel()
-    }
-
-    // const addCandidates = () => {
-    //   candidatesToBeAdded.value.forEach(async (candidate) => {
-    //     try {
-    //       await connection.addIceCandidate(new RTCIceCandidate(candidate))
-    //     } catch (err) {
-    //       console.log('error', err)
-    //     }
-    //   })
-    // }
-
-    // watch([remoteDescriptionSet, allCandidatesReceived], () => {
-    //   if (remoteDescriptionSet.value && allCandidatesReceived.value) {
-    //     addCandidates()
-    //   }
-    // })
 
     const changeMicState = () => {
       audioMedia.getAudioTracks()[0].enabled = micMute.value
@@ -348,8 +193,175 @@ export default defineComponent({
     const { personalChats } = storeToRefs(userStore)
 
     const inCallWithUser = computed(() => {
-      return personalChats.value.find(pc => pc.id === props.personalChatId || props.callingMessage?.personalChat.id)?.users[0]
+      return personalChats.value.find(pc => pc.id === personalChatId.value || callingMessage.value?.personalChat.id)?.users[0]
     })
+
+    const remoteOffer = ref<RTCSessionDescriptionInit>()
+    const incomingCall = ref(false)
+    const callActive = ref(false)
+
+    onMounted(async () => {
+      const i = ref(0)
+
+      socket.on('receive-candidate', async (data: {personalChat: PersonalChat, candidate: RTCIceCandidate }) => {
+        console.log('receive', i.value, data)
+        handleNewICECandidateMsg(data.candidate)
+        i.value++
+      })
+
+      socket.on('answer-call-one-to-one', async (data: { description?: RTCSessionDescriptionInit, callMessage?: PersonalMessage, answer?: boolean, err?: string }) => {
+        console.log('dude wtf', data)
+        if (data.description && data.answer) {
+          handleAnswer(data.description)
+          callActive.value = true
+        } else {
+          callActive.value = false
+          // todo: more
+        }
+      })
+
+      // eslint-disable-next-line no-undef
+      socket.on('receive-call-one-to-one', async (data: { callMessage: PersonalMessage, description: RTCSessionDescriptionInit, err?: string }) => {
+        console.log('[SOCKET<-] receive-call-one-to-one [[receiver]]', data)
+
+        if (!dialogRef.value) {
+          return
+        }
+
+        if (callType.value !== 'caller') {
+          callType.value = 'receiver'
+          if (!callActive.value) {
+            remoteOffer.value = description.value
+            incomingCall.value = true
+          }
+        }
+
+        if (data.err) {
+          console.log('ERROR --- ', data.err)
+          return
+        }
+
+        // onCall.value = true
+
+        console.log('halo')
+        callingMessage.value = data.callMessage
+        description.value = data.description
+        remoteOffer.value = description.value
+        dialogRef.value.show()
+        console.log('halo?')
+        // Dialog.create({
+        //   component: CallDialog,
+        //   componentProps: {
+        //     callingMessage: data.callMessage,
+        //     description: data.description
+        //   }
+        // }).onDismiss(() => { onCall.value = false }).onCancel(() => { onCall.value = false })
+      })
+    })
+
+    const callSetup = async () => {
+      try {
+        audioMedia = await navigator.mediaDevices.getUserMedia(
+          { audio: true, video: false }
+        )
+
+        console.log('????')
+        peerConnection.value = new RTCPeerConnection(configuration)
+
+        peerConnection.value.onicecandidate = handleICECandidateEvent
+        peerConnection.value.ontrack = handleRemoteStreamAdded
+
+        audioMedia.getTracks().forEach(track => peerConnection.value?.addTrack(track, audioMedia))
+      } catch (err) {
+        console.log('ERROR ----> ', err)
+      }
+    }
+
+    const startCall = async () => {
+      await callSetup()
+      if (!peerConnection.value) {
+        return
+      }
+
+      const callerOffer = await peerConnection.value?.createOffer()
+      await peerConnection.value.setLocalDescription(callerOffer)
+
+      socket.emit('send-voice-one-to-one', { description: callerOffer, personalChatId: personalChatId.value }, (data: { callMessageId: string }) => {
+        callMessageId = data.callMessageId
+      })
+      callActive.value = true
+    }
+
+    const acceptCall = async () => {
+      console.log('[ACCEPT CALL]')
+      await callSetup()
+
+      console.log('[ACCEPT CALL] after callSetup()')
+      if (!peerConnection.value || !remoteOffer.value) {
+        console.log('[ACCEPT CALL] NOT HAVING peerConnection and remoteOffer')
+        return
+      }
+
+      console.log('[ACCEPT CALL] has peerConnection and remoteOffer')
+      incomingCall.value = false
+      await peerConnection.value.setRemoteDescription(new RTCSessionDescription(remoteOffer.value))
+      const answer = await peerConnection.value.createAnswer()
+      await peerConnection.value.setLocalDescription(answer)
+
+      const data = { callMessageId: callingMessage.value?.id, answer: true }
+
+      console.log('apantaw edw bro', answer)
+      socket.emit('answer-call-one-to-one', { ...data, description: answer })
+
+      callActive.value = true
+    }
+
+    const rejectCall = () => {
+      const data = { callMessageId: callingMessage.value?.id, answer: false }
+      socket.emit('answer-call-one-to-one', { ...data })
+
+      incomingCall.value = false
+      remoteOffer.value = undefined
+      // Additional cleanup logic here if needed
+    }
+
+    const handleAnswer = async (answer: RTCSessionDescriptionInit) => {
+      console.log('PIRA APANTISI EGW VAZW REMOTE AN EINAI')
+      await peerConnection.value?.setRemoteDescription(new RTCSessionDescription(answer))
+    }
+
+    const handleNewICECandidateMsg = (candidate?: RTCIceCandidateInit) => {
+      console.log('before try', candidate)
+      try {
+        if (peerConnection.value) {
+          peerConnection.value.addIceCandidate(new RTCIceCandidate(candidate))
+        }
+      } catch (err) {
+        console.log('AAAAAAAAAAAAAAAA', err)
+      }
+    }
+
+    const handleICECandidateEvent = (event?: RTCPeerConnectionIceEvent) => {
+      if (event?.candidate) {
+        console.log('Candidate ---- ', event)
+        socket.emit('send-candidate', { personalChatId: callType.value === 'caller' ? personalChatId.value : callingMessage.value?.personalChat.id, candidate: event.candidate })
+      }
+    }
+
+    const handleRemoteStreamAdded = (event: RTCTrackEvent) => {
+      if (audio.value && audio.value.srcObject !== event.streams[0]) {
+        audio.value.srcObject = event.streams[0]
+      }
+    }
+
+    const hangUp = () => {
+      if (peerConnection.value) {
+        peerConnection.value?.close()
+        peerConnection.value = null
+      }
+
+      socket.emit('end-call-one-to-one', { callMessageId: callingMessage.value?.id || callMessageId })
+    }
 
     return {
       audio,
@@ -357,11 +369,19 @@ export default defineComponent({
       micMute,
       volumeState,
       inCallWithUser,
+      incomingCall,
 
-      answerCall,
-      endCall,
+      callType,
+
+      callingMessage,
+      description,
+
       changeMicState,
       changeSoundState,
+
+      acceptCall,
+      rejectCall,
+      hangUp,
 
       dialogRef,
       onDialogHide

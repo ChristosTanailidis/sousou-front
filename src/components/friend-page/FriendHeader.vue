@@ -51,16 +51,16 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { Dialog } from 'quasar'
 
 // components
 import UserImage from '../reusables/UserImage.vue'
-import CallDialog from '../dialogs/CallDialog.vue'
 
 // models
 import { User } from 'src/models/User'
 
 // stores
+import { useCallStore } from 'stores/call-store'
+import { storeToRefs } from 'pinia'
 
 // utils
 
@@ -77,14 +77,14 @@ export default defineComponent({
     }
   },
   setup (props) {
+    const callStore = useCallStore()
+    const { initiateCall, personalChatId, callType } = storeToRefs(callStore)
+
     const call = async () => {
-      Dialog.create({
-        component: CallDialog,
-        componentProps: {
-          personalChatId: props.personalChatId,
-          type: 'caller'
-        }
-      })
+      personalChatId.value = props.personalChatId
+      callType.value = 'caller'
+
+      initiateCall.value = true
     }
 
     return {

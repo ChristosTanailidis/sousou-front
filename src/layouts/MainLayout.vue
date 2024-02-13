@@ -58,6 +58,10 @@
         <router-view />
       </q-page>
     </q-page-container>
+
+    <CallDialog
+      ref="callDialogRef"
+    />
   </q-layout>
 </template>
 
@@ -66,7 +70,7 @@ import { defineComponent, onMounted, ref } from 'vue'
 import { socket, setSocketToken } from 'src/boot/socket_io'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { Dialog, date } from 'quasar'
+import { date } from 'quasar'
 
 import { Auth } from 'src/boot/custom-auth'
 
@@ -77,7 +81,6 @@ import GroupList from 'src/components/GroupList.vue'
 import CallDialog from 'src/components/dialogs/CallDialog.vue'
 
 // models
-import { PersonalMessage } from 'src/models/PersonalMessage'
 import { FriendRequest } from 'src/models/FriendRequest'
 import { PersonalChat } from 'src/models/PersonalChat'
 import { GroupInvite } from 'src/models/GroupInvite'
@@ -88,14 +91,12 @@ import { useAuthUser } from 'src/stores/auth-user'
 
 export default defineComponent({
   name: 'MainLayout',
-  components: { UserInfo },
+  components: { UserInfo, CallDialog },
   setup () {
     const leftDrawerOpen = ref(true)
     const userStore = useAuthUser()
 
     const { user } = storeToRefs(userStore)
-
-    const onCall = ref(false)
 
     onMounted(() => {
       refreshToken()
@@ -172,30 +173,6 @@ export default defineComponent({
           // remove friend request from the accepting user
           user.value?.groupInvites.splice(index, 1)
         }
-      })
-
-      // eslint-disable-next-line no-undef
-      socket.on('receive-call-one-to-one', async (data: { callMessage: PersonalMessage, description: RTCSessionDescriptionInit, err?: string }) => {
-        console.log('[SOCKET<-] receive-call-one-to-one [[receiver]]')
-
-        if (onCall.value) {
-          return
-        }
-
-        if (data.err) {
-          console.log('ERROR --- ', data.err)
-          return
-        }
-
-        // onCall.value = true
-
-        Dialog.create({
-          component: CallDialog,
-          componentProps: {
-            callingMessage: data.callMessage,
-            description: data.description
-          }
-        }).onDismiss(() => { onCall.value = false }).onCancel(() => { onCall.value = false })
       })
     })
 

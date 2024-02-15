@@ -37,7 +37,7 @@
         unelevated
         icon="phone_in_talk"
         color="primary"
-        @click="call"
+        @click="initiateCall(personalChatId)"
       />
       <q-btn
         flat
@@ -60,7 +60,6 @@ import { User } from 'src/models/User'
 
 // stores
 import { useCallStore } from 'stores/call-store'
-import { storeToRefs } from 'pinia'
 
 // utils
 
@@ -76,19 +75,12 @@ export default defineComponent({
       required: true
     }
   },
-  setup (props) {
+  setup () {
     const callStore = useCallStore()
-    const { initiateCall, personalChatId, callType } = storeToRefs(callStore)
-
-    const call = async () => {
-      personalChatId.value = props.personalChatId
-      callType.value = 'caller'
-
-      initiateCall.value = true
-    }
+    const { initiateCall } = callStore
 
     return {
-      call
+      initiateCall
     }
   }
 })

@@ -49,6 +49,7 @@
         @click="manageGroupInvitesDialog"
       />
       <q-btn
+        v-if="group.owner.id === user?.id"
         flat
         round
         unelevated

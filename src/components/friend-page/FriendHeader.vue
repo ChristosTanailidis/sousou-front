@@ -39,12 +39,6 @@
         color="primary"
         @click="initiateCall(personalChatId)"
       />
-      <q-btn
-        flat
-        round
-        unelevated
-        icon="settings"
-      />
     </div>
   </div>
 </template>

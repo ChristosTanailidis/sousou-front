@@ -33,7 +33,7 @@
 
     <!-- Groups -->
     <router-link
-      v-for="group in groups"
+      v-for="group in groupsFiltered"
       :key="group.id"
       :to="'/group/' + group.id"
     >
@@ -52,8 +52,8 @@
           </q-avatar>
         </q-item-section>
 
-        <q-item-section class="font-semibold text-lg ">
-          <div class="max-w-[9vw] truncate">
+        <q-item-section class="font-semibold text-lg overflow-hidden ">
+          <div class="w-[10rem] truncate">
             {{ group.name }}
           </div>
         </q-item-section>
@@ -101,9 +101,24 @@ export default defineComponent({
       })
     }
 
+    const groupsFiltered = computed(() => {
+      if (!groups.value) {
+        return []
+      }
+
+      if (!search.value.length || search.value.charAt(0) === ' ') {
+        return groups.value
+      }
+
+      return groups.value.filter(
+        (group) => group.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+      )
+    })
+
     return {
       user,
       groups,
+      groupsFiltered,
       search,
       openCreateGroup
     }

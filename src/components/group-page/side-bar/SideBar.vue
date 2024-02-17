@@ -51,6 +51,7 @@
     >
       <div class="px-2 pt-2">
         <q-btn
+          v-if="user?.id === group.owner.id"
           flat
           no-caps
           dense
@@ -90,6 +91,8 @@ import UserImage from '../../reusables/UserImage.vue'
 
 // models
 import { Group } from 'src/models/Group'
+import { storeToRefs } from 'pinia'
+import { useAuthUser } from 'src/stores/auth-user'
 
 // stores
 
@@ -109,6 +112,9 @@ export default defineComponent({
   },
   emits: [],
   setup () {
+    const userStore = useAuthUser()
+    const { user } = storeToRefs(userStore)
+
     const $q = useQuasar()
 
     const manageDialogs = (component: Component, componentProps: unknown) => {
@@ -138,7 +144,8 @@ export default defineComponent({
     }
 
     return {
-      manageCreateChannelDialog
+      manageCreateChannelDialog,
+      user
     }
   }
 })

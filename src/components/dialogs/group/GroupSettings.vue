@@ -101,19 +101,19 @@ export default defineComponent({
         label: 'General',
         component: GroupGeneralSettings,
         componentProps: { group: groupData.value }
-      },
-      {
-        name: 'preferences',
-        label: 'Preferences',
-        component: GroupPreferencesSettings,
-        componentProps: { group: groupData.value }
-      },
-      {
-        name: 'members_and_invites',
-        label: 'Members & Invites',
-        component: GroupMembersSettings,
-        componentProps: { group: groupData.value }
       }
+      // {
+      //   name: 'preferences',
+      //   label: 'Preferences',
+      //   component: GroupPreferencesSettings,
+      //   componentProps: { group: groupData.value }
+      // },
+      // {
+      //   name: 'members_and_invites',
+      //   label: 'Members & Invites',
+      //   component: GroupMembersSettings,
+      //   componentProps: { group: groupData.value }
+      // }
     ]
 
     const selectedTab = ref(tabs[0].name)

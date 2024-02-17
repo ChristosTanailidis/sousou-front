@@ -97,12 +97,12 @@ export default defineComponent({
         label: 'General',
         component: UserGeneralSettings,
         componentProps: { user: user.value }
-      },
-      {
-        name: 'preferences',
-        label: 'Preferences',
-        component: UserPreferencesSettings
       }
+      // {
+      //   name: 'preferences',
+      //   label: 'Preferences',
+      //   component: UserPreferencesSettings
+      // }
     ]
 
     const selectedTab = ref(tabs[0].name)

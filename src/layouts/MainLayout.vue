@@ -140,10 +140,13 @@ export default defineComponent({
           // add personal chat on friend request
           user.value.personalChats = user.value.personalChats || []
 
-          if (user.value.personalChats.length) {
-            user.value.personalChats.push(data.personalChat)
-          } else if (user.value) {
+          if (!user.value.personalChats.length) {
             user.value.personalChats = [data.personalChat]
+          }
+
+          const friendIndex = user.value.personalChats.findIndex(personalChat => personalChat.id === data.personalChat?.id)
+          if (friendIndex < 0) {
+            user.value.personalChats.push(data.personalChat)
           }
 
           const index = user.value.friendRequests.findIndex(fr => fr.id === data.identifier) || -1
@@ -158,10 +161,13 @@ export default defineComponent({
           // add group on groups list
           user.value.groups = user.value.groups || []
 
-          if (user.value.groups.length) {
-            user.value.groups.push(data.group)
-          } else if (user.value) {
+          if (!user.value.groups.length) {
             user.value.groups = [data.group]
+          }
+
+          const groupIndex = user.value.groups.findIndex(group => group.id === data.group?.id)
+          if (groupIndex < 0) {
+            user.value.groups.push(data.group)
           }
 
           const index = user.value?.groupInvites.findIndex(fr => fr.id === data.identifier) || -1

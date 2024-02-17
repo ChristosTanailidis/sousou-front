@@ -74,7 +74,7 @@ export default defineComponent({
 
     const friendRequestData = ref<FriendRequestInputData>({
       toUserId: props.to.id,
-      message: `Hi ${props.to.displayName},\nI would like tou add you as my friend 😄`
+      message: `Hi ${props.to.displayName},\nI would like to add you as my friend 😄`
     })
 
     const sendFriendRequest = async () => {

@@ -98,10 +98,11 @@ export default defineComponent({
 
     const { user } = storeToRefs(userStore)
 
+    const notificationSound = new Audio('/sounds/Notification.mp3')
+
     onMounted(() => {
       refreshToken()
-      // socket.disconnect()
-      // socket.connect()
+
       socket.on('authorization', (status) => {
         if (status === 'failed') {
           socket.disconnect()
@@ -117,7 +118,7 @@ export default defineComponent({
           case 'FRIEND_REQUEST': {
             if (!data.friendRequest) return
 
-            const index = user.value.friendRequests.findIndex(fr => fr.id === data.friendRequest.id)
+            const index = user.value.friendRequests.findIndex(fr => fr.id === data.friendRequest?.id)
 
             if (index < 0) {
               user.value?.friendRequests.push(data.friendRequest)
@@ -125,14 +126,21 @@ export default defineComponent({
 
             break
           }
-          case 'GROUP_INVITE':
+
+          case 'GROUP_INVITE': {
             if (!data.groupInvite) return
 
-            user.value.groupInvites = user.value.groupInvites.length ? user.value.groupInvites : []
+            const index = user.value.groupInvites.findIndex(fr => fr.id === data.friendRequest?.id)
 
-            user.value?.groupInvites.push(data.groupInvite)
+            if (index < 0) {
+              user.value?.groupInvites.push(data.groupInvite)
+            }
+
             break
+          }
         }
+
+        notificationSound.play()
       })
 
       socket.on('invitation-answer-receive', (data: {identifier: string, personalChat?: PersonalChat, group?: Group}) => {

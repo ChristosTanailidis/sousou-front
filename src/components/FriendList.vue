@@ -63,6 +63,7 @@ import { useAuthUser } from 'src/stores/auth-user'
 import { socket } from 'src/boot/socket_io'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { LastReadMessagePivot } from 'src/models/SocketData'
+import { useRouter } from 'vue-router'
 
 // utils
 
@@ -73,6 +74,8 @@ export default defineComponent({
   setup () {
     const userStore = useAuthUser()
     const { user, personalChats } = storeToRefs(userStore)
+
+    const notificationSound = new Audio('/sounds/Notification.mp3')
 
     const search = ref('')
 
@@ -103,6 +106,8 @@ export default defineComponent({
       })
     }
 
+    const router = useRouter()
+
     onMounted(() => {
       socket.on('message-receive', (message: PersonalMessage) => {
         if (message.from.id === user.value?.id) {
@@ -113,6 +118,15 @@ export default defineComponent({
 
         if (pcIndex < 0) {
           return
+        }
+
+        if (router.currentRoute.value.params) {
+          const { personalChatId } = router.currentRoute.value.params
+          if (personalChatId && personalChatId !== message.personalChat.id) {
+            notificationSound.pause()
+            notificationSound.currentTime = 0
+            notificationSound.play()
+          }
         }
 
         personalChats.value[pcIndex].latestMessage = message.text

@@ -55,8 +55,8 @@ export const useCallStore = defineStore('call-store', {
     micMuted: false,
 
     callSounds: {
-      ringingSound: new Audio('/sounds/ring-sound.mp3'),
-      callingSound: new Audio('/sounds/calling-sound.mp3')
+      ringingSound: new Audio('/sounds/Receiver.mp3'),
+      callingSound: new Audio('/sounds/Caller.mp3')
     }
   }),
   getters: {

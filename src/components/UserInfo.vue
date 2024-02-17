@@ -33,14 +33,23 @@
           </div>
 
           <div class="row gap-2 justify-between">
-            <q-btn
-              flat
-              round
-              icon="notifications"
-              :color="user?.friendRequests.length || user?.groupInvites.length ? 'primary' : 'grey-5'"
-              size="sm"
-              @click="notificationsMenu = !notificationsMenu"
-            />
+            <div class="relative">
+              <q-btn
+                flat
+                round
+                icon="notifications"
+                color="grey-5"
+                size="sm"
+                @click="notificationsMenu = !notificationsMenu"
+              />
+
+              <div
+                v-if="user?.friendRequests.length || user?.groupInvites.length"
+                class="bg-primary w-3 h-3 rounded-full absolute top-0.5 right-0.5 overflow-hidden leading-3 flex items-center justify-center text-[0.6rem]"
+              >
+                {{ (user?.friendRequests.length || 0) + (user?.groupInvites.length || 0) }}
+              </div>
+            </div>
 
             <div class="row flex-nowrap gap-2">
               <q-btn

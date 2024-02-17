@@ -130,11 +130,16 @@ export default defineComponent({
           case 'GROUP_INVITE': {
             if (!data.groupInvite) return
 
-            const index = user.value.groupInvites.findIndex(fr => fr.id === data.friendRequest?.id)
+            console.log('1')
+
+            const index = user.value.groupInvites.findIndex(gi => gi.id === data.groupInvite?.id)
+            console.log('2')
 
             if (index < 0) {
+              console.log('3')
               user.value?.groupInvites.push(data.groupInvite)
             }
+            console.log('4')
 
             break
           }

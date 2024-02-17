@@ -32,6 +32,9 @@
             <div v-else-if="callType === 'receiver' && ringing">
               {{ `${inCallWithUser?.displayName} is looking for sousou` }}
             </div>
+            <div v-else-if="!allCandidateReceived">
+              Synchronizing call
+            </div>
             <div v-else-if="onCall">
               {{ `In call with ${inCallWithUser?.displayName}` }}
             </div>
@@ -173,6 +176,7 @@ export default defineComponent({
       socket.on('end-call-one-to-one', () => {
         dialogRef.value?.hide()
         callStore.clearCall()
+        allCandidateReceived.value = false
       })
     })
 
@@ -228,7 +232,9 @@ export default defineComponent({
 
     watch([allCandidateReceived, remoteDescriptionIsSet], ([candidatesReceived, descriptionSet]) => {
       if (candidatesReceived && descriptionSet) {
-        candidates.value.forEach(c => peerConnection.value?.addIceCandidate(c))
+        candidates.value.forEach(async (c) => {
+          await peerConnection.value?.addIceCandidate(c)
+        })
       }
     }, { deep: true })
 
@@ -262,6 +268,8 @@ export default defineComponent({
       acceptCall,
       rejectCall,
       hangUp,
+
+      allCandidateReceived,
 
       dialogRef
     }

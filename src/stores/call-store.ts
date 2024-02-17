@@ -6,12 +6,28 @@ import { socket } from 'src/boot/socket_io'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { useAuthUser } from './auth-user'
 
-const PEER_CONNECTION_CONFIG = {
-  iceServers: [{
-    urls: 'turn:192.158.29.39:3478?transport=udp',
-    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-    username: '28224511:1379330808'
-  }]
+const PEER_CONNECTION_CONFIG: RTCConfiguration = {
+  iceServers: [
+    {
+      urls: [
+        'stun:stun.l.google.com:19302'
+        // 'stun:stun1.l.google.com:19302',
+        // 'stun:stun2.l.google.com:19302',
+        // 'stun:stun3.l.google.com:19302',
+        // 'stun:stun4.l.google.com:19302'
+      ]
+    }
+    // {
+    //   urls: ['turn:192.158.29.39:3478?transport=udp', 'turn:192.158.29.39:3478?transport=tcp'],
+    //   credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+    //   username: '28224511:1379330808'
+    // }
+    // {
+    //   url: 'turn:192.158.29.39:3478?transport=tcp',
+    //   credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+    //   username: '28224511:1379330808'
+    // }
+  ]
 }
 
 export const useCallStore = defineStore('call-store', {
@@ -70,16 +86,6 @@ export const useCallStore = defineStore('call-store', {
     async callSetup () {
       this.peerConnection = new RTCPeerConnection(PEER_CONNECTION_CONFIG)
 
-      this.audioMedia = await navigator.mediaDevices.getUserMedia(
-        { audio: true, video: false }
-      )
-
-      this.audioMedia?.getTracks().forEach(track => {
-        if (this.audioMedia) {
-          this.peerConnection?.addTrack(track, this.audioMedia)
-        }
-      })
-
       if (this.peerConnection) {
         this.peerConnection.onicecandidate = (event?: RTCPeerConnectionIceEvent) => {
           socket.emit('send-candidate', { personalChatId: this.callType === 'caller' ? this.personalChatId : this.callingMessage?.personalChat.id, candidate: event?.candidate })
@@ -91,6 +97,16 @@ export const useCallStore = defineStore('call-store', {
           }
         }
       }
+
+      this.audioMedia = await navigator.mediaDevices.getUserMedia(
+        { audio: true, video: false }
+      )
+
+      this.audioMedia?.getTracks().forEach(track => {
+        if (this.audioMedia) {
+          this.peerConnection?.addTrack(track, this.audioMedia)
+        }
+      })
     },
 
     async startCall () {
@@ -137,6 +153,7 @@ export const useCallStore = defineStore('call-store', {
           throw Error('No description was provided from the answered call')
         }
 
+        this.remoteOffer = description
         await this.peerConnection?.setRemoteDescription(new RTCSessionDescription(description))
         this.remoteDescriptionIsSet = true
 
@@ -150,11 +167,6 @@ export const useCallStore = defineStore('call-store', {
     },
 
     hangUp () {
-      if (this.peerConnection) {
-        this.peerConnection?.close()
-        this.peerConnection = undefined
-      }
-
       socket.emit('end-call-one-to-one', { callMessageId: this.callingMessage?.id || this.callingMessageId })
     },
 
@@ -183,6 +195,11 @@ export const useCallStore = defineStore('call-store', {
     },
 
     clearCall () {
+      if (this.peerConnection) {
+        this.peerConnection.close()
+        this.peerConnection = undefined
+      }
+
       this.onCall = false
       this.ringing = false
       this.callType = undefined

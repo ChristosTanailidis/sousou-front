@@ -100,11 +100,9 @@ export default defineComponent({
 
       const omResult = await fetchPaginatedMessages()
 
-      if (!omResult) {
-        return
+      if (omResult) {
+        oldMessages.value = omResult
       }
-
-      oldMessages.value = omResult
 
       // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: TextChannelMessage) => {

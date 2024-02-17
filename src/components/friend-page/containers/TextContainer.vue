@@ -99,15 +99,6 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const omResult = await fetchPaginatedMessages()
-
-      if (!omResult) {
-        return
-      }
-
-      oldMessages.value = omResult
-
-      // socket.open() // todo: check if this can be removed. first attempt of connection has token: null.
       socket.on('message-receive', (message: PersonalMessage) => {
         if (message.personalChat?.id !== props.personalChatId) {
           return
@@ -141,6 +132,12 @@ export default defineComponent({
 
         oldMessages.value.data[oldMessagesIndex] = data.lastReadMessage
       })
+
+      const omResult = await fetchPaginatedMessages()
+
+      if (omResult) {
+        oldMessages.value = omResult
+      }
     })
 
     // fix ta maps me https://github.com/Lemas97/Sousou-Api/issues/33

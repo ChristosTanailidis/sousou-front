@@ -114,17 +114,21 @@ export default defineComponent({
         }
 
         switch (data.type) {
-          case 'FRIEND_REQUEST':
+          case 'FRIEND_REQUEST': {
             if (!data.friendRequest) return
 
-            user.value.friendRequests = user.value.friendRequests || []
+            const index = user.value.friendRequests.findIndex(fr => fr.id === data.friendRequest.id)
 
-            user.value?.friendRequests.push(data.friendRequest)
+            if (index < 0) {
+              user.value?.friendRequests.push(data.friendRequest)
+            }
+
             break
+          }
           case 'GROUP_INVITE':
             if (!data.groupInvite) return
 
-            user.value.groupInvites = user.value?.groupInvites || []
+            user.value.groupInvites = user.value.groupInvites.length ? user.value.groupInvites : []
 
             user.value?.groupInvites.push(data.groupInvite)
             break
@@ -141,7 +145,7 @@ export default defineComponent({
           user.value.personalChats = user.value.personalChats || []
 
           if (!user.value.personalChats.length) {
-            user.value.personalChats = [data.personalChat]
+            user.value.personalChats = []
           }
 
           const friendIndex = user.value.personalChats.findIndex(personalChat => personalChat.id === data.personalChat?.id)
@@ -162,7 +166,7 @@ export default defineComponent({
           user.value.groups = user.value.groups || []
 
           if (!user.value.groups.length) {
-            user.value.groups = [data.group]
+            user.value.groups = []
           }
 
           const groupIndex = user.value.groups.findIndex(group => group.id === data.group?.id)

@@ -9,6 +9,8 @@
 
     :last-read-message-indexes="lastReadMessageIndexes"
 
+    :members="textChannelObj?.group.members"
+
     @fetch-more-paginated-messages="fetchMorePaginatedMessages"
     @send-message="sendMessage"
     @read-message="readMessage"
@@ -164,6 +166,8 @@ export default defineComponent({
       loading,
 
       lastReadMessageIndexes,
+
+      textChannelObj,
 
       fetchMorePaginatedMessages,
       sendMessage,

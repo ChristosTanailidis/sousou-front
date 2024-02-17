@@ -57,6 +57,25 @@
                   {{ formatDistanceToNow(new Date(message.createdAt)) }} ago
                 </div>
               </template>
+
+              <template
+                v-if="members?.length && message.from.id !== user?.id"
+                #name
+              >
+                <div class="text-gray-300">
+                  {{ members?.find(m => m.id === message.from.id)?.displayName }}
+                </div>
+              </template>
+
+              <template
+                v-if="members?.length && message.from.id !== user?.id"
+                #avatar
+              >
+                <UserImage
+                  :user="members?.find(m => m.id === message.from.id)"
+                  class="rounded-full w-[3rem] h-[3rem] mr-4"
+                />
+              </template>
             </q-chat-message>
             <div
               v-else
@@ -117,6 +136,25 @@
               <div>
                 {{ message.text }}
               </div>
+
+              <template
+                v-if="members?.length && message.from.id !== user?.id"
+                #name
+              >
+                <div class="text-gray-300">
+                  {{ members?.find(m => m.id === message.from.id)?.displayName }}
+                </div>
+              </template>
+
+              <template
+                v-if="members?.length && message.from.id !== user?.id"
+                #avatar
+              >
+                <UserImage
+                  :user="members?.find(m => m.id === message.from.id)"
+                  class="rounded-full w-[3rem] h-[3rem] mr-4"
+                />
+              </template>
             </q-chat-message>
             <div
               v-else
@@ -204,6 +242,10 @@ export default defineComponent({
     lastReadMessageIndexes: {
       type: Array as PropType<Array<MessageReadIndex>>,
       default: () => []
+    },
+    members: {
+      type: Array as PropType<Array<User>>,
+      default: undefined
     },
     loading: {
       type: Boolean,

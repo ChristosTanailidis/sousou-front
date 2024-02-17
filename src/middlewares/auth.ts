@@ -1,8 +1,6 @@
 import { NavigationGuardWithThis } from 'vue-router'
 import { Auth } from 'src/boot/custom-auth'
 
-// todo: selida no-access isws gia tis periptwseis apo katw
-
 const consoleOn = false
 
 export const isLogged:NavigationGuardWithThis<undefined> = (_to, _from, next) => {

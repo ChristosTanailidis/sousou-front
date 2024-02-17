@@ -21,8 +21,6 @@ export const setSocketToken = (token: string) => {
   socket.connect()
 }
 
-// socket.on('authorization', (data: string) => console.log(data))
-
 export default boot(({ app }) => {
   app.config.globalProperties.$socket = socket
 })

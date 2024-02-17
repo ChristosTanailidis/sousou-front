@@ -57,10 +57,6 @@ import UserItem from './UserItem.vue'
 import { PaginationData } from 'src/models/PaginationData'
 import { User } from 'src/models/User'
 
-// stores
-
-// utils
-
 export default defineComponent({
   components: { UserItem },
   props: {
@@ -78,7 +74,6 @@ export default defineComponent({
     const paginationObj = ref({ ...props.pagination })
 
     watch(paginationObj, () => {
-      console.log('running inside')
       emit('update:pagination', paginationObj.value)
     }, { deep: true })
 

@@ -71,12 +71,17 @@ export default defineComponent({
       })
     }
 
+    const debounce = ref()
+
     const readMessage = (messageId: string) => {
-      socket.emit('message-read', {
-        personalChatId: props.textChannelId,
-        personal: false,
-        messageId
-      })
+      clearTimeout(debounce.value)
+      debounce.value = setTimeout(() => {
+        socket.emit('message-read', {
+          personalChatId: props.textChannelId,
+          personal: false,
+          messageId
+        })
+      }, 1500)
     }
 
     const fetchPaginatedMessages = async () => {

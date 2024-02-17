@@ -14,8 +14,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/GroupPage.vue'),
         props: true,
         children: [
-          { path: 'text/:textChannelId', component: () => import('components/group-page/containers/TextChannelContainer.vue'), props: true },
-          { path: 'voice/:voiceChannelId', component: () => import('components/group-page/containers/VoiceChannelContainer.vue'), props: true }
+          { path: 'text/:textChannelId', component: () => import('components/group-page/containers/TextChannelContainer.vue'), props: true }
         ]
       },
       {

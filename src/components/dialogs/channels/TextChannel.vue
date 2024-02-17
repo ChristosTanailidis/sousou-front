@@ -19,11 +19,11 @@
               val => val.length > 5 || 'A channel name must contain at least 5 characters'
             ]"
           />
-          <q-input
+          <!-- <q-input
             v-model.number="voiceChannelObj.slowMode"
             type="number"
             label="Slow Mode"
-          />
+          /> -->
         </q-card-section>
 
         <!-- buttons example -->

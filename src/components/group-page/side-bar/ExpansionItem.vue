@@ -19,14 +19,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 
-// components
-
-// models
-
-// stores
-
-// utils
-
 export default defineComponent({
   props: {
     headerRef: {

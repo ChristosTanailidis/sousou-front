@@ -80,55 +80,6 @@
         </q-item-section>
       </q-item>
     </ExpansionItem>
-
-    <ExpansionItem
-      :header-ref="headerRef"
-      icon="mic"
-      label="Voice Channel"
-      :caption="`${group.voiceChannels?.length} available`"
-      group="group"
-    >
-      <div class="px-2 pt-2">
-        <q-btn
-          flat
-          no-caps
-          color="primary"
-          icon="add"
-          label="Create Voice Channel"
-          class="w-full"
-          @click="manageCreateChannelDialog('voice')"
-        />
-      </div>
-      <q-item
-        v-for="voiceChannel in group.voiceChannels"
-        :key="voiceChannel.id"
-        v-ripple
-        clickable
-        dense
-        class="rounded m-1"
-        :to="`/group/${group.id}/voice/${voiceChannel.id}`"
-      >
-        <q-item-section class="font-semibold">
-          {{ voiceChannel.name }}
-        </q-item-section>
-
-        <q-item-section>
-          <audio
-            id="audio"
-            ref="audio"
-            autoplay
-            controls
-          />
-        </q-item-section>
-
-        <q-item-section>
-          <q-btn
-            icon="call"
-            @click="joinCall(voiceChannel.id)"
-          />
-        </q-item-section>
-      </q-item>
-    </ExpansionItem>
   </div>
 </template>
 

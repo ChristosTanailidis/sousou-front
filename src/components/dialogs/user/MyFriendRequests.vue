@@ -3,7 +3,7 @@
     ref="dialogRef"
     @hide="onDialogHide"
   >
-    <q-card class="q-dialog-plugin h-[400px]">
+    <q-card class="q-dialog-plugin p-2 shadow-none border border-[rgba(255,255,255,0.1)] h-[400px]">
       <q-card-section v-if="user?.friendRequests.length">
         <div
           v-for="fr in user?.friendRequests"

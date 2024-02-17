@@ -6,7 +6,7 @@
     transition-hide="slide-down"
     @hide="onDialogHide"
   >
-    <q-card class="q-dialog-plugin">
+    <q-card class="q-dialog-plugin shadow-none border border-[rgba(255,255,255,0.1)]">
       <q-card-actions>
         <div class="flex flex-nowrap justify-between w-full">
           <div class="text-xl font-extralight">

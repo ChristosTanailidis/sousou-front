@@ -3,10 +3,11 @@
     ref="dialogRef"
     @hide="onDialogHide"
   >
-    <q-card class="my-card">
+    <q-card class="q-dialog-plugin overflow-hidden shadow-none border border-[rgba(255,255,255,0.1)] w-[30rem]">
       <UserList
         v-model:pagination="pagination"
         :users="users"
+        class="w-full"
       >
         <template #default="{ user }">
           <q-btn

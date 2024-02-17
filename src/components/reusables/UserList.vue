@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-dialog-plugin">
+  <q-card class="q-dialog-plugin shadow-none border border-[rgba(255,255,255,0.1)]">
     <q-card-section>
       <q-input
         v-if="paginationObj"

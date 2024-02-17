@@ -3,7 +3,7 @@
     ref="dialogRef"
     @hide="onDialogHide"
   >
-    <q-card class="q-dialog-plugin">
+    <q-card class="q-dialog-plugin p-2 shadow-none border border-[rgba(255,255,255,0.1)]">
       <q-form
         @submit.prevent="createGroup"
         @reset="cancel"
@@ -60,13 +60,13 @@
             type="submit"
             color="primary"
             label="OK"
-            class="w-[5rem]"
+            class="flex-grow"
           />
           <q-btn
             type="reset"
             color="primary"
             label="Cancel"
-            class="w-[5rem]"
+            class="w-[5rem] bg-secondary"
           />
         </q-card-actions>
       </q-form>

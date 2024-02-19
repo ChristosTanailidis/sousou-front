@@ -81,6 +81,8 @@ export const useCallStore = defineStore('call-store', {
 
       this.callingMessage = personalMessage
       this.remoteOffer = description
+
+      this.callSounds.ringingSound.play()
     },
 
     async callSetup () {
@@ -114,6 +116,8 @@ export const useCallStore = defineStore('call-store', {
         return
       }
 
+      this.callSounds.callingSound.play()
+
       const callerOffer = await this.peerConnection?.createOffer()
       await this.peerConnection.setLocalDescription(callerOffer)
 
@@ -144,10 +148,15 @@ export const useCallStore = defineStore('call-store', {
         data = { callMessageId: this.callingMessage?.id, answer: false }
       }
 
+      this.callSounds.callingSound.pause()
+      this.callSounds.callingSound.currentTime = 0
+
       socket.emit('answer-call-one-to-one', { ...data })
     },
 
     async receiveAnswer (answer?: boolean, description?: RTCSessionDescriptionInit) {
+      this.callSounds.callingSound.pause()
+      this.callSounds.callingSound.currentTime = 0
       if (answer) {
         if (!description) {
           throw Error('No description was provided from the answered call')
@@ -212,6 +221,12 @@ export const useCallStore = defineStore('call-store', {
       this.callingMessage = undefined
       this.callingMessageId = undefined
       this.personalChatId = undefined
+
+      this.callSounds.callingSound.pause()
+      this.callSounds.callingSound.currentTime = 0
+
+      this.callSounds.ringingSound.pause()
+      this.callSounds.ringingSound.currentTime = 0
     }
   }
 })

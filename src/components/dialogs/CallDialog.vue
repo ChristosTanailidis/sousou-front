@@ -121,6 +121,7 @@ import { defineComponent, onMounted, ref, watch } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
 import { storeToRefs } from 'pinia'
 import { socket } from 'src/boot/socket_io'
+import notify from 'src/utils/notify'
 
 // components
 import UserImage from '../reusables/UserImage.vue'
@@ -186,9 +187,7 @@ export default defineComponent({
         startCall()
       }
 
-      if (val) {
-        callType.value === 'caller' ? callSounds.value.callingSound.play() : callSounds.value.ringingSound.play()
-      } else {
+      if (!val) {
         callSounds.value.callingSound.pause()
         callSounds.value.callingSound.currentTime = 0
 
@@ -202,12 +201,24 @@ export default defineComponent({
     }
 
     const startCall = async () => {
-      await callSetup()
+      try {
+        await callSetup()
+      } catch (error) {
+        notify('error', 'No microphone detected')
+        hangUp()
+        return
+      }
+
       await callStore.startCall()
     }
 
     const acceptCall = async () => {
-      await callSetup()
+      try {
+        await callSetup()
+      } catch (error) {
+        notify('error', 'No microphone detected')
+        return
+      }
 
       callStore.answerCall(true)
     }

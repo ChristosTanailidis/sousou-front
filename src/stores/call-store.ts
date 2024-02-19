@@ -63,7 +63,7 @@ export const useCallStore = defineStore('call-store', {
     inCallWithUser: (state) => {
       const userStore = useAuthUser()
       const { personalChats } = storeToRefs(userStore)
-      return personalChats.value.find(pc => pc.id === state.personalChatId || state.callingMessage?.personalChat.id)?.users[0]
+      return personalChats.value.find(pc => pc.id === (state.personalChatId || state.callingMessage?.personalChat.id))?.users[0]
     }
   },
   actions: {

@@ -5,7 +5,7 @@
   >
     <div
       v-if="disabled"
-      class="absolute w-full h-full top-0 right-0 z-50 bg-[rgba(0,0,0,0.8)]"
+      class="absolute w-full h-full top-0 right-0 z-30 bg-[rgba(0,0,0,0.8)]"
     />
 
     <q-img

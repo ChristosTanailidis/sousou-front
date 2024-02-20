@@ -120,19 +120,18 @@ export default defineComponent({
           return
         }
 
+        personalChats.value[pcIndex].latestMessage = message.text
+
         if (router.currentRoute.value.params) {
           const { personalChatId } = router.currentRoute.value.params
           if (personalChatId && personalChatId !== message.personalChat.id) {
             notificationSound.pause()
             notificationSound.currentTime = 0
             notificationSound.play()
+            const nmn = personalChats.value[pcIndex].newMessagesNumber
+            personalChats.value[pcIndex].newMessagesNumber = nmn !== undefined ? nmn + 1 : 1
           }
         }
-
-        personalChats.value[pcIndex].latestMessage = message.text
-
-        const nmn = personalChats.value[pcIndex].newMessagesNumber
-        personalChats.value[pcIndex].newMessagesNumber = nmn ? nmn + 1 : 1
 
         const latestPC = personalChats.value.splice(pcIndex, 1)[0]
 

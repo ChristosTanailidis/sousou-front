@@ -1,8 +1,13 @@
 <template>
   <div
     v-if="user"
-    class="h-full w-full bg-primary"
+    class="h-full w-full bg-primary relative"
   >
+    <div
+      v-if="disabled"
+      class="absolute w-full h-full top-0 right-0 z-50 bg-[rgba(0,0,0,0.8)]"
+    />
+
     <q-img
       v-if="user.icon"
       :src="user.icon"
@@ -51,6 +56,10 @@ export default defineComponent({
     textSize: {
       type: String,
       default: '2rem'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup () {

@@ -82,7 +82,9 @@ export const useCallStore = defineStore('call-store', {
       this.callingMessage = personalMessage
       this.remoteOffer = description
 
-      this.callSounds.ringingSound.play()
+      setTimeout(() => {
+        this.callSounds.ringingSound.play()
+      }, 500)
     },
 
     async callSetup () {
@@ -116,7 +118,9 @@ export const useCallStore = defineStore('call-store', {
         return
       }
 
-      this.callSounds.callingSound.play()
+      setTimeout(() => {
+        this.callSounds.callingSound.play()
+      }, 300)
 
       const callerOffer = await this.peerConnection?.createOffer()
       await this.peerConnection.setLocalDescription(callerOffer)

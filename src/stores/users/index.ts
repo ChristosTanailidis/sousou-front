@@ -8,7 +8,7 @@ import { User } from 'src/models/User'
 
 // gql
 import { qGetUsers } from 'src/graphql/users/queries'
-import { mAnswerFriendRequest, mCancelFriendRequest, mCreateFriendRequest } from 'src/graphql/users/mutations'
+import { mAnswerFriendRequest, mCancelFriendRequest, mCreateFriendRequest, mRemoveFriend } from 'src/graphql/users/mutations'
 import { qGetPersonalMessages } from 'src/graphql/messages/queries'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { PaginatedData } from 'src/models/PaginatedData'
@@ -73,6 +73,14 @@ export const useUsersStore = defineStore('users-store', {
       this.loading = true
       return await Request(mAnswerFriendRequest, { answer, answerFriendRequestId })
         .then((response) => (response as { answerFriendRequest: boolean }).answerFriendRequest)
+        .catch(() => undefined)
+        .finally(() => { this.loading = false })
+    },
+
+    async removeFriend (deleteFriendId: string) {
+      this.loading = true
+      return await Request(mRemoveFriend, { deleteFriendId })
+        .then((response) => (response as { deleteFriend: boolean }).deleteFriend)
         .catch(() => undefined)
         .finally(() => { this.loading = false })
     }

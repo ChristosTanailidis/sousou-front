@@ -192,6 +192,14 @@ export default defineComponent({
           user.value?.groupInvites.splice(index, 1)
         }
       })
+
+      socket.on('update-personal-chat', (data: { disabled: boolean, id: string, isGroupPersonalChat: boolean, mute: boolean}) => {
+        const updatedIndex = user.value?.personalChats.findIndex(pc => pc.id === data.id)
+
+        if (user.value && updatedIndex && updatedIndex >= 0) {
+          Object.assign(user.value.personalChats[updatedIndex], { disabled: data.disabled })
+        }
+      })
     })
 
     const tabs = [

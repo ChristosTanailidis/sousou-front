@@ -41,6 +41,7 @@
         :user="personalChat.users[0]"
         :sub-text="personalChat.latestMessage || personalChat.messages[0]?.text"
         :notify="personalChat.newMessagesNumber"
+        :disabled="personalChat.disabled"
         class="mx-2"
       />
     </router-link>

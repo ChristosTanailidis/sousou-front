@@ -1,7 +1,7 @@
 <template>
-  <!-- :last-read-message="lastReadMessage" -->
   <TextChat
     v-model:loading="loading"
+    :disabled="disabled"
 
     :old-messages="oldMessages"
     :old-messages-pagination="oldMessagesPagination"
@@ -46,6 +46,10 @@ export default defineComponent({
     friend: {
       type: Object as PropType<User>,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup (props) {

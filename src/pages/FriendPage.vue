@@ -10,6 +10,7 @@
         <FriendHeader
           :friend="friend"
           :personal-chat-id="personalChatId"
+          :disabled="isDisabled"
         />
       </div>
 
@@ -21,6 +22,7 @@
             :key="personalChatId"
             :personal-chat-id="personalChatId"
             :friend="friend"
+            :disabled="isDisabled"
             :style="{ height: 'calc(100vh - 100px)' }"
           />
         </div>
@@ -68,10 +70,17 @@ export default defineComponent({
       return pc?.find(pc => pc.id === props.personalChatId)?.users[0]
     })
 
+    const isDisabled = computed(() => {
+      const pc = user.value?.personalChats
+
+      return pc?.find(pc => pc.id === props.personalChatId)?.disabled
+    })
+
     return {
       settingsMenu: ref(false),
       headerRef: ref(),
 
+      isDisabled,
       friend
 
     }

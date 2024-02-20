@@ -56,3 +56,9 @@ mutation AnswerFriendRequest($answer: Boolean!, $answerFriendRequestId: String!)
   }
 }
 `
+
+export const mRemoveFriend = gql`
+mutation DeleteFriend($deleteFriendId: String!) {
+  deleteFriend(id: $deleteFriendId)
+}
+`

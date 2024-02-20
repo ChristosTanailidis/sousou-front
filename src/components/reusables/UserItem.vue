@@ -25,19 +25,26 @@
       </div>
 
       <q-avatar
-        color="primary"
         size="40px"
       >
         <UserImage
           :user="user"
+          :disabled="disabled"
         />
       </q-avatar>
     </q-item-section>
 
-    <q-item-section>
+    <q-item-section
+      :class="[disabled && 'text-[rgba(255,255,255,0.3)]']"
+    >
       <q-item-label
         lines="1"
+        class="flex flex-row flex-nowrap gap-1 items-center"
       >
+        <q-icon
+          v-if="disabled"
+          name="block"
+        />
         {{ user.displayName }} {{ user.pending ? '(pending invite)' : '' }}
       </q-item-label>
 
@@ -52,6 +59,7 @@
         v-else-if="subText"
         caption
         lines="1"
+        :class="[disabled && '!text-[rgba(255,255,255,0.3)]']"
       >
         {{ subText }}
       </q-item-label>
@@ -122,6 +130,10 @@ export default defineComponent({
     },
     notify: {
       type: [Boolean, Number],
+      default: false
+    },
+    disabled: {
+      type: Boolean,
       default: false
     }
   },

@@ -173,7 +173,8 @@
       <q-input
         :key="user?.id"
         v-model="newText"
-        :autofocus="true"
+        :disable="disabled"
+        :autofocus="!disabled"
         type="text"
         label="Message"
         class="p-2"
@@ -197,13 +198,13 @@ import { TextChannelMessage } from 'src/models/TextChannelMessage'
 import { PersonalMessage } from 'src/models/PersonalMessage'
 import { PaginationData } from 'src/models/PaginationData'
 import { PaginatedData } from 'src/models/PaginatedData'
+import { User } from 'src/models/User'
 
 // stores
 import { useAuthUser } from 'src/stores/auth-user'
 
 // utils
 import { format, formatDistance, formatDistanceToNow } from 'date-fns'
-import { User } from 'src/models/User'
 
 export interface MessageReadIndex {
   user: User,
@@ -248,6 +249,10 @@ export default defineComponent({
       default: undefined
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }

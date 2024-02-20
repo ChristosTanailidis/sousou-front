@@ -100,6 +100,7 @@ query GetLoggedUser {
     }
     personalChats {
       id
+      disabled
       messages {
         createdAt
         deleteForAll

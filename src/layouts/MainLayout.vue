@@ -159,6 +159,8 @@ export default defineComponent({
           const friendIndex = user.value.personalChats.findIndex(personalChat => personalChat.id === data.personalChat?.id)
           if (friendIndex < 0) {
             user.value.personalChats.push(data.personalChat)
+          } else {
+            user.value.personalChats[friendIndex].disabled = false
           }
 
           const index = user.value.friendRequests.findIndex(fr => fr.id === data.identifier) || -1

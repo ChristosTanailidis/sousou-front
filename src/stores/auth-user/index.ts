@@ -98,7 +98,7 @@ export const useAuthUser = defineStore('auth-user', {
 
     async confirmEmail (token: string) {
       this.loading = true
-      return Request(mConfirmEmail, { confirmEmail: token })
+      return Request(mConfirmEmail, { confirmEmailToken: token })
         .then((response) => {
           return (response as { confirmEmail: boolean }).confirmEmail
         })

@@ -125,7 +125,7 @@ export default defineComponent({
 
         if (router.currentRoute.value.params) {
           const { personalChatId } = router.currentRoute.value.params
-          if (personalChatId && personalChatId !== message.personalChat.id) {
+          if (!personalChatId || (personalChatId && personalChatId !== message.personalChat.id)) {
             notificationSound.pause()
             notificationSound.currentTime = 0
             notificationSound.play()

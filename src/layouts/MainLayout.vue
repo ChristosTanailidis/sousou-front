@@ -198,7 +198,9 @@ export default defineComponent({
       socket.on('update-personal-chat', (data: { disabled: boolean, id: string, isGroupPersonalChat: boolean, mute: boolean}) => {
         const updatedIndex = user.value?.personalChats.findIndex(pc => pc.id === data.id)
 
-        if (user.value && updatedIndex && updatedIndex >= 0) {
+        console.log('1', !!user.value, updatedIndex)
+        if (user.value && updatedIndex !== undefined && updatedIndex >= 0) {
+          console.log('2', data)
           Object.assign(user.value.personalChats[updatedIndex], { disabled: data.disabled })
         }
       })
